@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2011 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ -->
+<resources>
+    <declare-styleable name="PSMobile.Light">
+        <attr name="listDragShadowBackground" format="reference" />
+        <!--
+        <item name="menuIconViewAsGrid">@drawable/ic_collections_view_as_grid</item>    
+        <item name="menuIconRefresh">@drawable/ic_navigation_refresh</item>
+        <item name="menuIconAccessAccount">@drawable/ic_device_access_accounts</item>
+        <item name="menuIconSocialCcBb">@drawable/ic_social_cc_bcc</item>
+         
+         -->
+        <attr name="menuIconViewAsList" format="reference"/>
+        <attr name="menuIconViewAsGrid" format="reference" />
+        <attr name="menuIconRefresh" format="reference" />
+        <attr name="menuIconAccessAccount" format="reference" />
+        <attr name="menuIconSocialCcBb" format="reference" />
+        
+        <attr name="menuIconCamera" format="reference" />
+        <attr name="menuIconToggle" format="reference" />
+        <attr name="menuIconShare" format="reference" />
+        <attr name="menuIconNewContent" format="reference"/>
+    </declare-styleable>
+</resources>

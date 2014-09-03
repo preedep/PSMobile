@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+  <item android:id="@+id/edit_expense_summary" android:title="@string/label_edit_expense"/>
+  <item android:id="@+id/show_expense_summary_report" android:title="@string/label_print_expense_report"/>
+</menu>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+<item android:id="@+id/menu_car_inspect_add_new_location" android:title="@string/text_context_menu_car_inspect_add_new_location"/>
+<item android:id="@+id/menu_car_inspect_edit_location" android:title="@string/text_context_menu_car_inspect_edit_location"/>
+<item android:id="@+id/menu_car_inspect_del_row" android:title="@string/text_context_menu_car_inspect_del_row"/>
+<item android:id="@+id/menu_car_inspect_reset_error_flag" android:title="@string/text_context_menu_car_inspect_reset_error_row"/>
+</menu>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- 
+      <string name="txt_context_menu_do_task_start">ดูงาน</string>
+    <string name="txt_context_menu_do_task_split">แยกงาน</string>
+    <string name="txt_context_menu_do_task_finish">สิ้นสุดงาน</string>    
+    <string name="txt_context_menu_do_finish_task_report">รายงานการตรวจ</string>
+    <string name="txt_context_menu_do_task_inspect">การเข้าตรวจ</string>
+    <string name="txt_context_menu_do_task_delete_duplicated">ลบงานแยก</string>
+    <string name="txt_context_menu_do_task_delete_duplicated_confirm">คุณต้องการลบงานแยกนี้จริงหรือไม่?</string>
+    <string name="txt_context_menu_do_task_change">แก้ไขการตรวจ</string>
+ 
+     -->
+    
+   <item android:id="@+id/do_task_start" android:title="@string/txt_context_menu_do_task_start" />
+   <item android:id="@+id/do_task_split" android:title="@string/txt_context_menu_do_task_split"/>
+   <item android:id="@+id/do_task_duplicated_delete" android:title="@string/txt_context_menu_do_task_delete_duplicated"/>   
+   <item android:id="@+id/do_task_change" android:title="@string/txt_context_menu_do_task_change"/>   
+   <item android:id="@+id/do_task_finish" android:title="@string/txt_context_menu_do_task_finish"/>
+   <item android:id="@+id/do_task_report_inspect" android:title="@string/txt_context_menu_do_finish_task_report"/>
+   <item android:id="@+id/do_task_inspect" android:title="@string/txt_context_menu_do_task_inspect"/>
+</menu>

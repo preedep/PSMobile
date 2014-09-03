@@ -1,0 +1,29 @@
+<report_list>
+	<report_title>รายงานการตรวจสอบรถยนต์</report_title>    
+	<report_columns>
+	    <!-- 
+	     <report_column id="chkBox" name="" inputType="checkBox"/>
+	     <report_column id="carNumber" name="หมายเลขตัวรถ" inputType="edittext" invokeTo="getcVin"/>
+	     <report_column id="sellType" name="แบบการขาย" inputType="drop_list" table=""/>
+	     <report_column id="dueDate" name="วันที่ส่งมอบ" inputType="date"/>
+	     <report_column id="dueDatePayment" name="กำหนดชำระเงิน" inputType="decimal"/>
+	     <report_column id="isDocument" name="เอกสาร" inputType="checkBox" />
+	     <report_column id="remark" name="หมายเหตุ" inputType="text"/>
+	     <report_column id="camera" name="" inputType="camera"/>
+	      -->
+	     <report_column id="chkBox" name="เลือก" inputType="checkBox"/>
+	     <report_column id="franchise" name="อนุญาติให้ขาย" inputType="edittext" invokeTo="getcFranchise"/>
+	     <report_column id="invoiceDate" name="วันส่งใบราคา" inputType="edittext" table="" invokeTo="getcInvoiceDate"/>
+	     <report_column id="registerNumber" name="เลขลงทะเบียน" inputType="edittext" invokeTo="getcRegisterNumber"/>
+	     <report_column id="mid" name="ค่ากลาง" inputType="edittext" invokeTo="getcMid"/>
+	     <report_column id="vin" name="หมายเลขตัวถัง" inputType="edittext" invokeTo="getcVin"/>
+	     <report_column id="engine" name="เครื่องยนต์" inputType="edittext" invokeTo="getcEngine"/>
+	     <report_column id="description" name="รายละเอียด" inputType="edittext" invokeTo="getcDescription"/>
+	     <report_column id="color" name="สี" inputType="edittext" invokeTo="getcColor"/>
+	     <report_column id="model" name="รุ่น" inputType="edittext" invokeTo="getcModel"/>
+	     <report_column id="year" name="ปี" inputType="edittext" invokeTo="getcYear"/>
+	     <report_column id="type" name="ชนิด" inputType="edittext" invokeTo="getcType"/>
+		 <report_column id="camera" name="" inputType="camera"/>
+	     	     	     	      
+	</report_columns>
+</report_list>

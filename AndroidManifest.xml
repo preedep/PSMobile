@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.epro.psmobile"
+    android:versionCode="175"
+    android:versionName="1.2" >
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="19" />
+    
+     <permission
+        android:name="com.epro.psmobile.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+    
+    <uses-permission android:name="com.epro.psmobile.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_psmobile"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" 
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
+        android:name="PSMobileApplication">
+         <uses-library android:name="com.google.android.maps" />
+   
+        <activity
+            android:name="com.epro.psmobile.PsMainActivity"
+            android:label="@string/app_name" 
+            android:theme="@style/PSMobile.Light" 
+            android:launchMode="singleTop" 
+            android:icon="@drawable/ic_psmobile" 
+            android:logo="@drawable/ic_psmobile"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustPan"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="PsDrawLayoutActivity"></activity>
+        
+        <!-- pro AIzaSyC-Foo2K7jN337g9tFbPHSuBrK2XjUhPDM -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCu56-apZ_VvEw-mWM_7BFBiUONl7k0dwY" />
+        <!--  
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyAysbVYRIgEDqgxT_F5Y7m9QW5PO_THROw" />
+        -->
+        <activity android:theme="@style/PSMobile.Light" android:name="TeamTimeAttendanceActivity"></activity>
+        <activity android:name="ExpenseEntryActivity" android:theme="@style/PSMobile.Light"></activity>
+        <activity android:theme="@style/PSMobile.Light" android:name="InspectPhotoEntryActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name="ReportListEntryActivity" android:theme="@style/PSMobile.Light"></activity>
+        <activity android:name="PhotoGalleryActivity" android:theme="@style/PSMobile.Light"></activity>
+        <activity android:name="HtmlPreviewActivity" android:theme="@style/PSMobile.Light"></activity>
+    </application>
+
+</manifest>

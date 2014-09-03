@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+<item  android:id="@+id/do_expense_edit" android:title="@string/label_context_menu_expense_edit"/>
+<item  android:id="@+id/do_expense_del" android:title="@string/label_context_menu_expense_del"/>
+    
+</menu>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sql_expense_master_arrays">
+        <item>INSERT INTO ExpenseType VALUES(1,\'ตรวจสินค้า\');</item>
+		<item>INSERT INTO ExpenseType VALUES(2,\'อบรม\');</item>
+		<item>INSERT INTO ExpenseType VALUES(3,\'ย้ายงาน\');</item>
+    </string-array>
+</resources>

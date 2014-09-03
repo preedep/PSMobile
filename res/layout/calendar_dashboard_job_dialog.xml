@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"      
+    android:padding="20dp"
+    android:orientation="vertical"
+    >
+    
+   <include layout="@layout/job_item_jobrequest_customer_detail"
+            />
+    <include layout="@layout/job_item_view_status"  
+            />
+    
+   <Button 
+          android:id="@+id/btn_cal_dashboard_ok"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="ok"
+          android:padding="10dp"
+          android:layout_gravity="center_horizontal"
+       />
+</LinearLayout>

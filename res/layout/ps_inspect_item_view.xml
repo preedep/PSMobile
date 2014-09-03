@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+    <RelativeLayout 
+        android:id="@+id/root_inspect_view_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+    <!-- 
+    <RelativeLayout 
+         android:id="@+id/rl_border"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:background="#00000000"
+                  
+        >--> 
+       
+        <RelativeLayout 
+			android:id="@+id/inspect_view_body"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"	
+            >           
+            
+            <TextView 
+                 android:id="@+id/inspect_view_body_width"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentTop="true"
+                 android:layout_centerHorizontal="true"
+                 android:text="1000 cm."
+                 android:visibility="gone"
+             />
+             <TextView
+              android:id="@+id/inspect_view_body_height"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:layout_centerVertical="true"
+              android:padding="0dp"
+              android:rotation="90"
+              android:text="tet"
+			  android:visibility="gone" />
+            <ImageView 
+                  android:id="@+id/inspect_img"
+				  android:layout_width="wrap_content"
+				  android:layout_height="wrap_content"	
+				  android:scaleType="center"
+				  android:layout_centerInParent="true"
+                />       
+        </RelativeLayout>
+         
+          <ImageButton 
+	               android:id="@+id/btn_del"
+        	       style="@style/ImageCornerButton"
+               	   android:background="@drawable/btn_layout_object_close"
+               	   android:layout_alignParentLeft="true"
+               	   android:layout_alignParentTop="true"
+               	   android:visibility="gone"
+              />
+          
+    	    <ImageButton 
+        	    android:id="@+id/btn_right"
+            	style="@style/ImageCornerButton"
+            	android:background="@drawable/btn_layout_object_right"
+            	android:layout_alignParentRight="true"
+               	android:layout_alignParentTop="true"
+               	android:visibility="gone"
+               	
+            />
+    	    
+    	    <ImageButton 
+	               android:id="@+id/btn_info"
+        	       style="@style/ImageCornerButton"
+               	   android:background="@drawable/btn_layout_object_info"
+               	   android:layout_centerHorizontal="true"
+               	   android:layout_alignParentTop="true"
+               	   android:visibility="gone"
+               	   
+              />
+    	    
+    	    <ImageButton 
+	            android:id="@+id/btn_down"
+    	      	style="@style/ImageCornerButton"
+            	android:background="@drawable/btn_layout_object_down"
+            	android:layout_alignParentLeft="true"
+               	android:layout_alignParentBottom="true"
+               	android:visibility="gone"
+               	
+	            />
+    	     <ImageButton 
+	               android:id="@+id/btn_rotate"
+        	       style="@style/ImageCornerButton"
+               	   android:background="@drawable/btn_layout_object_rotate"
+	               android:layout_alignParentRight="true"
+    	           android:layout_alignParentBottom="true"
+    	           android:visibility="gone"
+              />
+    	     
+    	      <ImageButton 
+	               android:id="@+id/btn_copy"
+        	       style="@style/ImageCornerButton"
+               	   android:background="@drawable/btn_layout_object_copy"
+               	   android:layout_centerHorizontal="true"
+               	   android:layout_alignParentBottom="true"
+               	   android:visibility="gone"
+               	   />
+   <!--  </RelativeLayout>-->
+	</RelativeLayout>
+</RelativeLayout>

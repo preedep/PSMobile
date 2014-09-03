@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <com.epro.psmobile.view.HistoryInspectLocationSpinner 
+        android:id="@+id/spn_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    
+
+    <EditText 
+         android:id="@+id/edt_location"
+         android:layout_width="match_parent"
+         android:layout_height="150dp"
+         android:layout_marginTop="3dp"
+         android:inputType="textMultiLine"
+         android:lines="8"
+         android:minLines="6"
+         android:gravity="top|left"
+         android:scrollbars="vertical"
+        />
+
+    <LinearLayout 
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:padding="10dp"
+          android:layout_marginTop="3dp"
+        >
+        
+    </LinearLayout>
+</LinearLayout>

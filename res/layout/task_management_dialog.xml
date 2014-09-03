@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<include 
+	    android:id="@+id/inc_customer_information_item"
+	    layout="@layout/job_item_jobrequest_customer_detail"
+    />
+	
+	<LinearLayout 
+	      android:id="@+id/ll_task_management_content"
+	      android:layout_width="match_parent"
+	      android:layout_height="wrap_content"
+	      android:orientation="vertical"
+	    ></LinearLayout>
+	<RelativeLayout 
+	       android:layout_width="match_parent"
+	       android:layout_height="wrap_content"
+	    >
+	    <LinearLayout 
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:layout_centerHorizontal="true"
+	          android:orientation="horizontal"
+	        >
+	    	<Button 
+	    	       android:id="@+id/btn_do_task_management"
+	    	       android:layout_width="wrap_content"
+	    	       android:layout_height="wrap_content"
+	    	       android:paddingLeft="10dp"
+	    	       android:paddingRight="10dp"
+	    	       android:text="Ok"
+	    	    />
+	    	<Button 
+	    	        android:id="@+id/btn_cancel_task_management"
+	    	        android:layout_width="wrap_content"
+	    	        android:layout_height="wrap_content"
+	    	        android:paddingLeft="10dp"
+	    	        android:paddingRight="10dp"
+	    	        android:text="Cancel"
+	    	    />
+	    	</LinearLayout>
+	</RelativeLayout>
+</LinearLayout>

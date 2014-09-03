@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+        <TextView 
+               android:id="@+id/tv_list_job_item_company_name"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               style="@style/text_label_company_name"
+            />
+        <TextView
+                android:id="@+id/tv_list_job_item_survey_site_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/text_label_job_detail"
+            />  
+         <TextView
+                 android:id="@+id/tv_list_job_item_inspect_type"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 style="@style/text_label_job_detail"
+             />
+         <TextView
+                 android:id="@+id/tv_list_job_item_date_remain"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 style="@style/text_label_job_detail"
+                
+             />
+    
+</LinearLayout>

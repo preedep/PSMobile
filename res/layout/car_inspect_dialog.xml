@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
+
+<TextView 
+        android:id="@+id/tv_car_inspect_site_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+<EditText 
+		android:id="@+id/edt_inspect_site_name"
+		android:inputType="textMultiLine" 
+    	android:lines="8" 
+    	android:minLines="6" 
+    	android:gravity="top|left" 
+    	android:maxLines="10" 
+    	android:layout_height="wrap_content" 
+    	android:layout_width="fill_parent"
+    	android:scrollbars="vertical" 
+    	android:visibility="gone"
+    	android:hint="@string/text_hit_location"
+    />
+
+<TextView 
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="@string/label_time_attendance_team_car_mile"
+       android:layout_marginTop="30dp"
+    />
+<View style="@style/Divider"/>
+<EditText 
+       android:id="@+id/et_car_inspect_dlg_mile_no"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:singleLine="true"
+       android:inputType="number"
+    />
+
+<TextView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="@string/label_time"
+       android:layout_marginTop="30dp"
+    />
+<View style="@style/Divider"/>
+
+<Button 
+      android:id="@+id/btn_car_inspect_dlg_time"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+    />
+</LinearLayout>

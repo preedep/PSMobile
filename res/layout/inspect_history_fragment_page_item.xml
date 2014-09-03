@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+<TextView 
+       android:id="@+id/tv_lasted_inspect_customer_site_address"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:textSize="20sp"
+    />
+<View style="@style/Divider"	    
+	    />
+   <com.epro.psmobile.view.VScroll 
+          android:id="@+id/v_scroll_show_layout_history"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:fillViewport="true" 
+          android:scrollbarSize="0dp"
+        >
+       <com.epro.psmobile.view.HScroll
+           android:id="@+id/h_scroll_show_layout_history"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:fillViewport="true" 
+           android:scrollbarSize="0dp"
+           >
+			<com.epro.psmobile.view.InspectRelativeLayout
+    			android:id="@+id/rl_previous_layout"
+    	    	style="@style/style_draw_layout_container"
+    	    /> 
+       </com.epro.psmobile.view.HScroll>
+    </com.epro.psmobile.view.VScroll>
+
+
+<ImageView 
+ 	 android:id="@+id/img_inspect_drawing_history"
+ 	 android:layout_width="match_parent"
+ 	 android:layout_height="match_parent"
+ 	 android:scaleType="fitXY"   
+ 	 android:visibility="gone"
+ />    
+
+<WebView 
+      android:id="@+id/wv_inspect_last_result_history"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:visibility="gone"
+    />
+
+
+</LinearLayout>

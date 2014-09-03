@@ -1,0 +1,1 @@
+ALTER TABLE Task ADD COLUMN flagSummaryCarInspect TEXT DEFAULT('N');

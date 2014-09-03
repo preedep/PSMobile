@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2011 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ -->
+<resources>
+    <color name="actionbar_background_light">#ccffffff</color>
+    <color name="actionbar_background_dark">#cc000000</color>
+    <color name="drag_active_color">#80cccccc</color>
+    
+    <!-- calendar -->
+    <color name="caldroid_white">#FFFFFF</color>
+    <color name="caldroid_black">#000000</color>
+    <color name="caldroid_transparent">#00000000</color>
+    <!-- For settings framework -->
+    <color name="caldroid_lighter_gray">#ddd</color>
+    <color name="caldroid_gray">#CCC</color>
+    <color name="caldroid_darker_gray">#aaa</color>
+    <!-- A light Holo shade of blue -->
+    <color name="caldroid_holo_blue_light">#ff33b5e5</color>
+    <!-- A dark Holo shade of blue -->
+    <color name="caldroid_holo_blue_dark">#ff0099cc</color>
+    <!-- A really bright Holo shade of blue -->
+    <color name="caldroid_sky_blue">#FFA3E8F7</color>
+    <!-- calendar -->
+    
+    
+    
+    <color name="gray_expense_title_color_bg">#80cccccc</color>
+    
+    
+    <color name="expense_status_new">#FF0000</color>
+    <color name="expense_status_approved">#00FF00</color>
+    <color name="expense_status_cancel">#0000FF</color>
+ <!--     
+    <color name="ALREADY_SYNC">#33CCFF</color>
+    <color name="NOT_SYNC">#9966CC</color>
+    <color name="ALREADY_INSPECTED">#FF3333</color>
+    <color name="ALLOW_EDIT">#FFCC33</color>
+    -->
+    <color  name="task_status_default">#99cc00</color>
+    <color  name="task_status_wait_confirm">#99cc00</color>
+    <color  name="task_status_confirm_inspect">#9966cc</color>
+    <color  name="task_status_confirmed_from_web">#99cc00</color>
+    <color  name="task_status_cancel">#9966cc</color>
+    <color  name="task_status_save_to_device">#ff3333</color>
+    <!--  
+    <color  name="task_status_complete">#33ccff</color>
+    -->
+    <color  name="task_status_complete">#9966cc</color>
+    
+    <color  name="task_status_is_duplicated">#ff3333</color>
+    <color  name="task_status_post_pone">#9966cc</color>
+    <color  name="task_status_allow_edit">#ffcc33</color>
+    <color  name="task_status_already_sync">#33ccff</color>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+<!-- 
+<item android:id="@+id/do_task_start" android:title="@string/txt_context_menu_do_task_start" />
+   <item android:id="@+id/do_task_split" android:title="@string/txt_context_menu_do_task_split"/>
+   <item android:id="@+id/do_task_finish" android:title="@string/txt_context_menu_do_task_finish"/>
+
+ -->
+ 
+ <!-- 
+<string name="txt_context_menu_plan_job_detail">ดูรายละเอียดงาน</string>
+	<string name="txt_context_menu_plan_job_confirm">ยืนยันงาน</string>
+    <string name="txt_context_menu_plan_job_shift">เลื่อนงาน</string>
+	<string name="txt_context_menu_plan_job_cancel">ยกเลิกงาน</string>
+  -->
+
+<item  android:id="@+id/do_plan_job_show_detail" android:title="@string/txt_context_menu_plan_job_detail"/>
+<item  android:id="@+id/do_plan_job_confirm" android:title="@string/txt_context_menu_plan_job_confirm"/>
+<item  android:id="@+id/do_plan_job_shift" android:title="@string/txt_context_menu_plan_job_shift"/>
+<item  android:id="@+id/do_plan_job_cancel" android:title="@string/txt_context_menu_plan_job_cancel"/>
+
+</menu>

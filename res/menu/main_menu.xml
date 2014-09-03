@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2011 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--  
+    <item
+        android:id="@+id/menuSort"
+        android:showAsAction="ifRoom"
+        android:icon="?attr/menuIconNewContent"        
+        android:actionLayout="@layout/action_report_list"  
+        />
+    -->
+    <item android:id="@+id/menu_add_new_content"
+          android:title="newcontent"
+          android:icon="?attr/menuIconNewContent"
+          android:showAsAction="ifRoom"
+          android:visible="false"
+          />
+    <item android:id="@+id/menu_view_as_grid"
+          android:title="test"
+          android:icon="?attr/menuIconViewAsList"
+          android:showAsAction="ifRoom"/>
+	<item android:id="@+id/menu_refresh"
+	      android:title="refresh"
+          android:icon="?attr/menuIconRefresh"
+          android:showAsAction="ifRoom"/>
+	<item android:id="@+id/menu_account"
+	      android:title="account"
+	      android:icon="?attr/menuIconAccessAccount"
+		  android:showAsAction="ifRoom"/>
+	<item android:id="@+id/menu_social_bb_cc"
+	      android:title="social_bb_cc"
+	      android:icon="?attr/menuIconSocialCcBb"
+	      android:showAsAction="ifRoom"/>
+
+	<item android:id="@+id/menu_show_more"
+	      android:title="social_bb_cc"
+	      android:icon="@drawable/ic_action_overflow"
+	      android:showAsAction="always">
+	      
+	     <item
+                android:id="@+id/action_about"
+                android:showAsAction="never"
+                android:title="@string/text_menu_about"/>
+	    
+	</item>
+		
+	<!--  
+	<item
+    android:id="@+id/a_More"
+    android:showAsAction="always"
+    android:title="More">
+    <menu>
+        <item
+            android:id="@+id/menu_sub_about"
+            android:title="About"/>
+    </menu>
+</item>
+-->
+    <!-- 
+    <item android:id="@+id/menu_camera"
+          android:title="@string/camera"
+          android:icon="?attr/menuIconCamera"
+          android:showAsAction="ifRoom" />
+    <item android:id="@+id/menu_toggleTitles"
+          android:title="@string/toggle_titles"
+          android:icon="?attr/menuIconToggle"
+          android:showAsAction="ifRoom|withText" />
+           -->
+    <!-- 
+    <item android:id="@+id/menu_toggleTheme"
+          android:title="@string/day_night" />
+    <item android:id="@+id/menu_showDialog"
+          android:title="@string/show_dialog" />
+    <item android:id="@+id/menu_showStandardNotification"
+          android:title="@string/basic_notification" />
+    <item android:id="@+id/menu_showCustomNotification"
+          android:title="@string/custom_notification" />
+           -->
+</menu>

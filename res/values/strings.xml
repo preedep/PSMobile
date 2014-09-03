@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PSMobile</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    
+    
+    
+    <!-- buiness message -->
+    <string name="login_user_failed_not_team">ผู้ใช้งานไม่ได้อยู่ในทีม</string>
+    <string name="login_user_no_device_id">ไม่มีข้อมูลของอุปกรณ์เครื่องนี้</string>
+    <string name="login_no_user_in_team">ทีมนี้ยังไม่เคยกำหนดสมาชิกระดับหัวหน้าในทีม</string>
+    <string name="login_user_not_exist">ยูเซอร์หรือรหัสผิดพลาด</string>
+    <!-- end -->
+    
+    <!--  title name -->
+    <string name="dialog_team_title_name">เข้าสู่ระบบ</string>
+    <string name="dialog_team_label_uername">รหัสทีม</string>
+    <string name="dialog_team_label_password">รหัสผ่าน</string>
+    <string name="dialog_team_label_device_id">Device ID</string>
+    <string name="dialog_team_text_current_date">ประจำวันที่ %1$s</string>
+    <string name="dialog_team_text_current_time">เวลา %1$s</string>
+    
+    <!-- string title message -->
+    <string name="message_box_title_error">ข้อผิดพลาด</string>
+    
+    
+    <!-- menu -->
+     <string name="camera">Camera</string>
+    <string name="toggle_titles">Toggle Titles</string>
+    <string name="day_night">Day/Night</string>
+    <string name="show_dialog">Show a dialog</string>
+    <string name="basic_notification">Show a basic notification</string>
+    <string name="custom_notification">Show a custom notification</string>
+    <string name="switch_camera">Switch camera</string>
+    
+    <!-- menu text -->
+    <string-array name="main_menu_text_array">
+        <item>หน้าหลัก</item>
+        <item>แผนงาน</item>
+        <item>งาน</item>
+        <item>ค่าใช้จ่าย</item>
+        <item>ข่าว</item>
+        <item>รายงาน</item>
+    </string-array>
+    
+    <!-- group menu title -->
+    <string-array name="menu_group_sort_array">
+        <item>แสดงกำหนดการทั้งหมด</item>
+        <item>แสดงตามกำหนดเวลา</item>
+        <item>แสดงตามการตรวจ</item>
+    </string-array>
+    <string-array name="sub_menu_group_task_sort_by_plan_job_status">
+        <item>รอยืนยัน</item>
+        <item>ยืนยันแล้ว</item>
+        <item>เลื่อน</item>
+        <item>ยกเลิก</item>
+    </string-array>
+    <string-array name="sub_menu_group_task_sort_by_task_status">
+        <item>เสร็จสิ้น</item>
+        <item>จัดเก็บ</item>
+        <item>ยืนยัน</item>
+        <item>แก้ไข</item>
+    </string-array>
+    <string-array name="sub_menu_group_task_sort_by_dashboard">
+        <item>รอยืนยัน</item>
+        <item>ยืนยันแล้ว</item>
+        <item>เลื่อน</item>
+        <item>ยกเลิก</item>
+        <item>เสร็จสิ้น</item>
+        <item>จัดเก็บ</item>
+        <item>ยืนยัน</item>        
+        <item>แก้ไข</item>
+    </string-array>
+    <string-array name="sub_menu_group_sort_array_2">
+        <item>วันนี้</item>
+        <item>อาทิตย์หน้า</item>
+        <item>เลือกระบุวัน</item>
+    </string-array>
+        <string-array name="sub_menu_group_sort_array_3">
+        <item>Package</item>
+        <item>Cluster</item>
+        <item>Adhoc</item>
+    </string-array>
+    
+    <!-- text job list -->
+    <string name="txt_today">วันนี้</string>
+    
+    <string name="txt_customer_survey_site_amount">สถานที่ : %1$s</string>
+    <string name="txt_customer_survey_site_inspect_type">ประเภท : %1$s</string>
+    <string name="txt_customer_survey_site_remain_date">ครบกำหนด : %1$s วัน</string>
+    <string name="txt_customer_survey_site_task_code_and_amount">เลขที่งาน : %1$s สถานที่ : %2$s</string>
+    <string name="txt_task_code">เลขที่งาน : %1$s</string>
+    <string-array name="txt_plan_job_context_menus">
+        <item>ดูรายละเอียดงาน</item>
+        <item>ยืนยันงาน</item>
+        <item>เลื่อนงาน</item>
+        <item>ยกเลิกงาน</item>
+    </string-array>
+    
+    <string name="txt_context_menu_plan_job_detail">ดูรายละเอียดงาน</string>
+	<string name="txt_context_menu_plan_job_confirm">ยืนยันงาน</string>
+    <string name="txt_context_menu_plan_job_shift">เลื่อนงาน</string>
+	<string name="txt_context_menu_plan_job_cancel">ยกเลิกงาน</string>
+    
+    <string name="txt_context_menu_do_task_start">ดูงาน</string>
+    <string name="txt_context_menu_do_task_split">แยกงาน</string>
+    <string name="txt_context_menu_do_task_finish">สิ้นสุดงาน</string>    
+    <string name="txt_context_menu_do_finish_task_report">รายงานการตรวจ</string>
+    <string name="txt_context_menu_do_task_inspect">การเข้าตรวจ</string>
+    <string name="txt_context_menu_do_task_delete_duplicated">ลบงานแยก</string>
+    <string name="txt_context_menu_do_task_delete_duplicated_confirm">คุณต้องการลบงานแยกนี้จริงหรือไม่?</string>
+    <string name="txt_context_menu_do_task_change">แก้ไขการตรวจ</string>
+ 
+    
+    
+    <string name="text_titles_of_job_detail_detail">รายละเอียดงาน</string>
+    <string name="text_titles_of_job_detail_product">รายละเอียดสินค้า</string>
+    <string name="text_titles_of_job_detail_warehouse">สถานที่เก็บสินค้า</string>
+    
+    <string name="text_titles_header_customer_detail">รายละเอียดลูกค้า</string>
+    <string name="text_titles_header_subject">วัตถุประสงค์</string>
+    <string name="text_title_header_type_of_inspect">ประเภทการใช้บริการ</string>
+    
+    <string name="text_tel_prefix">โทร : </string>
+    <string name="text_inspect_type_prefix">ประเภท : </string>
+    
+    <string name="text_customer_code_prefix">เลขที่ </string>
+    <string name="text_customer_business_type">ประเภทกิจการ %1$s</string>
+    <string name="text_customer_schedule_preiod_inspect">วันที่ต้องการตรวจนับ %1$s</string>
+    
+    <string name="text_customer_product_item_format">%1$d, %2$s %3$s %4$s</string>
+    <string name="text_customer_warehouse_details_format">%1$d, %2$s\n%3$s\nผู้นำตรวจ : %4$s</string>
+    
+    <string name="text_job_request_notes">บันทึกเพิ่มเติมจากส่วนกลาง</string>
+   <!--  
+    <string-array  name="titles_of_job_detail">
+        <item>รายละเอียดงาน</item>
+        <item>รายละเอียดสินค้า</item>
+        <item>สถานที่เก็บสินค้า</item>
+    </string-array>
+    -->
+    <string-array 
+    		name="array_header_name_of_group_job_inspect"     
+        >
+		<item>งาน</item>        
+		<item>สถานที่</item>
+		<item>ความคิดเห็น</item>
+		<item>ข้อสังเกตุ</item>
+		<item>รายงานการตรวจ</item>
+    </string-array>
+    <string-array name="array_list_of_inspect_item">
+		<item>รายละเอียดงาน</item>        
+		<item>แผนผัง</item>
+		<item>ผลการตรวจครั้งล่าสุด</item>
+    </string-array>
+	<string-array name="array_list_of_news">
+	    <item>ข่าวทั้งหมด</item>
+	    <item>เฉพาะวันนี้</item>
+	    <item>ย้อนหลังไป 7 วัน</item>
+	    <item>ย้อนหลังไป 15 วัน</item>
+	</string-array>
+    <string-array name="array_list_of_reports">
+        <item>เลือกรายงาน</item>
+    </string-array>
+    <string name="text_tools_box">เครื่องมือ</string>
+	<string-array name="tools_box_group_name">
+	    <item>แผนผัง</item>
+	    <item>สิ่งปลูกสร้าง</item>
+	    <item>ชนิดสินค้า</item>
+	    <item>ถ่ายภาพ</item>
+	</string-array>    
+    
+	<string name="label_inspect_data_entry_group_size">ขนาด</string>
+	<string name="label_inspect_data_entry_product_group">ประเภทสินค้า</string>
+	<string name="label_inspect_data_entry_product">ชนิดสินค้า</string>
+	<string name="label_inspect_data_entry_width">กว้าง</string>
+	<string name="label_inspect_data_entry_long">ยาว</string>
+	<string name="label_inspect_data_entry_heigh">สูง</string>
+	<string name="label_inspect_data_entry_radius">รัศมี</string>
+	<string name="label_inspect_data_entry_product_lost">ขาด</string>
+	<string name="label_inspect_data_entry_product_over">เกิน</string>
+	<string name="label_inspect_data_entry_total_amount">รวม</string>
+	<string name="label_inspect_data_entry_value">มูลค่า</string>
+	<string name="label_inspect_data_entry_comment">ข้อสังเกตุ</string>
+	<string name="label_inspect_data_entry_obj_name">Layout name</string>
+	<string name="label_inspect_data_entry_product_type">ประเภทสินค้า</string>
+	<string name="label_inspect_data_entry_density">หนาแน่น</string>
+	<string name="label_inspect_data_entry_amount_unit">หน่วยนับ</string>
+	<string name="label_inspect_data_entry_formula">สูตร</string>
+	<string name="label_inspect_data_entry_additional">เพิ่ม</string>
+	<string name="label_inspect_data_entry_btn_save">ตกลง</string>
+	<string name="label_inspect_data_entry_btn_cancel">ยกเลิก</string>
+	<string name="label_inspect_data_entry_product_controlled">สินค้าควบคุมพิเศษ</string>
+	<string name="label_inspect_data_entry_palate_amount">จำนวนลูก/พาเลท</string>
+	<string name="label_inspect_data_entry_area">พื้นที่ (ตรม.)</string>
+	
+	<string name="label_inspect_data_camera_view_choose">เลือกภาพ</string>
+	<string name="label_inspect_data_camera_view_choose_album">จากอัลบัม</string>
+	<string name="label_inspect_data_camera_view_take_photo">ถ่ายรูป</string>
+	
+	<string name="question_number">คำถามที่ %1$s</string>
+    <string name="on_current_at_question_number">%1$s / %2$s</string>
+    
+    <string name="label_text_answer">ข้อความ</string>
+    <string name="label_text_choice">ตัวเลือก</string>
+    
+    <string name="label_text_tools_record">เครื่องมือบันทึก</string>
+    
+    <string name="label_time_attendance_team_detail">รายละเอียดทีม</string>
+    <string name="label_time_attendance_team_members">ลูกทีม</string>
+    <string name="label_time_attendance_team_photo">รูปถ่าย</string>
+    <string name="label_time_attendance_team_car_mile">เลขไมล์</string>
+    <string name="label_time_attendance_team_car_register_no">ทะเบียนรถ</string>
+    
+    <string name="label_inspect_emp_role_leader">หัวหน้าทีม</string>
+    <string name="label_inspect_emp_role">ลูกทีม</string>
+    
+    <string name="label_context_menu_delete_team_member">ลบสมาชิก</string>
+    
+    <string name="label_simple_dlg_title_end_of_inspect">สิ้นสุดการตรวจ</string>
+    <string name="label_simple_dlg_btn_end_of_inspect_ok">สิ้นสุดการตรวจ</string>
+    <string name="label_simple_dlg_btn_cancel">ยกเลิก</string>
+    
+    <string name="label_simple_dlg_title_log_out">ออกงาน</string>
+    <string name="label_simple_dlg_log_out_ok">ออกงาน</string>
+    <string name="label_logout_message">ระบบจะบันทึกเวลาออกงาน</string>
+    
+    <string name="label_simple_dlg_title_print_report">รายงานการตรวจ</string>
+    <string name="label_simple_dlg_btn_print_report_ok">พิพม์รายงาน</string>
+    
+    <string name="label_postpone_dlg_title">เลื่อนงาน</string>
+    <string name="label_date">วันที่</string>
+    <string name="label_time">เวลา</string>
+    <string name="label_postpone_cause">สาเหตุการเลื่อน</string>    
+    <string name="label_btn_postpone">เลื่อนงาน</string>
+    
+    <string name="label_confirm_dlg_title">ยืนยันงาน</string>
+    <string name="label_btn_confirm">ยืนยันงาน</string>
+    
+    <string name="label_cancel_dlg_title">ยกเลิกงาน</string>
+    <string name="label_cancel_cause">สาเหตุการยกเลิกงาน</string>
+    <string name="label_btn_cancel">ยกเลิกงาน</string>
+    
+    <string name="label_save_title">บันทึก</string>
+    <string name="label_save_complete">บันทึกสำเร็จ</string>
+    <string name="label_btn_ok">ตกลง</string>
+    
+    
+    <string name="label_title_report_inspect">รายงานผลการตรวจของ </string>
+    <string name="label_inspect">การเข้าตรวจ</string>
+    
+    <string name="label_task">ภาระกิจ</string>
+    
+    <string name="label_expense_group_fuel_name">ค่าเชื้อเพลิง</string>
+    <string name="label_expense_group_other_name">ค่าอื่นๆ</string>
+    <string-array name="label_columns_expense_fuel">
+        <item>วันที่ที่เติม</item>      
+        <item>เวลาที่เติม</item>
+        <item>เลขไมล์</item>
+        <item>ประเภทน้ำมัน/ชำระ</item>
+        <item>จำนวน</item>
+        <item>ลิตร</item>
+        <item>หมายเหตุ</item>
+    </string-array>
+    <string-array name="label_columns_expense_other">
+		<item>วันที่</item>        
+		<item>เวลา</item>
+		<item>ประเภทค่าใช้จ่าย</item>
+		<item>จำนวนเงิน</item>
+		<item>หมายเหตุ</item>
+    </string-array>
+    
+    <string name="label_context_menu_expense_edit">แก้ไข</string>
+    <string name="label_context_menu_expense_del">ลบ</string>
+    
+    <string name="label_expense_text">ค่าใช้จ่าย</string>
+
+    <string name="label_expense_status_text_finish">เสร็จสิ้น</string>
+    <string name="label_expense_status_text_stored">จัดเก็บ</string>
+    <string name="label_expense_status_text_edited">แก้ไข</string>
+    
+    <string name="text_expense_date">วันที่: %1$s</string>
+    <string name="text_expense_total_amount">รวม: %1$s บาท</string>
+    
+    <string name="label_edit_expense">แก้ไขค่าใช้จ่าย</string>
+    <string name="label_print_expense_report">รายงานค่าใช้จ่าย</string>
+    
+    <string name="label_task_duplicate_dlg_title">ยืนยันการแยกงาน</string>
+    <string name="label_task_duplicated">แยกงาน</string>
+    <string name="label_task_duplicate_location_start">จาก</string>
+    <string name="label_task_duplicate_location_to">ถึง</string>
+    <string name="label_task_duplicate_distance">ระยะห่าง</string>
+    
+    <string name="label_inspect_photo_entry_inspect_data">ภาพถ่ายของ</string>
+    <string name="label_inspect_photo_entry_pictures">รูปภาพ</string>
+    <string name="label_inspect_photo_entry_picture_comment">รายละเอียดภาพ</string>
+    
+    <string name="label_context_menu_delete_photo">ลบรูป</string>
+    <string name="label_context_menu_delete_product_name">ลบสินค้า</string>
+    
+    <string name="inspector_title_display_mape">คุณอยู่ตรงนี้</string>
+    <string name="inspector_snippet_display_map">ตำแหน่งของคุณ</string>
+    
+    <string name="inspect_have_remark_dlg_title">ข้อสังเกตุ</string>
+    <string name="inspect_have_remark">มีข้อสังเกตุ</string>
+    <string name="inspect_dont_have_remark">N/A</string>
+    
+    <string name="wait_current_location">หาตำแหน่ง</string>
+    <string name="distance_from_current_location">%1$s KM.</string>
+    
+    <string name="job_detail_calendar_dlg_title">งาน</string>
+    
+    <string name="market_price_label">ราคากลาง</string>
+    <string name="async_task_login_message">กำลังเข้าระบบ</string>
+    
+    <string name="show_expense_all">แสดงทั้งหมด</string>
+    <string name="news_read_more">อ่านต่อ</string>
+    
+    
+    
+    <string name="text_btn_sync_ok">ซิงค์</string>
+    <string name="text_btn_sync_cancel">ยกเลิก</string>
+    <string name="text_title_sync_dlg">แลกเปลี่ยนข้อมูล</string>
+    
+    <string name="text_sync_upload">ส่งข้อมูลกลับศูนย์กลาง</string>
+    <string name="text_sync_download">รับข้อมูลกลับจากศูนย์กลาง</string>
+    
+    <string name="text_scale_customer_site">กำหนดค่าโกดัง</string>
+    <string name="text_scale_customer_site_width">ความกว้างโกดัง(เมตร)</string>
+    <string name="text_scale_customer_site_long">ความยาวโกดัง(เมตร)</string>
+    <string name="text_scale_customer_site_save">บันทึก</string>
+    
+    <string name="text_alert_not_more_than_task_scheduled">คุณไม่สามารถเลื่อนงานเกินวันที่ %1$s</string>
+	<string name="text_error_required_field">กรุณกรอกข้อมูลให้ครบ</string>    
+	<string name="text_error_not_support_past">ไม่สามาถเลื่อนงานน้อยกว่าวันปัจจุบัน</string>
+	
+	<string name="text_context_menu_open_photo">เปิดรูป</string>
+	<string name="text_context_menu_delete_photo">ลบรูป</string>
+	
+	<string name="text_not_allow_postpone">(ไม่อนุญาติให้เลื่อนงานเนื่องจากมีทีมอื่นเข้าด้วย)</string>
+	
+	<string name="text_alert_confirm_finish_task">คุณต้องการสิ้นสุดการตรวจ?</string>
+	<string name="title_alert_confirm_finish_task">@string/label_simple_dlg_title_end_of_inspect</string>
+	
+	
+	<string name="expense_status_stored">เก็บไว้ในเครื่อง</string>
+	<string name="expense_status_approved">ถูกอนุมัติแล้ว</string>
+	<string name="expense_status_edited">ถูกแก้ไข</string>
+	<string name="expense_status_cancel">ยกเลิก</string>
+	
+	<string name="team_check_alert_message_no_photo">กรุณาถ่ายรูป</string>
+	<string name="team_check_alert_message_no_miles">กรุณากรอกเลขไมล์</string>
+	<string name="team_check_alert_message_no_car_license">กรุณากรอกทะเบียนรถ</string>
+	
+	<!-- 
+	รายการสินค้า : (ชนิด ชื่อ ...)
+	ปริมาตร : ก x ย x ส
+	มูลค่า : xxxx
+	 -->
+	<string name="text_html_inspect_preview_product_name">รายการสินค้า : </string>
+	<string name="text_html_inspect_preview_size">ปริมาตร : </string>
+	<string name="text_html_inspect_preview_value">มูลค่า : </string>
+	<string name="text_html_inspect_preview_miss_capacity">ขาด : </string>
+	<string name="text_html_inspect_preview_over_capacity">เกิน : </string>
+	<string name="text_html_inspect_preview_conjunction">ของ</string>
+	
+	<string-array name="array_angle_details">
+	    <item></item>
+	    <item>ภาพถ่ายด้านบน</item>
+	    <item>ภาพถ่ายด้านล่าง</item>
+	    <item>ภาพถ่ายด้านซ้าย</item>
+	    <item>ภาพถ่ายด้านขวา</item>
+	</string-array>
+	
+	<string name="default_result_status">รอตรวจสอบ</string>
+	
+	<string name="report_title">รายงาน</string>
+	<string-array name="report_list">
+		<item>รายงานการทำงานประจำวัน</item>	    
+		<item>รายงานข้อมูลและค่าใช้จ่ายการปฎิบัติงาน</item>
+		<item>รายงานจำนวนวันที่เบิกค่าเบี้ยเลี้ยง</item>
+	</string-array>
+	
+	<string name="text_warning_title">ระวัง</string>
+	<string name="text_error_title">ข้อผิดพลาด</string>
+	<string name="text_warning_not_login_team_of_day">คุณยังไม่ได้เช็คอินทีมสำหรับเริ่มวันใหม่</string>
+	<string name="text_warning_not_allow_split">คุณไม่สามารถแยกงานได้ในกรณีมีเพียง 1 สถานที่</string>
+	<string name="text_error_duplicate_must_from_original">คุณไม่สามารถแยกงาน จากงานที่ถูกแยก</string>
+	<string name="text_error_duplicate_exceed">คุณไม่สามารถแยกงาน เนื่องจากแยกครบแล้ว</string>
+	<string name="text_error_duplicate_same_location">คุณไม่สามารถเลือกสถานที่ต้นทางกับปลายเหมือนกันได้</string>
+	
+	<string name="text_login_type_1_desc">เข้างานของวัน</string>
+	<string name="text_login_type_2_desc">เข้าตรวจงาน</string>
+	<string name="text_login_type_3_desc">เข้าตรวจงานของสถานที่</string>
+	
+	<string name="text_alert_gps_not_open">GPS ของคุณยังไม่ได้เปิดใช้งาน</string>
+	<string name="text_btn_gps_setting">เปิดใช้งาน GPS</string>
+	
+	<string name="text_error_side_of_object">กว้าง หรือ ยาว ห้ามเป็น 0</string>
+	<string name="text_title_logout">ออกจากระบบ</string>
+	<string name="text_message_logout">คุณต้องการออกจากระบบหรือไม่?</string>
+	<string name="text_logout_ok">ออกจากระบบ</string>
+	<string name="text_logout_cancel">ยกเลิก</string>
+	
+	<string-array name="server_name_array">
+		<item>TEST</item>
+		<item>UAT</item>	    
+		<item>PROD</item>
+		<item>LAY_TEST</item>
+	</string-array>
+	
+	<string name="report_inspection_report_title">รายงานผลการตรวจ</string>
+	<string name="report_inspection_job_detail_title">รายละเอียดงาน</string>
+	<string name="report_inspection_customer_detail_title">รายละเอียดลูกค้า</string>
+	<string name="report_inspection_product_details">รายละเอียดสินค้า</string>
+	<string name="report_inspection_comments">ความคิดเห็นและข้อสังเกตุ</string>
+	<string name="report_inspection_products_photos">รูปถ่ายสินค้า</string>
+	<string name="report_inspection_general_photos">รูปถ่ายทั่วไป</string>
+	<string name="report_inspection_layout_details">แผนผัง</string>
+	<string name="report_inspection_baths_unit">บาท</string>
+	<string name="report_camera_no">มุมกล้องที่ %1$s</string>
+	<string name="report_inspection_product_details_product_name">รายการสินค้า</string>
+	<string name="report_inspection_product_details_capacity">ปริมาณ</string>
+	<string name="report_inspection_product_details_product_total">มูลค่า</string>
+	<string name="report_inspection_product_in_controlled">สินค้าในควบคุม</string>
+	<string name="report_inspection_product_not_controlled">สินค้านอกควบคุม</string>
+	<string name="report_inspection_product_summary_total">มูลค่ารวม</string>
+	
+	<string name="text_post_pone_force_time">คุณไม่สามารถเลื่อนวันได้</string>
+	<string name="text_post_pone_not_force_time">คุณไม่สามารถเลื่อนวันเกินกำหนด</string>
+	
+	<string name="text_error_godown_maximum">คุณไม่สามารถกรอกเกินค่าโกดังได้</string>
+	<string name="text_error_godown_remain_capacity">ปริมาตรที่ยังสามารถใส่ได้ </string>
+	<string name="text_error_not_add_photo">คุณจำเป็นต้องถ่ายรูปก่อน</string>
+	
+	<string name="photo_entry_default">ภาพประกอบทั่วไป</string>
+	
+	<string name="text_report_filter_dlg_date">ประจำวันที่</string>
+	<string name="text_report_filter_dlg_team_name">ทีมตรวจ</string>
+	<string name="text_report_filter_dlg_inspect_type">ประเภทการตรวจ</string>
+	<string name="text_report_filter_dlg_report_type">เลือกแบบ</string>
+	
+	<string name="text_report_filter_dlg_report_btn_ok">ออกรายงาน</string>
+	
+	<string name="text_report_regular_day_start_date">ตั้งแต่วันที่ : </string>
+	<string name="text_report_regular_day_end_date">ถึงวันที่ : </string>
+	<string name="text_report_regular_day_page_no">หน้าที่ : </string>
+	<string name="text_report_regular_day_team_name">ทีมตรวจ : </string>
+	<string name="text_report_regular_day_inspect_type_name">ประเภทการตรวจ : </string>
+	
+	<string name="text_report_regular_day_col_team">ทีมตรวจ</string>
+	<string name="text_report_regular_day_col_inspect_date">วันที่ตรวจ</string>
+	<string name="text_report_regular_day_col_team_member_1">เจ้าหน้าที่ตรวจ 1</string>
+	<string name="text_report_regular_day_col_team_member_2">เจ้าหน้าที่ตรวจ 2</string>
+	<string name="text_report_regular_day_col_team_member_3">เจ้าหน้าที่ครวจ 3</string>
+	<string name="text_report_regular_day_col_distance">ระยะทาง</string>
+	<string name="text_report_regular_day_col_used_distance">ระยะทางที่ใช้</string>
+	<string name="text_report_regular_day_col_customer_name">ชื่อลูกค้า</string>
+	<string name="text_report_regular_day_col_task_code">เลขที่งาน</string>
+	<string name="text_report_regular_day_col_customer_survey_sites">สถานที่เก็บสินค้า</string>
+	<string name="text_report_regular_day_col_task_end_time">เวลาสิ้นสุด</string>
+	<string name="text_report_regular_day_col_period">ระยะเวลา</string>
+	<string name="text_report_regular_day_col_inspect_type">ประเภทการตรวจ</string>					
+	
+	<string name="text_report_regular_day_col_start">เริ่มต้น</string>
+	<string name="text_report_regular_day_col_end">สิ้นสุด</string>
+	
+	<string name="text_report_expense_col_inspect_date">วันที่ตรวจ</string>
+	<string name="text_report_expense_col_inspect_time">เวลา</string>
+	<string name="text_report_expense_col_oil">น้ำมัน</string>
+	<string name="text_report_expense_col_ngv">NGV</string>
+	<string name="text_report_expense_col_internet_and_print">Internet/พิพม์งาน</string>
+	<string name="text_report_expense_col_hi_way">ค่าทางด่วน</string>
+	<string name="text_report_expense_col_post_office">ค่าไปรษณีย์</string>
+	<string name="text_report_expense_col_bus">ค่ารถโดยสาร</string>
+	<string name="text_report_expense_col_home_stay">ค่าที่พัก</string>
+	<string name="text_report_expense_col_other">อื่นๆ</string>
+	<string name="text_report_expense_col_study">อบรม</string>
+	<string name="text_report_expense_col_meeting">ประชุม/ย้ายสาย</string>
+	<string name="text_report_expense_col_hotel">โรงแรม</string>
+	<string name="text_report_expense_col_total">รวมเป็นเงินทั้งสิ้น</string>
+	<string name="text_report_expense_col_feet">Feet</string>
+	<string name="text_report_expense_col_cash">เงินสด</string>
+	<string name="text_report_expense_col_liter">ลิตร</string>
+	
+	<string name="text_report_expense_col_unit">กก.</string>
+	
+	<string name="text_error_expense_required_field">กรอกค่าไม่สมบรูณ์</string>
+
+	<string name="text_report_allowance_amount">จำนวน</string>	
+	<string name="text_report_allowance_items">ราย</string>
+	<string name="text_report_allowance_jobs">งาน</string>
+			
+	<string name="text_sync_dialog_offline">Offline mode (ทำการบันทึกไฟล์ลงเครื่องเท่านั้น)</string>
+	
+	<string name="text_error_confirm_job_previous_date">คุณยืนยันงานที่ผ่านมาแล้วไม่ได้</string>
+	
+	<string name="text_error_comments_not_complete_yet">คุณยังไม่ได้มีการกรอกคำถาม 13ข้อ</string>
+	<string name="text_error_report_not_generated_yet">คุณยังไม่ได้ทำการสร้างรายงานการตรวจ\r\n(อาจเป็นเพราะคุณมีการแก้ไขข้อมูลการตรวจ คุณจำเป็นต้องสร้างรายงานการตรวจอีกครั้ง)</string>
+	<string name="text_error_layout_not_saved_yet">คุณมีการแก้ไข Layout กรุณาทำการบันทึกก่อนทำรายการอื่น</string>
+	<string name="text_error_comment_no13_not_saved_yet">คุณอาจมีการแก้ไขคำถาม 13 ข้อ กรุณาทำการกรอก และ บันทึกก่อนทำงานอื่น</string>
+	<string name="text_error_comment_qc_no13_not_saved_yet">คุณอาจมีการแก้ไขคำถาม กรุณาทำการกรอก และ บันทึกก่อนทำงานอื่น</string>
+	
+	<string name="text_error_car_inspect_not_saved_yet">คุณมีการแก้ไขข้อมูลการตรวจรถยนต์ กรุณาทำการบันทึกก่อนทำรายการอื่น</string>
+	
+	<string name="text_extra_answer_simple_question">บันทึกเพิ่มเติม</string>
+	<string name="text_error_inspect_photo_entry_saved">ต้องกด add รายการของแต่ละรูปจึง save ผ่าน</string>
+	
+	<string name="text_prefix_location_inspect_summary_report">สถานที่:</string>
+	<string name="text_save_processing">กรุณารอซักครู่ , ระบบกำลังบันทึกข้อมูลทั้งหมด.</string>
+	<string name="text_warning_add_team_member">คุณไม่มีลูกทีมในการตรวจครั้งนี้จริงหรือไม่?</string>
+	<string name="text_error_add_team_member">คุณต้องเลือกผู้เข้าตรวจอย่างน้อย 1 คน</string>
+	<string name="text_btn_ok_warning_add_team_member">ยืนยัน</string>
+	<string name="text_btn_cancel_warning_add_team_member">ยกเลิก</string>
+	
+    <string name="text_warning_sync">คุณมีงานยังไม่สิ้นสุดการตรวจ ต้องการ Sync หรือไม่? \r\n(หากคุณ Sync ในขณะนี้ข้อมูลคุณอาจจะมีการเปลี่ยนแปลง)</string>
+    
+    
+    <string name="text_search">ค้นหา</string>
+    <string name="text_search_clear">ล้าง</string>
+    
+    <string name="text_title_dlg_car_location_stamp">เข้าตรวจสถานที่</string>
+    
+    
+    <string name="text_car_inspect_del_row_wrarning">คุณต้องการลบรายการนี้จริงหรือไม่?</string>
+    <string name="text_hit_location">เพิ่มสถานที่ใหม่ตรงนี้</string>
+    <string name="text_title_dlg_car_add_new_location">เพิ่มสถานที่</string>
+    <string name="text_error_required_field_new_location">กรุณากรอกสถานที่ใหม่</string>
+    <string name="text_error_required_field_new_mile_no">กรุณากรอกเลขไมล์</string>
+    <string name="text_error_required_field_new_time_stamp">กรุณากรอกเวลา</string>
+    
+    <string name="text_alert_error_delete_car_duplicated">คุณต้องการจะลบรายการตรวจรถยนต์นี้จริงหรือไม่ เนื่องจากเหลือเพียงหนึ่งรายการ</string>
+    
+    
+    <string name="text_btn_camera">ถ่ายภาพ</string>
+    
+    <string name="text_alert_not_logout">คุณไม่สามารถทำงานในวันใหม่ได้โดยไม่ทำการ "ออกงาน" </string>
+    <string name="text_menu_about">เกี่ยวกับ</string>
+    <string name="text_msg_about">คุณกำลังใช้งานโปรแกรมรุ่น : </string>
+    
+    <!-- unversal -->
+    <string name="universal_size">ขนาด : w:%1$s x h:%2$s = %3$s ตรม.</string>
+    <string name="universal_layout_name">Layout name : %1$s</string>
+    <string name="universal_note">- %1$s</string>
+    <string name="univeral_car_item">%1$s : %2$s คัน</string>
+    <string name="univeral_total_item">รวม : %1$s คัน</string>
+    
+    <string name="universal_error_has_refer">Object นี้มีการอ้างอิงแล้ว</string>
+    
+    <string name="title_list_obj_inspecting">เลือก Object ที่ซ้อนทับกัน</string>
+    
+    <string name="obj_intersecting_toast_dlg_popup">กรุณาเลือก Object ที่ต้องการ</string>
+    
+    
+    <string name="text_insert_error_msg">ไม่สามารถบันทึกข้อมูลได้</string>
+</resources>

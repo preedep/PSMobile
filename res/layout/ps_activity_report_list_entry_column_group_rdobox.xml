@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    <RadioGroup 
+        android:id="@+id/rdo_group_chk_car"
+	    android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        >
+			<RadioButton 
+		          android:id="@+id/chkbox_report_list_entry_column_chkbox_has"
+				  android:layout_width="wrap_content"
+				  android:layout_height="wrap_content"			    
+			    />        
+			<RadioButton 
+			    android:id="@+id/chkbox_report_list_entry_column_chkbox_no_has"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"			    			    
+			    />
+    </RadioGroup>
+</LinearLayout>

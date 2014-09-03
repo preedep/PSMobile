@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+   <TextView
+           android:id="@+id/tv_customer_detail_title"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="@string/text_titles_of_job_detail_detail"
+        />
+
+    <View style="@style/Divider"/>
+    
+  <TextView 
+          android:id="@+id/tv_job_detail_customer_name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textSize="25sp"
+          android:textStyle="bold"          
+        />
+    <TextView
+          android:id="@+id/tv_job_detail_customer_address"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+           
+        />
+    <TextView
+         android:id="@+id/tv_job_detail_customer_tels"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+	/>        
+	<TextView
+	     android:id="@+id/tv_job_detail_customer_inspect_type"
+	     android:layout_width="match_parent"
+         android:layout_height="wrap_content"	     
+	/>	    
+	
+</LinearLayout>

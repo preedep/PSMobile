@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     >
+     
+    <TextView 
+          android:id="@+id/tv_sortable_number"
+          android:layout_width="40dip"
+          android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:text="1"
+          android:textSize="20sp"
+          android:background="#c5c5c5"    
+          android:gravity="center"      
+        />
+	<TextView 
+	     android:id="@+id/tv_sortable_choice_name"
+	     android:layout_width="400dip"
+	     android:layout_height="wrap_content"
+	     android:layout_toRightOf="@id/tv_sortable_number"
+	     android:layout_marginLeft="10dp"
+	     android:text="test"
+	     android:layout_centerVertical="true"
+	     
+	    />
+	
+	<Button 
+	      android:id="@+id/btn_sortable_goto_more"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:text="more"
+	      android:layout_alignParentRight="true"
+	      android:layout_centerVertical="true"	
+	      android:visibility="gone"	            
+	    />
+</RelativeLayout>

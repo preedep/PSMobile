@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="#c5c5c5"
+    android:padding="10dp"
+    >
+    <RelativeLayout 
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:paddingLeft="2dp"
+         android:paddingRight="2dp"
+         android:background="#c5c5c5"
+        >
+        <TextView 
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="@string/text_tools_box"
+               android:layout_alignParentLeft="true"
+               android:layout_centerVertical="true"
+            />
+        <Button
+               android:id="@+id/btn_inspect_panel_close"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text=" X " 
+               android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
+   
+    <LinearLayout
+         android:id="@+id/rl_show_inspect_group_name"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:visibility="gone"
+		 android:orientation="vertical"          
+	>        
+    <RelativeLayout 
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:paddingLeft="10dp"
+        >
+        <ImageButton 
+		       android:id="@+id/btn_inspect_group_back"
+		       android:layout_width="wrap_content"
+		       android:layout_height="wrap_content"
+		       android:layout_alignParentLeft="true"
+		       android:background="@drawable/ic_navigation_previous"
+		    />     
+        <TextView 
+               android:id="@+id/tv_show_group_name"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_centerVertical="true"
+               android:layout_marginLeft="20dp"
+               android:layout_toRightOf="@id/btn_inspect_group_back"
+            />
+		   
+    </RelativeLayout>
+    <View style="@style/Divider"
+	    android:layout_marginTop="10dp"
+	    />
+     </LinearLayout>        
+   
+   <!--  
+    <ExpandableListView 
+        android:id="@+id/elv_inspect_item"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        >        
+    </ExpandableListView>
+    -->
+    
+    <ListView 
+          android:id="@+id/lv_inspect_group_menu"
+          android:layout_width="300dp"
+          android:layout_height="860dp"
+          android:background="#ffffff"
+          android:scrollingCache="true"
+        ></ListView>
+</LinearLayout>

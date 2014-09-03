@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+     >
+
+<TextView 
+       android:id="@+id/tv_report_list_customer_name"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="customer name"
+       android:textSize="20sp"
+       android:padding="10dp"
+    />
+
+<LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content" 
+       android:orientation="horizontal"
+       android:layout_gravity="center_vertical"
+       android:paddingLeft="10dp"
+    >
+    <TextView 
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/text_search"
+        />
+    <com.epro.psmobile.view.InspectReportListColumnSpinner
+          android:id="@+id/ls_car_inspect_col_filter"
+          android:layout_width="@dimen/search_column_width"
+          android:layout_height="@dimen/search_column_height"
+          android:layout_marginLeft="3dp"
+        />
+    
+    <EditText 
+          android:id="@+id/edt_car_inspect_search"
+          android:layout_width="@dimen/search_column_width"
+          android:layout_height="@dimen/search_column_height"
+          android:singleLine="true"
+          android:layout_marginLeft="3dp"
+        />
+    <LinearLayout 
+          android:id="@+id/object_search_container"
+          android:layout_width="@dimen/search_column_width"
+          android:layout_height="@dimen/search_column_height"
+          android:layout_marginLeft="3dp"
+          android:layout_gravity="center_vertical"   
+          android:orientation="horizontal"       
+          android:visibility="gone"
+        >
+        
+    </LinearLayout>
+    <Button
+          android:id="@+id/btn_car_inspect_search"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/text_search"		 		          
+          android:layout_marginLeft="3dp"
+        />
+    <Button
+         android:id="@+id/btn_car_inspect_clear"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+         android:text="@string/text_search_clear"
+         android:layout_marginLeft="3dp"
+         
+        />
+</LinearLayout>
+<HorizontalScrollView 
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_marginTop="10dp"
+    >
+    <LinearLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+    <LinearLayout 
+        android:id="@+id/list_view_header"
+        android:layout_width="wrap_content"
+    	android:layout_height="@dimen/car_row_height"
+        android:orientation="horizontal"
+        android:background="#cccccc"
+        
+        ></LinearLayout>
+	<ListView
+ 	   android:id="@+id/lv_report_list" 
+ 	   android:layout_width="wrap_content"
+ 	   android:layout_height="wrap_content"  
+ 	   android:descendantFocusability="beforeDescendants" 
+    ></ListView>
+    
+    </LinearLayout>
+</HorizontalScrollView>
+</LinearLayout>
+     

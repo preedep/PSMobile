@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+<!-- 
+<string name="label_time_attendance_team_detail">รายละเอียดทีม</string>
+    <string name="label_time_attendance_team_members">ลูกทีม</string>
+    <string name="label_time_attendance_team_photo">รูปถ่าย</string>
+    <string name="label_time_attendance_team_car_mile">เลขไมล์</string>
+    <string name="label_time_attendance_team_car_register_no">ทะเบียนรถ</string>
+ -->
+ <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_time_attendance_team_detail"
+     />
+ <View style="@style/Divider"
+	    />
+ <TextView
+        android:id="@+id/tv_team_zone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bangkok"
+        android:textSize="30sp"
+        android:textStyle="bold"
+     />
+ <TextView
+     	android:id="@+id/tv_team_address"
+     	android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:text="1234-123-12-11111"
+     />
+</LinearLayout>

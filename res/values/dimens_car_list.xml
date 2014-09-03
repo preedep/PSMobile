@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="search_column_width">200dp</dimen>
+    <dimen name="search_column_height">50dp</dimen>
+	<dimen name="car_row_height">50dp</dimen>    
+	
+    <dimen name="car_column_1">50dp</dimen>
+    <dimen name="car_column_2">200dp</dimen>
+    <dimen name="car_column_3">100dp</dimen>
+    <dimen name="car_column_4">100dp</dimen>
+    <dimen name="car_column_5">100dp</dimen>
+    <dimen name="car_column_6">50dp</dimen>
+    <dimen name="car_column_7">50dp</dimen>
+    <dimen name="car_column_8">120dp</dimen>
+    <dimen name="car_column_9">65dp</dimen>
+    <dimen name="car_column_10">65dp</dimen>
+    <dimen name="car_column_11">120dp</dimen>
+    <dimen name="car_column_12">50dp</dimen>
+    <dimen name="car_column_13">100dp</dimen>
+    <dimen name="car_column_14">80dp</dimen>
+    <dimen name="car_column_15">80dp</dimen>
+    <dimen name="car_column_16">70dp</dimen>
+    <dimen name="car_column_17">58dp</dimen>
+    
+    <!--  
+    <dimen name="car_column_16">200dp</dimen>
+    <dimen name="car_column_17">70dp</dimen>
+    <dimen name="car_column_18">150dp</dimen>
+    <dimen name="car_column_19">150dp</dimen>
+    -->
+</resources>

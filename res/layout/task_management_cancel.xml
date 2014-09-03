@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+  <include layout="@layout/job_item_view_status"    
+            />   
+
+   <TextView 
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text="@string/label_cancel_cause"
+         android:layout_marginTop="5dp"
+     />
+  <View style="@style/Divider"
+	    />
+ <com.epro.psmobile.view.ReasonSentenceSpinner 
+        android:id="@+id/sp_reason_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+     />
+ <EditText 
+         android:id="@+id/et_cancel_cause"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:singleLine="true"
+     />
+</LinearLayout>

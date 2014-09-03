@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+ 
+ <item android:id="@+id/menu_time_attendance_take_photo"
+          android:title="take_photo"
+          android:icon="@drawable/ic_device_access_camera"
+          android:showAsAction="ifRoom"
+ />
+ 
+ <item android:id="@+id/menu_time_attendance_add_new"
+          android:title="add_new"
+          android:icon="@drawable/ic_content_new"
+          android:showAsAction="ifRoom"/>
+ 
+ <item android:id="@+id/menu_time_attendance_save"
+          android:title="edit"
+          android:icon="@drawable/ic_content_save"
+          android:showAsAction="ifRoom"/>
+</menu>

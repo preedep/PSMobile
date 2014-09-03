@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:paddingRight="10dp"
+ >
+    
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_device_access_time"
+                />
+            <TextView 
+                 android:id="@+id/tv_device_access_time"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="06:00-10:00"
+                 android:layout_gravity="center_vertical"
+                />
+        </LinearLayout>
+
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_location_place"
+                />
+            <TextView 
+                 android:id="@+id/tv_distance_location_place"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="@string/wait_current_location"
+                 android:layout_gravity="center_vertical"
+                />
+        </LinearLayout>
+        
+        <LinearLayout 
+            android:id="@+id/btn_action_show_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_about"
+                         
+                />
+            <TextView 
+                 android:id="@+id/tv_action_about"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="@string/inspect_dont_have_remark"
+                 android:layout_gravity="center_vertical"
+                />
+        </LinearLayout>
+</LinearLayout>

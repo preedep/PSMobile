@@ -1,0 +1,151 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    
+    
+  <style name="ActionBar" parent="@android:style/Widget.Holo.ActionBar" />
+
+    <style name="ActionBar.Light" parent="@style/ActionBar">
+        <item name="android:background">@color/actionbar_background_light</item>
+    </style>
+
+    <style name="ActionBar.Dark" parent="@style/ActionBar">
+        <item name="android:background">@color/actionbar_background_dark</item>
+    </style>
+
+    <style name="AppTheme.Light" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/ActionBar.Light</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="listDragShadowBackground">@android:color/background_light</item>
+        <item name="menuIconCamera">@drawable/ic_navigation_refresh</item>
+        <item name="menuIconToggle">@drawable/ic_device_access_accounts</item>
+        <item name="menuIconShare">@drawable/ic_menu_share_holo_light</item>
+    </style>
+
+    <style name="PSMobile.Light" parent="@style/Sherlock.__Theme.Light">
+        <item name="android:windowActionBarOverlay">true</item> 
+        <item name="menuIconNewContent">@drawable/ic_content_new</item>
+        <item name="menuIconViewAsList">@drawable/ic_collections_sort_by_size</item>
+        <item name="menuIconViewAsGrid">@drawable/ic_collections_view_as_grid</item>    
+        <item name="menuIconRefresh">@drawable/ic_navigation_refresh</item>
+        <item name="menuIconAccessAccount">@drawable/ic_device_access_accounts</item>
+        <item name="menuIconSocialCcBb">@drawable/ic_social_cc_bcc</item>
+        
+        <item name="menuIconCamera">@drawable/ic_navigation_refresh</item>        
+        <item name="menuIconToggle">@drawable/ic_device_access_accounts</item>        
+        <item name="menuIconShare">@drawable/ic_menu_share_holo_light</item>        
+    </style>
+    
+    <style name="AppTheme.Dark" parent="@android:style/Theme.Holo">
+        <item name="android:actionBarStyle">@style/ActionBar.Dark</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="listDragShadowBackground">@android:color/background_dark</item>
+        <item name="menuIconCamera">@drawable/ic_menu_camera_holo_dark</item>
+        <item name="menuIconToggle">@drawable/ic_menu_toggle_holo_dark</item>
+        <item name="menuIconShare">@drawable/ic_menu_share_holo_dark</item>
+    </style>
+
+    
+    <style name="ImageCornerButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    
+    <!-- Dialog team login  -->
+	<style name="dialog_team_login_dimens">
+	   <item name="android:layout_width">300dp</item>
+	   <item name="android:layout_height">350dp</item>
+	   <item name="android:background">#FFFFFF</item>
+	   <item name="android:paddingLeft">5dp</item>
+	   <item name="android:paddingRight">5dp</item>
+	   <item name="android:paddingTop">5dp</item>
+	</style>
+	<style name="dialog_team_login_text_title">
+	    <item name="android:textSize">15sp</item>
+	    <item name="android:textColor">#000000</item>
+	    <item name="android:layout_marginLeft">3dp</item>	    
+	</style>
+	<style name="dialog_team_login_current_time">
+	    <item name="android:textSize">13sp</item>
+	    <item name="android:textColor">#000000</item>
+	</style>
+	<style name="dialog_team_login_bg_current_time"
+	    >
+	    <item name="android:background">#FF00FF</item>
+	    <item name="android:layout_marginTop">5dp</item>
+	    <item name="android:paddingLeft">3dp</item>
+	    <item name="android:paddingTop">2dp</item>
+	    <item name="android:paddingBottom">2dp</item>
+	    <item name="android:paddingRight">20dp</item>
+	</style>
+	
+	<style name="text_label">
+	    <item name="android:background">@drawable/text_view_line_bottom</item>
+	    <item name="android:textSize">20sp</item>	    
+	</style>
+	<style name="edit_text">
+	    <item name="android:background">@drawable/edit_text_view_line_bottom</item>
+	    <item name="android:textSize">20sp</item>	
+	    <item name="android:singleLine">true</item>    
+	</style>
+	
+	<style name="text_label_company_name">
+		<item name="android:textSize">25sp</item>	    
+		<item name="android:textStyle">bold</item>
+	</style>
+	
+	<style name="text_label_job_detail">
+	    <item name="android:textSize">14sp</item>
+	</style>
+	
+	<style name="Divider">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">1dp</item>
+    <item name="android:background">?android:attr/listDivider</item>
+    </style>
+    
+	<style name="style_edit_inspect_entry_field">
+		<item name="android:layout_width">130dp</item>		
+		<item name="android:maxWidth">130dp</item>	    
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>        
+	</style>
+	
+	<style name="style_edit_inspect_entry_number_field" parent="style_edit_inspect_entry_field">
+	    <item name="android:inputType">numberDecimal</item>
+		<item name="android:digits">0123456789.</item>
+	</style>
+	
+	<style name="style_edit_simple_number_field">
+	    <item name="android:inputType">numberDecimal</item>
+		<item name="android:digits">0123456789.</item>	   	    
+	</style>
+	
+	<style name="style_report_list_entry_field">
+		<item name="android:layout_width">130dp</item>		
+		<item name="android:maxWidth">130dp</item>	    
+		<item name="android:layout_height">wrap_content</item>	    	    
+	</style>
+
+	<style name="style_draw_layout_container">
+	    <item name="android:layout_width">@dimen/draw_layout_width</item>
+    	<item name="android:layout_height">@dimen/draw_layout_deep</item>
+	</style>
+		    
+</resources>

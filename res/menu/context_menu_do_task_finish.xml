@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+   <item android:id="@+id/do_task_finish_start" android:title="@string/txt_context_menu_do_task_start" />
+   <item android:id="@+id/do_task_finish_report_inspect" android:title="@string/txt_context_menu_do_finish_task_report"/>
+    
+
+</menu>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+ 
+<item android:id="@+id/menu_switch_to_universal"
+          android:title="switch_input"
+          android:icon="@drawable/ic_layout"
+          android:showAsAction="ifRoom"
+ />
+  
+ <item android:id="@+id/menu_car_inspect_general_take_photo"
+          android:title="take_photo"
+          android:icon="@drawable/ic_device_access_camera"
+          android:showAsAction="ifRoom"
+ />    
+    
+<item android:id="@+id/menu_entry_add_new_row"
+          android:title="add_new"
+          android:icon="@drawable/ic_content_new"
+          android:showAsAction="ifRoom"/>
+    
+    
+<item android:id="@+id/menu_entry_full_screen"
+          android:title="full screen"
+          android:icon="@drawable/ic_av_full_screen"
+          android:showAsAction="ifRoom"/>
+    
+<item android:id="@+id/menu_entry_save"
+          android:title="save"
+          android:icon="@drawable/ic_content_save"
+          android:showAsAction="ifRoom"/>
+    
+</menu>

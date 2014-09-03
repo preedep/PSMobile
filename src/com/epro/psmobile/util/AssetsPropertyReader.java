@@ -1,0 +1,34 @@
+package com.epro.psmobile.util;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.util.Log;
+
+public class AssetsPropertyReader {
+	public static Properties getProperties(Context context,String FileName) throws IOException {
+
+			  Properties properties = null;
+			  properties = new Properties();
+               /**
+                * getAssets() Return an AssetManager instance for your
+                * application's package. AssetManager Provides access to an
+                * application's raw asset files;
+                */
+               AssetManager assetManager = context.getAssets();
+               /**
+                * Open an asset using ACCESS_STREAMING mode. This
+                */
+               InputStream inputStream = assetManager.open(FileName);
+               /**
+                * Loads properties from the specified InputStream,
+                */
+               properties.load(inputStream);
+
+        return properties;
+
+ }
+}

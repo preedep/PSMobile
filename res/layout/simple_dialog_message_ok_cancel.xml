@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout 
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:visibility="gone"
+        >
+        <ImageView 
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:src="@drawable/ic_psmobile"
+            />
+        <TextView 
+              android:id="@+id/tv_simple_msg_dialog_title_name"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="title_name"
+            />
+    </LinearLayout>
+
+    <include layout="@layout/green_line_date_time_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+        />
+    
+    <TextView 
+          android:id="@+id/tv_simple_dialog_message"
+          android:layout_width="match_parent"
+          android:layout_height="200dp"
+          android:text="abc-abc-abc"
+          android:gravity="left"
+        />
+    
+ <LinearLayout
+          android:id="@+id/ll_data_container"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:visibility="gone"
+          android:orientation="vertical"
+        >
+     <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/label_time_attendance_team_car_mile"
+      />
+  	<View style="@style/Divider"
+	    />
+  	<EditText
+         android:id="@+id/simple_dlg_et_team_car_mile"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:singleLine="true" 
+         style="@style/style_edit_simple_number_field"         
+      />
+	<TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/label_time_attendance_team_car_register_no"
+      />
+  <View style="@style/Divider"
+	    />
+  
+   <com.epro.psmobile.view.LicensePlateSpinner
+       	  android:id="@+id/sp_simple_dlg_license_late" 
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+       />  
+    </LinearLayout>
+    
+    <RelativeLayout 
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingLeft="10dp"
+          android:paddingRight="10dp"
+        >
+		<Button 
+		       android:id="@+id/btn_simple_dlg_ok"
+		       android:layout_width="wrap_content"
+		       android:layout_height="wrap_content"
+		       android:padding="10dp"
+		       android:layout_alignParentLeft="true"
+		    />        
+
+		<Button 
+		       android:id="@+id/btn_simple_dlg_cancel"
+		       android:layout_width="wrap_content"
+		       android:layout_height="wrap_content"
+		       android:padding="10dp"
+		       android:layout_alignParentRight="true"
+		    />		    
+    </RelativeLayout>
+</LinearLayout>

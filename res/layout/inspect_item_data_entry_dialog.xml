@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ android:scrollbars="vertical"
+>
+    
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:focusableInTouchMode="true"
+     >
+    <LinearLayout 
+          android:id="@+id/ll_layout_name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:visibility="gone"
+        >
+        <TextView 
+          android:id="@+id/tv_label_inspect_data_entry_object_name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/label_inspect_data_entry_obj_name"
+        />
+		<View style="@style/Divider"/>
+		<EditText 
+			android:id="@+id/et_inspect_entry_dlg_object_name"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+		/>	    	
+    </LinearLayout>
+    
+   <TextView 
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/label_inspect_data_entry_product_group"
+        />
+	<View style="@style/Divider"	    
+	    />
+    <com.epro.psmobile.view.ProductGroupSpinner
+            android:id="@+id/sp_inspect_data_entry_product_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        >        
+    </com.epro.psmobile.view.ProductGroupSpinner>
+    
+     <TextView 
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/label_inspect_data_entry_product"
+        />
+	<View style="@style/Divider"	    
+	    />
+     <com.epro.psmobile.view.ProductSpinner 
+          android:id="@+id/sp_inspect_data_entry_product"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+      />
+
+     <TextView 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/market_price_label"
+         />
+     <View style="@style/Divider"	    
+	    />
+     
+     <EditText 
+            android:id="@+id/et_market_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:inputType="numberDecimal"
+            android:digits="0123456789."
+	 />
+       <TextView 
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/label_inspect_data_entry_amount_unit"						  		          
+		/>
+		<View style="@style/Divider"/>
+		
+		<com.epro.psmobile.view.ProductUnitSpinner
+			             android:id="@+id/sp_inspect_data_entry_amount_unit"
+			             android:layout_width="match_parent"
+ 			             android:layout_height="wrap_content"
+			          />
+		
+		<TextView 
+		      android:layout_width="match_parent"
+		      android:layout_height="wrap_content"
+		      android:text="@string/label_inspect_data_entry_formula"
+		    />
+		<View style="@style/Divider"/>
+		<TextView
+		       android:id="@+id/tv_formula"
+		       android:layout_width="match_parent"
+		       android:layout_height="wrap_content"
+		       android:text="-" 
+		    />		
+		<TextView
+		       android:layout_width="match_parent"
+		       android:layout_height="wrap_content"
+		       android:text="@string/label_inspect_data_entry_group_size"
+		       android:layout_marginTop="2dp"
+		    />
+	   <View style="@style/Divider"/>
+	   	       <LinearLayout 
+	           	android:layout_width="match_parent"
+	           	android:layout_height="wrap_content"
+	            android:orientation="horizontal"	
+	           >
+				<TextView
+				      android:id="@+id/tv_label_inspect_data_entry_width"
+				      style="@style/style_edit_inspect_entry_field"
+				      android:text="@string/label_inspect_data_entry_width"
+				    />	           
+				<TextView
+				      android:id="@+id/tv_label_inspect_data_entry_long"
+				      style="@style/style_edit_inspect_entry_field"
+				      android:text="@string/label_inspect_data_entry_long"
+				    />	           
+				<TextView
+				      android:id="@+id/tv_label_inspect_data_entry_height"				    
+				      style="@style/style_edit_inspect_entry_field"
+				      android:text="@string/label_inspect_data_entry_heigh"
+				    />	           
+				<TextView
+				      style="@style/style_edit_inspect_entry_field"
+				      android:text="@string/label_inspect_data_entry_radius"
+				    />	           
+				<TextView 
+				      android:id="@+id/tv_label_inspect_data_entry_area"
+				      style="@style/style_edit_inspect_entry_field"
+				      android:text="@string/label_inspect_data_entry_area"
+				      android:visibility="gone"
+				    />
+	       </LinearLayout>
+	       <View style="@style/Divider"/>	       
+	   
+	   <LinearLayout
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:orientation="horizontal"
+	       >
+	       <EditText 
+	              android:id="@+id/et_inspect_entry_dlg_width"
+	              style="@style/style_edit_inspect_entry_number_field"
+	              android:imeOptions="actionNext"
+	           >
+	       </EditText>
+	       
+	       <EditText 
+	              android:id="@+id/et_inspect_entry_dlg_long"
+	              style="@style/style_edit_inspect_entry_number_field"
+		          android:imeOptions="actionNext"	              
+	           />
+	       <EditText 
+	           	  android:id="@+id/et_inspect_entry_dlg_heigh"
+	              style="@style/style_edit_inspect_entry_number_field"
+	              android:imeOptions="actionNext"	              
+	           />
+	       <EditText 
+	              android:id="@+id/et_inspect_entry_dlg_radius"
+	              style="@style/style_edit_inspect_entry_number_field"
+	              android:imeOptions="actionNext"
+	              
+	           />	
+	           <EditText 
+	              android:id="@+id/et_inspect_entry_dlg_area"
+	              style="@style/style_edit_inspect_entry_number_field"
+	              android:imeOptions="actionNext"
+	              android:visibility="gone"
+	              android:enabled="false"
+	           />       
+	       </LinearLayout>
+	       <LinearLayout 
+	           	android:layout_width="match_parent"
+	           	android:layout_height="wrap_content"
+	            android:orientation="horizontal"	
+	           >
+				<TextView
+				      style="@style/style_edit_inspect_entry_field"
+				      android:text="@string/label_inspect_data_entry_product_lost"
+				    />	           
+				<TextView
+				      style="@style/style_edit_inspect_entry_field"
+				      android:text="@string/label_inspect_data_entry_product_over"
+				    />	           
+				<TextView
+				      android:id="@+id/txt_edit_inspect_entry_field_density"
+				      style="@style/style_edit_inspect_entry_field"
+				      android:text="@string/label_inspect_data_entry_density" 
+				    />
+				<TextView
+				      android:id="@+id/txt_edit_inspect_entry_field_palate_amount"
+				      style="@style/style_edit_inspect_entry_field"
+				      android:text="@string/label_inspect_data_entry_palate_amount" 
+				      android:visibility="gone"
+				    />
+				<TextView
+				      style="@style/style_edit_inspect_entry_field"
+				      android:text="@string/label_inspect_data_entry_total_amount"
+				    />	           
+				<TextView
+				      style="@style/style_edit_inspect_entry_field"
+				      android:text="@string/label_inspect_data_entry_value"
+				    />	           
+	       </LinearLayout>
+	       <View style="@style/Divider"/>	       
+	       <LinearLayout
+	              android:layout_width="match_parent"
+	              android:layout_height="wrap_content"
+	              android:orientation="horizontal"
+	           >
+		       <EditText 
+		          android:id="@+id/et_inspect_entry_dlg_lost"
+	              style="@style/style_edit_inspect_entry_number_field"
+	              android:imeOptions="actionNext"	              
+	           />	       
+		       <EditText 
+		          android:id="@+id/et_inspect_entry_dlg_over"
+	              style="@style/style_edit_inspect_entry_number_field"
+	              android:imeOptions="actionNext"	              
+	           />	       
+	           <EditText
+	                  android:id="@+id/et_inspect_entry_dlg_density"
+	                  style="@style/style_edit_inspect_entry_number_field" 
+	                  android:imeOptions="actionNext"
+	               />
+	           <EditText
+	                  android:id="@+id/et_inspect_entry_dlg_palate_amount"
+	                  style="@style/style_edit_inspect_entry_number_field" 
+	                  android:imeOptions="actionNext"
+	                  android:visibility="gone"
+	            />
+		       <EditText 
+		          android:id="@+id/et_inspect_entry_dlg_total"
+	              style="@style/style_edit_inspect_entry_number_field"
+	              android:imeOptions="actionNext"	              
+	           />	       
+		       <EditText 
+		          android:id="@+id/et_inspect_entry_dlg_value"
+	              android:layout_width="220dp"
+	              android:layout_height="wrap_content"
+	              android:imeOptions="actionNext"
+	              android:singleLine="true"
+	           />	       		 
+	           <CheckBox
+	                  android:id="@+id/chk_product_controlled"
+	                  android:layout_width="wrap_content"
+	                  android:layout_height="wrap_content"
+	                  android:text="@string/label_inspect_data_entry_product_controlled" 
+	                  android:imeOptions="actionNext"
+	                  android:visibility="gone"
+	               />      		       	           	           
+	       </LinearLayout>
+	       
+	       <LinearLayout 
+	             android:id="@+id/ll_comment"
+	             android:layout_width="match_parent"
+	             android:layout_height="wrap_content"
+	             android:orientation="vertical"
+	             
+	           >
+	            <TextView 
+	              android:id="@+id/tv_label_inspect_data_entry_opinion"
+	              android:layout_width="match_parent"
+	              android:layout_height="wrap_content"
+	              android:text="@string/label_inspect_data_entry_comment"	              
+	           />
+	       	   <View style="@style/Divider"/>
+			   <EditText 
+			       android:id="@+id/et_inspect_entry_dlg_opinion"
+			       android:layout_width="match_parent"
+			       android:layout_height="wrap_content"
+			    />	    
+	       </LinearLayout>
+	       
+			<LinearLayout 
+			      android:layout_width="match_parent"
+			      android:layout_height="wrap_content"
+			      android:orientation="horizontal"
+			    >
+			     <Button
+			          android:id="@+id/btn_inspect_data_entry_dlg_save"
+					  android:layout_height="wrap_content"
+					  android:layout_weight=".5"
+					  android:layout_width="0dip"
+ 					  android:textSize="12sp" 
+ 					  android:text="@string/label_inspect_data_entry_btn_save"
+ 					  >
+ 					  </Button>
+			     <Button
+			          android:id="@+id/btn_inspect_data_entry_dlg_cancel"
+					  android:layout_height="wrap_content"
+					  android:layout_weight=".5"
+					  android:layout_width="0dip"
+ 					  android:textSize="12sp" 
+ 					  android:text="@string/label_inspect_data_entry_btn_cancel"
+ 					  />
+			</LinearLayout>
+</LinearLayout>
+
+</ScrollView>
+

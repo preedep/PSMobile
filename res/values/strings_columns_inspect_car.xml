@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array 
+           name="columns_car_inspect_summary_no"
+        >
+        <item>@string/col_order</item>
+        <item>@string/col_min</item>
+        <item>@string/col_model</item>
+        <item>@string/col_desc</item>
+        <item>@string/col_vin</item>
+        <item>@string/col_color</item>
+        <item>@string/col_engine</item>
+        <item>@string/col_get_item</item>
+        <item>@string/col_sold</item>
+        <item>@string/col_pay</item>
+        <item>@string/col_date</item>
+        <item>@string/col_device_connected</item>
+        <item>@string/col_has_doc</item>
+        <item>@string/col_reason</item>
+        <item>@string/col_miles</item>
+        <item>@string/col_remark</item>   
+        <item>@string/col_warehouse</item>
+        <item>@string/col_layout</item>
+        <item></item><!-- open context menu -->
+        <item></item><!-- camera -->
+    </string-array>
+    
+     <string-array 
+           name="columns_car_inspect_summary_no_multi_row"
+        >
+        <item>@string/col_order</item>
+        <item>@string/col_mid_vin</item>
+        <item>@string/col_desc_model</item>
+        <item>@string/col_engine_color</item>
+        <item>@string/col_get_item</item>
+        <item>@string/col_sold</item>
+        <item>@string/col_pay</item>
+        <item>@string/col_date</item>
+        <item>@string/col_device_connected</item>
+        <item>@string/col_has_doc</item>
+        <item>@string/col_reason</item>
+        <item>@string/col_miles</item>
+        <item>@string/col_remark</item>   
+        <item>@string/col_warehouse</item>
+        <item>@string/col_layout</item>
+        <item></item><!-- open context menu -->
+        <item></item><!-- camera -->
+    </string-array>
+    
+    <string name="col_mid_vin">Mid\r\nVin</string>
+    <string name="col_desc_model">Description\r\nModel</string>
+    <string name="col_engine_color">Engine\r\nColor</string>
+    <string name="col_order">ลำดับ</string>
+    <string name="col_min">Mid</string>
+    <string name="col_model">Model</string>
+    <string name="col_desc">Description</string>
+    <string name="col_vin">Vin</string>
+    <string name="col_color">Color</string>
+    <string name="col_engine">Engine</string>
+    <string name="col_get_item">พบ/ไม่พบ</string>
+    <string name="col_sold">Sold</string>
+    <string name="col_pay">Pay</string>
+    <string name="col_date">วันที่ Sold/Pay</string>
+    <string name="col_device_connected">ติด อุปกรณ์</string>
+    <string name="col_has_doc">มี เอกสาร</string>
+    <string name="col_reason">สาเหตุที่ไม่พบ</string>
+    <string name="col_miles">เลขไมล์</string>
+    <string name="col_remark">หมายเหตุ</string>
+    <string name="col_warehouse">Warehouse</string>
+    <string name="col_layout">Layout</string>
+</resources>

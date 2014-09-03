@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_car_inspect_report_title">รายงานผลการตรวจสอบรถยนต์</string>
+    <string name="text_car_inspect_report_date">วันที่ : %1$s</string>
+    <string name="text_car_inspect_report_dealer_name">ชื่อผู้แทนจำหน่าย : %1$s</string>
+    <string name="text_car_inspect_report_task_code">รหัสงาน : %1$s</string>
+    <string name="text_car_inspect_report_dealer_code">รหัสผู้แทนจำหน่าย : %1$s</string>
+    <string name="text_car_inspect_report_summary_title">รถยนต์ที่ตรวจสอบ</string>
+    
+    <string name="text_car_inspect_report_summary_total">ทั้งหมด : %1$s คัน</string>
+    <string name="text_car_inspect_report_summary_found">พบ : %1$s คัน</string>
+    <string name="text_car_inspect_report_summary_sold">ขาย : %1$s คัน</string>
+    <string name="text_car_inspect_report_summary_equip">ติดอุปกรณ์ : %1$s คัน</string>
+    <string name="text_car_inspect_report_summary_test_drive">ทดลองขับ : %1$s คัน</string>
+    <string name="text_car_inspect_report_summary_show_outside">นำไปโชว์นอกสถานที่ : %1$s คัน</string>
+    <string name="text_car_inspect_report_summary_no_car">ไม่พบรถยนต์ : %1$s คัน</string>
+    <string name="text_car_inspect_report_summary_transfered">โอนระหว่างผู้แทนจำหน่าย : %1$s คัน</string>
+    <string name="text_car_inspect_report_summary_other">อื่นๆ : %1$s คัน</string>
+    <string name="text_car_inspect_report_summary_amount"> : %1$s คัน</string>
+    <string name="text_car_inspect_report_summary_has_doc">มี</string>
+    <string name="text_car_inspect_report_summary_no_has_doc">ไม่มี</string>
+    
+   <string name="text_car_inspect_report_free"></string>
+   <string name="text_car_inspect_report_summary_dealer_name">ผู้แทนจำหน่ายหรือผูรับมอบอำนาจ</string>
+   <string name="text_car_inspect_report_summary_inspector_name">ผู้ตรวจสอบ</string>
+   <string name="text_car_inspect_report_summary_sign_holder">ลงชื่อ (......................................)</string>
+   <string-array name="text_car_inspect_report_cols_headers">
+       <item>ลำดับที่</item>
+       <item>หมายเลขตัวรถ</item>
+       <item>แบบการขาย</item>
+       <item>วันที่ส่งมอบ</item>
+       <item>กำหนดชำระ</item>
+       <item>เอกสาร</item>
+       <item>เหตุที่ไม่พบ</item>
+   </string-array>
+   <string-array name="text_car_inspect_report_summary_cols_headers">
+       <item>สถานที่เก็บรถยนต์</item>
+       <item>เวลา</item>
+       <item>จำนวน</item>
+   </string-array>
+   
+   
+      <string name="text_context_menu_car_inspect_add_new_location">เพิ่มสถานที่</string>
+            <string name="text_context_menu_car_inspect_edit_location">แก้ไขสถานที่</string>
+      
+    <string name="text_context_menu_car_inspect_del_row">ลบรายการ</string>
+    <string name="text_context_menu_car_inspect_reset_error_row">ยกเลิกข้อมูลผิดพลาด</string>
+    
+    <string name="text_title_edit_location">แก้ไขสถานที่</string>
+    
+    <string name="text_error_cannot_finish_vin_dup">คุณไม่สามารถทำรายการต่อไปของตรวจรถยนต์นี้ได้เนื่องจากยังมีรถที่มี vin ซ้ำกัน หรือ หากท่านแก้ไขแล้วกรุณากดบันทึกก่อนทำรายการต่อไป</string>
+ 
+</resources>

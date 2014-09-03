@@ -1,0 +1,14 @@
+eclipse.preferences.version=1
+encoding//assets/data_test.sql=UTF-8
+encoding//assets/data_test_v2.sql=UTF-8
+encoding//assets/expense.sql=UTF-8
+encoding//assets/tables.sql=UTF-8
+encoding//src/com/epro/psmobile/adapter/CarReportListEntryAdapter.java=UTF-8
+encoding//src/com/epro/psmobile/adapter/UniversalListEntryAdapter.java=UTF-8
+encoding//src/com/epro/psmobile/data/upload/CheckListFormDetail.java=UTF-8
+encoding//src/com/epro/psmobile/data/upload/LoginHistory.java=UTF-8
+encoding//src/com/epro/psmobile/fragment/InspectSummaryReportFragment.java=UTF-8
+encoding//src/com/epro/psmobile/fragment/TaskListFragment.java=UTF-8
+encoding//src/com/epro/psmobile/sync/DataUploadGenerator.java=UTF-8
+encoding//src/com/epro/psmobile/util/HTMLReportPreviewUtil.java=UTF-8
+encoding//src/com/epro/psmobile/util/MathEval.java=UTF-8
