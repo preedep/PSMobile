@@ -1037,7 +1037,7 @@ public class PSBODataAdapter {
 	        String sql = "select * from JobRequestProduct where " +
 	        		   " jobRequestID="+jobRequestID + " and customerSurveySiteID="+customerSurveySiteID+" " +
 	        		   " order by productRowId";
-	        sql += " limit "+maxRowPerPage+" , "+rowOffset;
+	        sql += " limit "+maxRowPerPage+" offset "+rowOffset;
 	        
 	        return query(sql,JobRequestProduct.class);
 	}

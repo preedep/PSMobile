@@ -9,6 +9,7 @@ import com.epro.psmobile.InspectPhotoEntryActivity;
 import com.epro.psmobile.R;
 import com.epro.psmobile.adapter.UniversalListEntryAdapter;
 import com.epro.psmobile.adapter.UniversalListEntryAdapter.OnColumnInputChangeListener;
+import com.epro.psmobile.adapter.UniversalListPageFragmentAdapter;
 import com.epro.psmobile.adapter.callback.OnTakeCameraListener;
 import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.CustomerSurveySite;
@@ -18,14 +19,18 @@ import com.epro.psmobile.data.JobRequest;
 import com.epro.psmobile.data.JobRequestProduct;
 import com.epro.psmobile.data.Task;
 import com.epro.psmobile.fragment.ContentViewBaseFragment.InspectOptMenuType;
+import com.epro.psmobile.fragment.UniversalInspectListFragmentItem.OnDataReloadCompleted;
 import com.epro.psmobile.key.params.InstanceStateKey;
 import com.epro.psmobile.util.ActivityUtil;
 import com.epro.psmobile.util.MessageBox;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +40,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class UniversalInspectListFragment extends InspectReportListFragment implements OnTakeCameraListener<JobRequestProduct> {
+@SuppressLint("CutPasteId")
+public class UniversalInspectListFragment extends InspectReportListFragment implements OnTakeCameraListener<JobRequestProduct>, OnClickListener {
 
    //private View currentView;
    //private JobRequest jobRequest;
@@ -60,6 +66,7 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
     **/
    @SuppressWarnings("unused")
    private JobRequestProduct currentJobRequestProduct;
+   private int pages;
    
    public UniversalInspectListFragment() {
       // TODO Auto-generated constructor stub
@@ -87,77 +94,273 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
     */
    protected void initial(final View v)
    {
-      
-      TextView tvCustomerName = (TextView)currentView.findViewById(R.id.tv_universal_customer_name);
-      tvCustomerName.setText(InspectReportListFragment.customerSurveySite.getCustomerName()+"\r\n" +
-      		""+customerSurveySite.getSiteAddress());
-      
-      ListView ls = (ListView)v.findViewById(R.id.universal_lv_report);
-      //ls.setAnimationCacheEnabled(false);
-      //ls.setScrollingCacheEnabled(false);
-      
-
-      //super.doPopupCheckIn();
-      
-      PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
-      try{
-         InspectJobMapper jobMapper = 
-               dataAdapter.getInspectJobMapper(jobRequest.getJobRequestID(), currentTask.getTaskCode());
-         
-         if (jobMapper != null)
-         {
-            if (!jobMapper.isAudit()){
-               final Button btnAddNoAudit = (Button)v.findViewById(R.id.btn_add_no_audit);
-               btnAddNoAudit.setVisibility(View.VISIBLE);
-               btnAddNoAudit.setOnClickListener(new OnClickListener(){
-
-                  @Override
-                  public void onClick(View vClick) {
-                     // TODO Auto-generated method stub
-                     ListView ls = (ListView)v.findViewById(R.id.universal_lv_report);
-                     //ls.setChildrenDrawingCacheEnabled(false);
-                     //ls.setChildrenDrawnWithCacheEnabled(false);
-                     if (ls.getAdapter() instanceof UniversalListEntryAdapter){
-                        btnAddNoAudit.setEnabled(false);
-                        ((UniversalListEntryAdapter)(ls.getAdapter())).addNewRowNoAudit();
-                     }
-                  }
-                  
-               });
-            }
-            ArrayList<InspectFormView>  formViewList = 
-                  dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
-            if (formViewList != null){
-               setupHeader(v,formViewList);  
-            }
-
+         final PSBODataAdapter dataAdapter = 
+               PSBODataAdapter.getDataAdapter(getSherlockActivity());
             
-            /*
-             * 
-             */
-            int rowCount = dataAdapter.getRowCountOfJobRequestProduct(jobRequest.getJobRequestID(), customerSurveySite.getCustomerSurveySiteID());
-            int pages = rowCount % InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
-            if (pages == 0){
-               pages = rowCount / InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
-            }else
-            {
-               pages = ((rowCount - pages)/InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE) + 1;
-            }
-            /*
-             * Create Fragment page controller
-             */
-            
-            jobRequestProducts = dataAdapter.findJobRequestProductsByJobRequestIDWithSiteID(jobRequest.getJobRequestID(),
-                  customerSurveySite.getCustomerSurveySiteID(),
-                  InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE,
-                  0);
-            
-            setupList(v,formViewList,jobRequestProducts,jobMapper.isAudit());
+      
+         TextView tvCustomerName = (TextView)currentView.findViewById(R.id.tv_universal_customer_name);
+         if (tvCustomerName != null){
+                  tvCustomerName.setText(InspectReportListFragment.customerSurveySite.getCustomerName()+"\r\n" +
+               ""+customerSurveySite.getSiteAddress());
          }
-      }catch(Exception ex){
-         MessageBox.showMessage(getSherlockActivity(), 
-               R.string.message_box_title_error, ex.getMessage());
-      }
+         //ListView ls = (ListView)v.findViewById(R.id.universal_lv_report);
+         //ls.setAnimationCacheEnabled(false);
+         //ls.setScrollingCacheEnabled(false);
+         
+
+         //super.doPopupCheckIn();
+         
+         try{
+            InspectJobMapper jobMapper = 
+                  dataAdapter.getInspectJobMapper(jobRequest.getJobRequestID(), currentTask.getTaskCode());
+            
+            if (jobMapper != null)
+            {
+               if (!jobMapper.isAudit()){
+                  final Button btnAddNoAudit = (Button)v.findViewById(R.id.btn_add_no_audit);
+                  btnAddNoAudit.setVisibility(View.VISIBLE);
+                  btnAddNoAudit.setOnClickListener(new OnClickListener(){
+
+                     @Override
+                     public void onClick(View vClick) {
+                        // TODO Auto-generated method stub
+                       final ViewPager viewPager = (ViewPager)v.findViewById(R.id.universal_pager);
+                        int currentViewIdx = viewPager.getCurrentItem();  
+                        boolean addToNewPage = false;
+                        int rowCount = 0;
+                        try {
+                            rowCount = dataAdapter.getRowCountOfJobRequestProduct(jobRequest.getJobRequestID(),
+                                 customerSurveySite.getCustomerSurveySiteID())+1;
+                           
+                           int tmp_pages = rowCount % InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
+                           if (tmp_pages == 0){
+                              tmp_pages = rowCount / InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
+                           }else
+                           {
+                              tmp_pages = ((rowCount - tmp_pages)/InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE) + 1;
+                           }
+                           
+                           if (tmp_pages > pages){
+                              pages = tmp_pages;
+                              addToNewPage = true;
+                           }
+                           
+                        }
+                        catch (Exception e) {
+                           // TODO Auto-generated catch block
+                           e.printStackTrace();
+                        }
+                        
+                        if (!addToNewPage){
+                           if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
+                              UniversalListPageFragmentAdapter adapter =
+                                    (UniversalListPageFragmentAdapter)viewPager.getAdapter();
+                              Fragment f = adapter.getItem(currentViewIdx);
+                              if ( f instanceof UniversalInspectListFragmentItem){
+                                 UniversalInspectListFragmentItem universal_f = (UniversalInspectListFragmentItem)f;
+                                 btnAddNoAudit.setEnabled(false);
+                                 
+                                 View vgNavigator = v.findViewById(R.id.ll_page_navigator);
+                                 vgNavigator.setVisibility(View.GONE);
+                                 if (pages > 1){
+                                    vgNavigator.setVisibility(View.VISIBLE);
+                                    Button btnNext = (Button)vgNavigator.findViewById(R.id.btn_nav_next);
+                                    Button btnPrev = (Button)vgNavigator.findViewById(R.id.btn_nav_back);
+                                    btnNext.setEnabled(false);
+                                    btnPrev.setEnabled(false);
+                                 }
+                                 viewPager.setCurrentItem(adapter.getCount()-1);
+                                 
+                                 
+                                 int lastRowProductId = 0;
+                                 if (universal_f.getAllJobRequestProduct() != null){
+                                    lastRowProductId = 
+                                          universal_f.getAllJobRequestProduct().get(universal_f.getAllJobRequestProduct().size()-1).getProductRowID();
+                                 }
+                                 universal_f.addNewRowNoAudit(lastRowProductId);
+                              }
+                           }                           
+                        }else{
+                           if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
+                              
+                              btnAddNoAudit.setEnabled(false);
+                              
+                              View vgNavigator = v.findViewById(R.id.ll_page_navigator);
+                              vgNavigator.setVisibility(View.GONE);
+                              if (pages > 1){
+                                 vgNavigator.setVisibility(View.VISIBLE);
+                                 Button btnNext = (Button)vgNavigator.findViewById(R.id.btn_nav_next);
+                                 Button btnPrev = (Button)vgNavigator.findViewById(R.id.btn_nav_back);
+                                 btnNext.setEnabled(false);
+                                 btnPrev.setEnabled(false);
+                              }
+                              
+                              final UniversalListPageFragmentAdapter adapter =
+                                    (UniversalListPageFragmentAdapter)viewPager.getAdapter();
+                              UniversalInspectListFragmentItem f = 
+                                    (UniversalInspectListFragmentItem)InspectReportListFragment.newInstance(jobRequest, 
+                                          currentTask, 
+                                          customerSurveySite,
+                                          (rowCount - 1) * (InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE), true);
+                              
+                              f.setDataReloadCompleted(new OnDataReloadCompleted(){
+
+                                 @Override
+                                 public void onReloadComplete() {
+                                    // TODO Auto-generated method stub
+                                    Button btnAddNoAudit = (Button)v.findViewById(R.id.btn_add_no_audit);
+                                    btnAddNoAudit.setEnabled(true);              
+                                    
+                                    View vgNavigator = v.findViewById(R.id.ll_page_navigator);
+                                    vgNavigator.setVisibility(View.GONE);
+                                    if (pages > 1){
+                                       vgNavigator.setVisibility(View.VISIBLE);
+                                       Button btnNext = (Button)vgNavigator.findViewById(R.id.btn_nav_next);
+                                       Button btnPrev = (Button)vgNavigator.findViewById(R.id.btn_nav_back);
+                                       btnNext.setEnabled(true);
+                                       btnPrev.setEnabled(true);
+                                       
+                                       
+                                       
+                                       String strTextCurrentPageNo = 
+                                             getString(R.string.text_current_page, adapter.getCount(),pages);
+                                       TextView tvCurrentPageNo = (TextView)currentView.findViewById(R.id.tv_current_page_no);
+                                       tvCurrentPageNo.setText(strTextCurrentPageNo);
+                                    
+                                       
+                                       
+                                    }
+                                    if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
+                                       UniversalListPageFragmentAdapter adapter =
+                                             (UniversalListPageFragmentAdapter)viewPager.getAdapter();
+                                       viewPager.setCurrentItem(adapter.getCount()-1);
+                                    }
+                                 }
+                                 
+                              });
+                              adapter.append(f);
+                              adapter.notifyDataSetChanged();
+                              viewPager.setCurrentItem(adapter.getCount()-1);
+                              int lastRowProductId = 0;
+                              
+                              try {
+                                 ArrayList<JobRequestProduct> jrpList = 
+                                       dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(),
+                                       customerSurveySite.getCustomerSurveySiteID());
+                                 if (jrpList != null){
+                                    lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
+                                 }
+                              }
+                              catch (Exception e) {
+                                 // TODO Auto-generated catch block
+                                 e.printStackTrace();
+                              }
+                              f.addNewRowNoAudit(lastRowProductId);
+                           }
+                        }
+                     }
+                     
+                  });
+               }
+               ArrayList<InspectFormView>  formViewList = 
+                     dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
+               if (formViewList != null){
+                  setupHeader(v,formViewList);  
+               }
+
+               
+               /*
+                * 
+                */
+               int rowCount = dataAdapter.getRowCountOfJobRequestProduct(jobRequest.getJobRequestID(), customerSurveySite.getCustomerSurveySiteID());
+               pages = rowCount % InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
+               if (pages == 0){
+                  pages = rowCount / InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
+               }else
+               {
+                  pages = ((rowCount - pages)/InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE) + 1;
+               }
+               /*
+                * Create Fragment page controller
+                */
+               /*
+               jobRequestProducts = dataAdapter.findJobRequestProductsByJobRequestIDWithSiteID(jobRequest.getJobRequestID(),
+                     customerSurveySite.getCustomerSurveySiteID(),
+                     InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE,
+                     0);
+               
+               setupList(v,formViewList,jobRequestProducts,jobMapper.isAudit());*/
+               
+               
+               
+               View vgNavigator = v.findViewById(R.id.ll_page_navigator);
+               vgNavigator.setVisibility(View.GONE);
+               if (pages > 1){
+                  vgNavigator.setVisibility(View.VISIBLE);
+                  Button btnNext = (Button)vgNavigator.findViewById(R.id.btn_nav_next);
+                  Button btnPrev = (Button)vgNavigator.findViewById(R.id.btn_nav_back);
+                  btnNext.setOnClickListener(this);
+                  btnPrev.setOnClickListener(this);
+               }
+               
+               
+               ////////////
+               final ViewPager viewPager = (ViewPager)v.findViewById(R.id.universal_pager);
+
+               String strTextCurrentPageNo = 
+                     this.getString(R.string.text_current_page, viewPager.getCurrentItem()+1,pages);
+               TextView tvCurrentPageNo = (TextView)currentView.findViewById(R.id.tv_current_page_no);
+               tvCurrentPageNo.setText(strTextCurrentPageNo);
+
+               
+               ArrayList<Fragment> fragments = 
+                     new ArrayList<Fragment>();
+               
+               for(int i = 0; i < pages ;i++){
+                  Fragment f = 
+                        InspectReportListFragment.newInstance(jobRequest, 
+                              currentTask, 
+                              customerSurveySite,
+                              i * (InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE), true);
+                  if (f instanceof UniversalInspectListFragmentItem){
+                     UniversalInspectListFragmentItem universal_f = (UniversalInspectListFragmentItem)f;
+                     universal_f.setDataReloadCompleted(new OnDataReloadCompleted(){
+
+                        @Override
+                        public void onReloadComplete() {
+                           // TODO Auto-generated method stub
+                           Button btnAddNoAudit = (Button)v.findViewById(R.id.btn_add_no_audit);
+                           btnAddNoAudit.setEnabled(true);              
+                           
+                           View vgNavigator = v.findViewById(R.id.ll_page_navigator);
+                           vgNavigator.setVisibility(View.GONE);
+                           if (pages > 1){
+                              vgNavigator.setVisibility(View.VISIBLE);
+                              Button btnNext = (Button)vgNavigator.findViewById(R.id.btn_nav_next);
+                              Button btnPrev = (Button)vgNavigator.findViewById(R.id.btn_nav_back);
+                              btnNext.setEnabled(true);
+                              btnPrev.setEnabled(true);
+                           }
+                           if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
+                              UniversalListPageFragmentAdapter adapter =
+                                    (UniversalListPageFragmentAdapter)viewPager.getAdapter();
+                              viewPager.setCurrentItem(adapter.getCount()-1);
+                           }
+                           
+                        }
+                     });
+
+                  }
+                  fragments.add(f);
+               }
+               UniversalListPageFragmentAdapter lpFragment = new UniversalListPageFragmentAdapter(
+                     this.getSherlockActivity().getSupportFragmentManager(),fragments);
+               viewPager.setAdapter(lpFragment);
+            }
+         }catch(Exception ex){
+            MessageBox.showMessage(getSherlockActivity(), 
+                  R.string.message_box_title_error, ex.getMessage());
+         }       
    }
    private void setupHeader(View vRoot,ArrayList<InspectFormView> inspectViewList){
       ViewGroup headerContainer = (ViewGroup)vRoot.findViewById(R.id.universal_col_container);
@@ -187,151 +390,39 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
          headerContainer.addView(v);
       }
    }
-   private void setupList(final View vRoot,ArrayList<InspectFormView> inspectViewList,
-         ArrayList<JobRequestProduct> jobRequestProductList,boolean isAudit){
-      final ListView ls = (ListView)vRoot.findViewById(R.id.universal_lv_report);
-      ls.setScrollingCacheEnabled(false);
-      ls.setCacheColorHint(Color.parseColor("#00000000"));
-      final UniversalListEntryAdapter adapter = 
-            new UniversalListEntryAdapter(getSherlockActivity(),
-                  jobRequest,
-                  currentTask,
-                  customerSurveySite,
-                  inspectViewList,jobRequestProductList,isAudit);
-      adapter.setOnTakeCameraListener(this);
-      adapter.setColumnInputChangeListener(new OnColumnInputChangeListener(){
+   
 
-         @Override
-         public void onColumnInputChanged(View target,int index) {
-            // TODO Auto-generated method stub
-            /*
-            ListView list = ls;
-            int start = list.getFirstVisiblePosition();
-            for(int i=start, j=list.getLastVisiblePosition();i<=j;i++)
-                if(target==list.getItemAtPosition(i))
-                {
-                    View view = list.getChildAt(i-start);
-                    list.getAdapter().getView(i, view, list);
-                    break;
-                }*/
-            
-         }
 
-         @Override
-         public void onRowSaved(JobRequestProduct jrp) {
-            // TODO Auto-generated method stub
-            try{
-               saveSingleRowData(jrp);
-            }catch(Exception ex)
-            {
-               ex.printStackTrace();
-            }finally{
-            }
-         }
-
-         @Override
-         public void onReload(int position) {
-            // TODO Auto-generated method stub
-            //ls.invalidateViews();
-            //if (position >= 0)
-            //   ls.getChildAt(position);
-            ((UniversalListEntryAdapter)ls.getAdapter()).notifyDataSetChanged();
-            
-            //View v = ls.getAdapter().getView(position, null, ls);
-            //onModified(v,position);
-            
-            Button btnAddNoAudit = (Button)vRoot.findViewById(R.id.btn_add_no_audit);
-            btnAddNoAudit.setEnabled(true);
-            
-         }
-
-         @Override
-         public void onModified(View target,int position) {
-            // TODO Auto-generated method stub
-          // ((UniversalListEntryAdapter)ls.getAdapter()).notifyDataSetChanged();
-            /*
-            if (position >= 0){
-               View v = ls.getChildAt(position);
-               if (v != null){
-                  v.requestLayout();
-               }
-            }
-            */
-            try{
-            ListView list = ls;
-            int start = list.getFirstVisiblePosition();
-            for(int i=start, j=list.getLastVisiblePosition();i<=j;i++)
-                if(target==list.getItemAtPosition(i))
-                {
-                    View view = list.getChildAt(i-start);
-                    list.getAdapter().getView(i, view, list);
-                    break;
-                }
-            }catch(Exception ex){
-               ex.printStackTrace();
-            }
-         }
-         
-      });
-      ls.setAdapter(adapter);
-   }
-
-   @Override
-   public void onTakeCamera(JobRequestProduct type) {
-      // TODO Auto-generated method stub
-      currentJobRequestProduct = type;
-      Bundle argument = new Bundle();
-      
-      argument.putString(InstanceStateKey.KEY_ARGUMENT_TASK_CODE, InspectReportListFragment.currentTask.getTaskCode());
-      argument.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL, InspectReportListFragment.jobRequest);
-      argument.putInt(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY_ID, InspectReportListFragment.customerSurveySite.getCustomerSurveySiteID());
-      argument.putInt(InstanceStateKey.KEY_ARGUMENT_INSPECT_DATA_ENTRY_PHOTOS_ID, type.getPhotoSetID());
-      argument.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST, type);
-      ActivityUtil.startNewActivityWithResult(getActivity(),
-            InspectPhotoEntryActivity.class, 
-            argument, 
-            InstanceStateKey.RESULT_INSPECT_PHOTO_ENTRY);
-   }
-
-   /* (non-Javadoc)
-    * @see android.support.v4.app.Fragment#startActivityForResult(android.content.Intent, int)
-    */
-   @Override
-   public void onActivityResult(int requestCode, int resultCode, Intent data){
-      // TODO Auto-generated method stub
-      super.onActivityResult(requestCode, resultCode, data);
-      final ListView ls = (ListView)currentView.findViewById(R.id.universal_lv_report);      
-      super.doActivityResultForTakePhoto(requestCode, 
-            resultCode, 
-            data, 
-            currentJobRequestProduct, ls,false);
-   }
-
-   private boolean saveSingleRowData(JobRequestProduct jrp){
-      boolean bRet = false;
-      PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
-      try {
-         dataAdapter.insertSingleRowUniversalJobRequestProduct(InspectReportListFragment.jobRequest.getJobRequestID(),
-                        InspectReportListFragment.customerSurveySite.getCustomerSurveySiteID(),
-                        jrp);
-         bRet = true;
-      }
-      catch (Exception e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      return bRet;
-   }
    @Override
    protected boolean saveAllData() {
       // TODO Auto-generated method stub
       boolean bRet = false;
-      ListView ls = (ListView)currentView.findViewById(R.id.universal_lv_report);   
-      if (ls.getAdapter() instanceof UniversalListEntryAdapter){
+      
+      ArrayList<JobRequestProduct> jobRequestProductList = 
+             new ArrayList<JobRequestProduct>();
+      
+      
+      ViewPager viewPager = (ViewPager)currentView.findViewById(R.id.universal_pager);
+      if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
+         UniversalListPageFragmentAdapter adapter =
+               (UniversalListPageFragmentAdapter)viewPager.getAdapter();
+         for(int i = 0; i < adapter.getCount();i++)
+         {
+            Fragment f = adapter.getItem(i);
+            if ( f instanceof UniversalInspectListFragmentItem){
+               UniversalInspectListFragmentItem universal_f = (UniversalInspectListFragmentItem)f;
+               if (universal_f.getAllJobRequestProduct() != null){
+                  jobRequestProductList.addAll(universal_f.getAllJobRequestProduct());
+               }
+            }            
+         }
+      }
+      
+     // if (ls.getAdapter() instanceof UniversalListEntryAdapter)
+      {
          PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
          
-         UniversalListEntryAdapter adapter = (UniversalListEntryAdapter)ls.getAdapter();
-         if (adapter.getAllJobRequestProducts() != null)
+         if (jobRequestProductList.size() > 0 )
          {
             /*insert all*/
             try {
@@ -340,7 +431,7 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                 */
                dataAdapter.insertUniversalJobRequestProduct(InspectReportListFragment.jobRequest.getJobRequestID(),
                      InspectReportListFragment.customerSurveySite.getCustomerSurveySiteID(),
-                     adapter.getAllJobRequestProducts());
+                     jobRequestProductList);
                bRet = true;
             }
             catch (Exception e) {
@@ -370,5 +461,38 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
       initialControls(currentView);
        */
       initial(currentView);
+   }
+
+   @Override
+   public void onTakeCamera(JobRequestProduct type) {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void onClick(View v) {
+      // TODO Auto-generated method stub
+      ViewPager viewPager = (ViewPager)currentView.findViewById(R.id.universal_pager);
+      int currentViewIdx = viewPager.getCurrentItem();  
+      
+      
+      String strTextCurrentPageNo = 
+            this.getString(R.string.text_current_page, currentViewIdx+1,pages);
+      TextView tvCurrentPageNo = (TextView)currentView.findViewById(R.id.tv_current_page_no);
+      tvCurrentPageNo.setText(strTextCurrentPageNo);
+      
+      int id = v.getId();
+      switch(id){
+         case R.id.btn_nav_next:{
+            if (currentViewIdx < pages){
+               viewPager.setCurrentItem(currentViewIdx + 1);
+            }
+         }break;
+         case R.id.btn_nav_back:{
+            if (currentViewIdx > 0){
+               viewPager.setCurrentItem(currentViewIdx - 1);               
+            }
+         }break;
+      }
    }
 }

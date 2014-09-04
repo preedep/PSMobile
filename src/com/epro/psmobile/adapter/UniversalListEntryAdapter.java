@@ -485,14 +485,18 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   for(View vEachCol : holder.viewRows){
                      InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
                      UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
+                     
+                     EachColViewHolder eachColViewHolder = new EachColViewHolder();
+                     eachColViewHolder.formView = viewForm;
+                     eachColViewHolder.jrp =jobRequestProductList.get(position);
+                     eachColViewHolder.position = position;
+                     eachColViewHolder.viewCol = vEachCol;                        
+                     eachColViewHolder.viewRow = viewRow;
+                     
                      if (ctrlType == UniversalControlType.MarketPrice){
-                        EachColViewHolder eachColViewHolder = new EachColViewHolder();
-                        eachColViewHolder.formView = viewForm;
-                        eachColViewHolder.jrp =jobRequestProductList.get(position);
-                        eachColViewHolder.position = position;
-                        eachColViewHolder.viewCol = vEachCol;
-                        
                         new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, eachColViewHolder);
+                     }else if (ctrlType == UniversalControlType.ProductUnit){
+                        new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, eachColViewHolder);                        
                      }
                   }
                }
@@ -1262,7 +1266,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       return this.jobRequestProductList;
    }
    
-   public void addNewRowNoAudit()
+   public void addNewRowNoAudit(int lastRowProductIdOfCurrentPage)
    {
       if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
          Log.d("DEBUG_D_CRF", "On double clicked.....");
@@ -1273,7 +1277,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       if (this.jobRequestProductList == null){
          this.jobRequestProductList = new ArrayList<JobRequestProduct>();
       }
-      new AsyncTaskAddNewRowNoAudit().execute();
+      new AsyncTaskAddNewRowNoAudit().execute(lastRowProductIdOfCurrentPage);
    }
    class AsyncTaskReloadColumn extends AsyncTask<EachColViewHolder,Void,Void>{
 
@@ -1286,6 +1290,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       private int objProductIdx = -1;
       private int objProductUnitIdx = -1;
       private EachColViewHolder marketPriceeachColViewHolder;
+      private EachColViewHolder productUniteachColViewHolder;
       @Override
       protected Void doInBackground(EachColViewHolder... params) {
          // TODO Auto-generated method stub
@@ -1348,17 +1353,59 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   for(View vEachCol : holder.viewRows){
                      InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
                      UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
-                     if (ctrlType == UniversalControlType.MarketPrice){
+                     if (ctrlType == UniversalControlType.MarketPrice)
+                     {
                         marketPriceeachColViewHolder = new EachColViewHolder();
                         marketPriceeachColViewHolder.formView = viewForm;
                         marketPriceeachColViewHolder.jrp =v.jrp;
                         marketPriceeachColViewHolder.position = v.position;
                         marketPriceeachColViewHolder.viewCol = vEachCol;
+                        marketPriceeachColViewHolder.viewRow = v.viewRow;
+                     }else if (ctrlType == UniversalControlType.ProductUnit){
+                        productUniteachColViewHolder = new EachColViewHolder();
+                        productUniteachColViewHolder.formView = viewForm;
+                        productUniteachColViewHolder.jrp =v.jrp;
+                        productUniteachColViewHolder.position = v.position;
+                        productUniteachColViewHolder.viewCol = vEachCol;
+                        productUniteachColViewHolder.viewRow = v.viewRow;
                      }
                   }
                }
             }
-         }else if (ctrlType == UniversalControlType.ProductUnit){
+         }else if (ctrlType == UniversalControlType.ProductUnit)
+         {
+            int productAmountUnitID = -1;
+            if (v.viewRow != null)
+            {
+               if (v.viewRow.getTag() != null)
+               {
+                  Holder holder = (Holder)v.viewRow.getTag();
+                  for(View vEachCol : holder.viewRows){
+                     if (vEachCol == null)continue;
+                     
+                     InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
+                     UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
+                     if (ctrlType == UniversalControlType.Product)
+                     {
+                        final ProductSpinner sp_product = 
+                              (ProductSpinner)vEachCol.findViewById(R.id.sp_product);
+                        if (sp_product.getProducts() == null)
+                           sp_product.findProductByGroupID(v.jrp.getProductGroupID());
+                        
+                        if (sp_product.getProducts() != null)
+                        {
+                           for(Product p : sp_product.getProducts()){
+                              if (p.getProductID() == v.jrp.getProductId()){
+                                 productAmountUnitID = p.getProductAmountUnitID();
+                                 break;
+                              }
+                           }
+                        }
+                        break;
+                     }
+                  }
+               }
+            }
             final ProductUnitSpinner sp_product_unit = 
                   (ProductUnitSpinner)v.viewCol.findViewById(R.id.sp_product_unit);
           
@@ -1366,13 +1413,24 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             
             for(int i = 0; i < sp_product_unit.getProductAmountUnits().size();i++){
                ProductAmountUnit productUnit = sp_product_unit.getProductAmountUnits().get(i);
-               if (productUnit.getUnitName().equalsIgnoreCase(jrp.getProductUnit()))
+               if (productAmountUnitID >= 0)
                {
-                  this.productUnit = productUnit;
-                  //sp_product_unit.setSelection(i, false);
-                  v.jrp.setProductUnit(this.productUnit.getUnitName());
-                  this.objProductUnitIdx = i;
-                  break;
+                  if (productUnit.getProductAmountUnitID() == productAmountUnitID){
+                     this.productUnit = productUnit;
+                     //sp_product_unit.setSelection(i, false);
+                     v.jrp.setProductUnit(this.productUnit.getUnitName());
+                     this.objProductUnitIdx = i;                     
+                     break;
+                  }
+               }else{
+                  if (productUnit.getUnitName().equalsIgnoreCase(jrp.getProductUnit()))
+                  {
+                     this.productUnit = productUnit;
+                     //sp_product_unit.setSelection(i, false);
+                     v.jrp.setProductUnit(this.productUnit.getUnitName());
+                     this.objProductUnitIdx = i;
+                     break;
+                  }
                }
             }
          }else if (ctrlType == UniversalControlType.Layout){
@@ -1427,8 +1485,12 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                if (marketPriceeachColViewHolder != null){
                   new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, marketPriceeachColViewHolder);
                }
+               if (productUniteachColViewHolder != null){
+                  new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, productUniteachColViewHolder);                  
+               }
             }
-         }else if (ctrlType == UniversalControlType.ProductUnit){
+         }else if (ctrlType == UniversalControlType.ProductUnit)
+         {
             final ProductUnitSpinner sp_product_unit = 
                   (ProductUnitSpinner)v.viewCol.findViewById(R.id.sp_product_unit);
           
@@ -1452,15 +1514,15 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          }
       }
    }
-   class AsyncTaskAddNewRowNoAudit extends AsyncTask<Void,Void,Void>{
+   class AsyncTaskAddNewRowNoAudit extends AsyncTask<Integer,Void,Void>{
 
       
 
       @Override
-      protected Void doInBackground(Void... params) {
+      protected Void doInBackground(Integer... params) {
          // TODO Auto-generated method stub
          
-         int maxRowId = 0;
+         int maxRowId = params[0];
          for(JobRequestProduct item : jobRequestProductList)
          {
             if (item.getProductRowID() > maxRowId){

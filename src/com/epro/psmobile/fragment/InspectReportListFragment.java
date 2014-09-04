@@ -99,7 +99,11 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 		{
 			fragment = new InspectCarReportListEntryFragment();
 		}else{
-		   fragment = new UniversalInspectListFragment();
+		   if (!showInPaging){
+		      fragment = new UniversalInspectListFragment();
+		   }else{
+		      fragment = new UniversalInspectListFragmentItem();
+		   }
 		}
 
 		if (fragment != null)
@@ -145,13 +149,14 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	        }	       
 	    }else{
 	       /*show in paging use for universal only*/
-	       
+	       currentView = arg0.inflate(R.layout.universal_inspect_list_view_fragment_item, arg1, false);
 	    }
 	    
 	    
 		initial(currentView);
-		
-		doPopupCheckIn();
+		if (!showInPaging){
+		   doPopupCheckIn();
+		}
 		//this.setRetainInstance(true);
 		
 		
@@ -321,7 +326,8 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 				{
 				   MessageBox.showSaveCompleteMessage(getActivity());
 				}*/
-			   new SaveAsyncTask().execute();
+			   if (!showInPaging)
+			      new SaveAsyncTask().execute();
 			   
 			}break;
 		}

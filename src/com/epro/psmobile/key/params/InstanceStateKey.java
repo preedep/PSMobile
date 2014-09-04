@@ -95,7 +95,7 @@ public class InstanceStateKey {
 	
 	
 	
-	public final static int UNIVERSAL_MAX_ROW_PER_PAGE = 15;
+	public final static int UNIVERSAL_MAX_ROW_PER_PAGE = 10;
 	
 	
 }

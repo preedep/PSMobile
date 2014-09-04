@@ -1,32 +1,38 @@
 package com.epro.psmobile.adapter;
 
+import java.util.ArrayList;
+
+import com.epro.psmobile.fragment.InspectReportListFragment;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class UniversalListPageFragmentAdapter extends FragmentStatePagerAdapter {
 
-   private int maxPage;
-   private int rowOffset;
+   //private int rowOffset;
+   private ArrayList<Fragment> fragments;
    public UniversalListPageFragmentAdapter(FragmentManager fm,
-         int maxPage,
-         int rowOffset) {
+         ArrayList<Fragment> fragments) {
       super(fm);
       // TODO Auto-generated constructor stub
-      this.maxPage = maxPage;
-      this.rowOffset = rowOffset;
-   }
+      this.fragments = fragments;
+     }
 
    @Override
    public Fragment getItem(int position) {
       // TODO Auto-generated method stub
-      return null;
+      return fragments.get(position);
    }
 
    @Override
    public int getCount() {
       // TODO Auto-generated method stub
-      return maxPage;
+      return fragments.size();
+   }
+   
+   public void append(Fragment f){
+      this.fragments.add(f);
    }
 
 }

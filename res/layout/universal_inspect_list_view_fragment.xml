@@ -20,14 +20,50 @@
       android:layout_height="wrap_content"
       android:padding="10dp"
     >
+    <LinearLayout 
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:orientation="vertical"
+            android:layout_alignParentRight="true"
+        >
     <Button 
           android:id="@+id/btn_add_no_audit"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text=" + "
-          android:layout_alignParentRight="true"
           android:visibility="gone"
+          android:layout_gravity="right"
         />
+    <LinearLayout 
+           android:id="@+id/ll_page_navigator"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+        >
+        <TextView 
+              android:id="@+id/tv_current_page_no"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="1 of 100 pages"
+              android:textStyle="bold"
+            />
+        <Button 
+              android:id="@+id/btn_nav_back"
+              android:layout_width="120dp"
+              android:layout_height="wrap_content"
+              android:text=" Pre "
+              android:layout_marginLeft="10dp"
+            />
+        <Button 
+              android:id="@+id/btn_nav_next"
+              android:layout_width="120dp"
+              android:layout_height="wrap_content"
+              android:text=" Next "
+            
+            />
+    </LinearLayout>
+    
+    </LinearLayout>
 </RelativeLayout>
 <HorizontalScrollView 
     	android:layout_width="match_parent"
@@ -49,11 +85,19 @@
    />
     </LinearLayout>
 </HorizontalScrollView>
+
+<android.support.v4.view.ViewPager
+    android:id="@+id/universal_pager"
+    android:layout_weight="1"
+    android:layout_width="match_parent"
+    android:layout_height="0dp" 
+    />
+<!--  
 <ListView
  	   android:id="@+id/universal_lv_report" 
  	   android:layout_width="wrap_content"
  	   android:layout_height="match_parent"  
  	   android:descendantFocusability="beforeDescendants" 
 ></ListView>
-
+-->
 </LinearLayout>
