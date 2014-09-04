@@ -1029,12 +1029,34 @@ public class PSBODataAdapter {
         String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + " and cWarehouse="+customerSurveySiteID+" order by productRowId";
         return query(sql,JobRequestProduct.class);
     }
-	   public synchronized ArrayList<JobRequestProduct> findJobRequestProductsByJobRequestIDWithSiteID(int jobRequestID,
-	          int customerSurveySiteID) throws Exception
-	    {
-	        String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + " and customerSurveySiteID="+customerSurveySiteID+" order by productRowId";
+	public synchronized ArrayList<JobRequestProduct> findJobRequestProductsByJobRequestIDWithSiteID(int jobRequestID,
+	          int customerSurveySiteID,
+	          int maxRowPerPage,
+	          int rowOffset) throws Exception
+	{
+	        String sql = "select * from JobRequestProduct where " +
+	        		   " jobRequestID="+jobRequestID + " and customerSurveySiteID="+customerSurveySiteID+" " +
+	        		   " order by productRowId";
+	        sql += " limit "+maxRowPerPage+" , "+rowOffset;
+	        
 	        return query(sql,JobRequestProduct.class);
-	    }
+	}
+	public synchronized int getRowCountOfJobRequestProduct(int jobRequestID,
+              int customerSurveySiteID) throws Exception
+    {
+	        String sql = "select * from JobRequestProduct where " +
+             " jobRequestID="+jobRequestID + " and customerSurveySiteID="+customerSurveySiteID+" " +
+             " order by productRowId";
+	        
+	        ArrayList<JobRequestProduct> jobRequestProducts = 
+	              query(sql,JobRequestProduct.class);
+	        
+	        if (jobRequestProducts != null)
+	        {
+	           return jobRequestProducts.size();
+	        }
+	        return 0;
+    }
 	public synchronized ArrayList<JobRequestProduct> findJobRequestProductsByJobRequestID(int jobRequestID) throws Exception
 	{
 	  String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + "  order by cReasonId, productRowId";

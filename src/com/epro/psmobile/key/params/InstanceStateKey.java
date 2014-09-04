@@ -12,6 +12,8 @@ public class InstanceStateKey {
 	public final static String KEY_ARGUMENT_CUSTOMER_SITE_SURVEY_ID = "com.epro.psmobile.key.params.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY_ID";
 	public final static String KEY_ARGUMENT_TEAM = "com.epro.psmobile.key.params.KEY_ARGUMENT_TEAM";
 	public final static String KEY_ARGUMENT_ADD_NEW_LOCATION = "com.epro.psmobile.key.params.KEY_ARGUMENT_ADD_NEW_LOCATION";
+	public final static String KEY_ARGUMENT_ROW_OFFSET_LIST_DISPLAY = "com.epro.psmobile.key.params.KEY_ARGUMENT_ROW_OFFSET_LIST_DISPLAY";
+	public final static String KEY_ARGUMENT_SHOW_IN_PAGING = "com.epro.psmobile.key.params.KEY_ARGUMENT_SHOW_IN_PAGING";
 	
 	public final static String KEY_ARGUMENT_CUSTOMER_MAP = "com.epro.psmobile.key.params.KEY_ARGUMENT_CUSTOMER_MAP";
 	public final static String KEY_ARGUMENT_TASK = "com.epro.psmobile.key.params.KEY_TASK";
@@ -92,6 +94,8 @@ public class InstanceStateKey {
 	public final static String TAG_NAME_DRAWING_LAYOUT = "DrawingInspect";
 	
 	
+	
+	public final static int UNIVERSAL_MAX_ROW_PER_PAGE = 15;
 	
 	
 }

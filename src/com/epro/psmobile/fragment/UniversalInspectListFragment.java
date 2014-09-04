@@ -130,14 +130,29 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
             if (formViewList != null){
                setupHeader(v,formViewList);  
             }
+
+            
+            /*
+             * 
+             */
+            int rowCount = dataAdapter.getRowCountOfJobRequestProduct(jobRequest.getJobRequestID(), customerSurveySite.getCustomerSurveySiteID());
+            int pages = rowCount % InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
+            if (pages == 0){
+               pages = rowCount / InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
+            }else
+            {
+               pages = ((rowCount - pages)/InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE) + 1;
+            }
+            /*
+             * Create Fragment page controller
+             */
             
             jobRequestProducts = dataAdapter.findJobRequestProductsByJobRequestIDWithSiteID(jobRequest.getJobRequestID(),
-                  customerSurveySite.getCustomerSurveySiteID());
+                  customerSurveySite.getCustomerSurveySiteID(),
+                  InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE,
+                  0);
             
-            //if (jobRequestProducts != null)
-            //{
-               setupList(v,formViewList,jobRequestProducts,jobMapper.isAudit());
-            //}
+            setupList(v,formViewList,jobRequestProducts,jobMapper.isAudit());
          }
       }catch(Exception ex){
          MessageBox.showMessage(getSherlockActivity(), 

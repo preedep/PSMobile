@@ -68,8 +68,9 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
     protected static JobRequest jobRequest;
     protected static Task currentTask;
     protected static CustomerSurveySite customerSurveySite;
-
+    protected int rowOffset;
 	protected View currentView;
+	protected boolean showInPaging;
 
 	private Uri imageUri;
 	
@@ -78,9 +79,20 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	
 	protected ArrayList<JobRequestProduct> jobRequestProducts;
 	
+	/*
+	 * for default supported old function
+	 */
+	public static Fragment newInstance(JobRequest jobRequest,
+          Task currentTask,
+          CustomerSurveySite surveySite)
+	{
+	   return newInstance(jobRequest,currentTask,surveySite,0,false);
+	}
 	public static Fragment newInstance(JobRequest jobRequest,
 			Task currentTask,
-			CustomerSurveySite surveySite)
+			CustomerSurveySite surveySite,
+			int rowOffset,
+			boolean showInPaging)
 	{
 		Fragment fragment = null;
 		if (jobRequest.getInspectType().getInspectTypeID() == InspectServiceSupportUtil.SERVICE_CAR_INSPECT)
@@ -96,6 +108,8 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 			bArgument.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL, jobRequest);
 			bArgument.putParcelable(InstanceStateKey.KEY_ARGUMENT_TASK, currentTask);
 			bArgument.putParcelable(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY, surveySite);
+			bArgument.putInt(InstanceStateKey.KEY_ARGUMENT_ROW_OFFSET_LIST_DISPLAY, rowOffset);
+			bArgument.putBoolean(InstanceStateKey.KEY_ARGUMENT_SHOW_IN_PAGING, showInPaging);
 			fragment.setArguments(bArgument);
 		}
 		return fragment;
@@ -118,13 +132,21 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	    jobRequest = this.getArguments().getParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL);
 	    currentTask = this.getArguments().getParcelable(InstanceStateKey.KEY_ARGUMENT_TASK);
 	    customerSurveySite = this.getArguments().getParcelable(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY);
-
-	    if (jobRequest.getInspectType().getInspectTypeID() == InspectServiceSupportUtil.SERVICE_CAR_INSPECT)
-        {
-	       currentView = arg0.inflate(R.layout.ps_activity_report_list_entry_v2, arg1, false);
-        }else{
-           currentView = arg0.inflate(R.layout.universal_inspect_list_view_fragment, arg1, false);
-        }
+	    rowOffset = this.getArguments().getInt(InstanceStateKey.KEY_ARGUMENT_ROW_OFFSET_LIST_DISPLAY);
+	    showInPaging = this.getArguments().getBoolean(InstanceStateKey.KEY_ARGUMENT_SHOW_IN_PAGING);
+	    
+	    if (!showInPaging)
+	    {
+	        if (jobRequest.getInspectType().getInspectTypeID() == InspectServiceSupportUtil.SERVICE_CAR_INSPECT)
+	        {
+	           currentView = arg0.inflate(R.layout.ps_activity_report_list_entry_v2, arg1, false);
+	        }else{
+	           currentView = arg0.inflate(R.layout.universal_inspect_list_view_fragment, arg1, false);
+	        }	       
+	    }else{
+	       /*show in paging use for universal only*/
+	       
+	    }
 	    
 	    
 		initial(currentView);
