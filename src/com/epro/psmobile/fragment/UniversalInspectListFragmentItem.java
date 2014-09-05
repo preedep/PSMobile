@@ -14,8 +14,10 @@ import com.epro.psmobile.data.JobRequestProduct;
 import com.epro.psmobile.key.params.InstanceStateKey;
 import com.epro.psmobile.util.ActivityUtil;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -39,30 +41,79 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
    protected void initial(View currentView) {
       // TODO Auto-generated method stub
       //ListView ls = (ListView)currentView.findViewById(R.id.universal_lv_report);
-      PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
-      try{
-         InspectJobMapper jobMapper = 
-               dataAdapter.getInspectJobMapper(jobRequest.getJobRequestID(), currentTask.getTaskCode());
-         
-         if (jobMapper != null)
-         {
-            ArrayList<InspectFormView>  formViewList = 
-                  dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
-            jobRequestProducts = dataAdapter.findJobRequestProductsByJobRequestIDWithSiteID(jobRequest.getJobRequestID(),
-                  customerSurveySite.getCustomerSurveySiteID(),
-                  InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE,
-                  this.rowOffset);
-            
-            setupList(currentView,formViewList,
-                     jobRequestProducts,
-                     jobMapper.isAudit()
-                  );
-         }
-      }catch(Exception ex){
-         ex.printStackTrace();
+      if (this.rowOffset == 0){
+         /*first page*/
+         this.renderOnPageChanged();
       }
    }
+   public class AsyncRenderOnPageChanged extends AsyncTask<Boolean,Void,InspectJobMapper>
+   {
 
+      ArrayList<InspectFormView>  formViewList = null;
+      InspectJobMapper jobMapper = null;
+      ProgressDialog dialog = null;
+      
+      public AsyncRenderOnPageChanged(){
+         dialog = new ProgressDialog(getSherlockActivity());
+      }
+      /* (non-Javadoc)
+       * @see android.os.AsyncTask#onPreExecute()
+       */
+      @Override
+      protected void onPreExecute() {
+         // TODO Auto-generated method stub
+         super.onPreExecute();
+         dialog.setMessage("Fetching..");
+         dialog.show();
+      }
+
+      @Override
+      protected InspectJobMapper doInBackground(Boolean... params) {
+         // TODO Auto-generated method stub
+         PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
+         try{
+            jobMapper = 
+                  dataAdapter.getInspectJobMapper(jobRequest.getJobRequestID(), currentTask.getTaskCode());
+            
+            if (jobMapper != null)
+            {
+               formViewList = 
+                     dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
+               jobRequestProducts = dataAdapter.findJobRequestProductsByJobRequestIDWithSiteID(jobRequest.getJobRequestID(),
+                     customerSurveySite.getCustomerSurveySiteID(),
+                     InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE,
+                     rowOffset);
+               
+            }
+         }catch(Exception ex){
+            ex.printStackTrace();
+         }
+         return jobMapper;
+      }
+
+      /* (non-Javadoc)
+       * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+       */
+      @Override
+      protected void onPostExecute(InspectJobMapper result) {
+         // TODO Auto-generated method stub
+         super.onPostExecute(result);
+         if (jobMapper != null){
+            setupList(currentView,formViewList,
+                  jobRequestProducts,
+                  jobMapper.isAudit()
+               );
+            if (dialog != null){
+               dialog.dismiss();
+            }
+         }
+      }
+
+
+   }
+   public void renderOnPageChanged(){
+      new AsyncRenderOnPageChanged().execute();
+   }
    @Override
    protected boolean saveAllData() {
       // TODO Auto-generated method stub
@@ -78,8 +129,13 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
    
    @SuppressWarnings("unused")
    private void setupList(final View vRoot,ArrayList<InspectFormView> inspectViewList,
-         ArrayList<JobRequestProduct> jobRequestProductList,boolean isAudit){
+         ArrayList<JobRequestProduct> jobRequestProductList,boolean isAudit)
+   {
       final ListView ls = (ListView)vRoot.findViewById(R.id.universal_lv_report);
+      if (ls.getAdapter() instanceof UniversalListEntryAdapter){
+         return; /*already binded*/
+      }
+      
       ls.setScrollingCacheEnabled(false);
       ls.setCacheColorHint(Color.parseColor("#00000000"));
       final UniversalListEntryAdapter adapter = 

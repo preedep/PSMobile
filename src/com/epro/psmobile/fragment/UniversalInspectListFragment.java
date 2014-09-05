@@ -31,10 +31,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
@@ -306,7 +309,33 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                
                ////////////
                final ViewPager viewPager = (ViewPager)v.findViewById(R.id.universal_pager);
+               viewPager.setOnPageChangeListener(new OnPageChangeListener(){
 
+                  @Override
+                  public void onPageScrollStateChanged(int arg0) {
+                     // TODO Auto-generated method stub
+                     
+                  }
+
+                  @Override
+                  public void onPageScrolled(int arg0, float arg1, int arg2) {
+                     // TODO Auto-generated method stub
+                     
+                  }
+
+                  @Override
+                  public void onPageSelected(int arg0) {
+                     // TODO Auto-generated method stub
+                     if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
+                        UniversalListPageFragmentAdapter adapter = (UniversalListPageFragmentAdapter)viewPager.getAdapter();
+                        Fragment f = adapter.getItem(arg0);
+                        if (f instanceof UniversalInspectListFragmentItem){
+                           ((UniversalInspectListFragmentItem)f).renderOnPageChanged();
+                        }
+                     }
+                  }
+                  
+               });
                String strTextCurrentPageNo = 
                      this.getString(R.string.text_current_page, viewPager.getCurrentItem()+1,pages);
                TextView tvCurrentPageNo = (TextView)currentView.findViewById(R.id.tv_current_page_no);
@@ -356,6 +385,12 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                UniversalListPageFragmentAdapter lpFragment = new UniversalListPageFragmentAdapter(
                      this.getSherlockActivity().getSupportFragmentManager(),fragments);
                viewPager.setAdapter(lpFragment);
+               if (fragments.size() > 0){
+                  viewPager.setCurrentItem(0);/*default first time*/
+                  /*
+                  UniversalInspectListFragmentItem f = (UniversalInspectListFragmentItem)fragments.get(0);
+                  f.renderOnPageChanged();*/
+               }
             }
          }catch(Exception ex){
             MessageBox.showMessage(getSherlockActivity(), 
@@ -476,11 +511,8 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
       int currentViewIdx = viewPager.getCurrentItem();  
       
       
-      String strTextCurrentPageNo = 
-            this.getString(R.string.text_current_page, currentViewIdx+1,pages);
-      TextView tvCurrentPageNo = (TextView)currentView.findViewById(R.id.tv_current_page_no);
-      tvCurrentPageNo.setText(strTextCurrentPageNo);
       
+      int currentPage = 0;
       int id = v.getId();
       switch(id){
          case R.id.btn_nav_next:{
@@ -494,5 +526,12 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
             }
          }break;
       }
+      
+      currentPage = viewPager.getCurrentItem();
+      String strTextCurrentPageNo = 
+            this.getString(R.string.text_current_page, currentPage+1,pages);
+      TextView tvCurrentPageNo = (TextView)currentView.findViewById(R.id.tv_current_page_no);
+      tvCurrentPageNo.setText(strTextCurrentPageNo);
+
    }
 }
