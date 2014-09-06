@@ -14,20 +14,36 @@ import com.epro.psmobile.data.JobRequestProduct;
 import com.epro.psmobile.key.params.InstanceStateKey;
 import com.epro.psmobile.util.ActivityUtil;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class UniversalInspectListFragmentItem extends InspectReportListFragment implements OnTakeCameraListener<JobRequestProduct> {
 
    @SuppressWarnings("unused")
    private JobRequestProduct currentJobRequestProduct;
    
+   private static Activity activity = null;
+   private static View rootView;;
+   private static ArrayList<JobRequestProduct> jrpList;
+   
+   static class Holder{
+     View vContainer;
+     Activity aActivity;
+   };
    public interface OnDataReloadCompleted{
       void onReloadComplete();
    }
@@ -41,20 +57,40 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
    protected void initial(View currentView) {
       // TODO Auto-generated method stub
       //ListView ls = (ListView)currentView.findViewById(R.id.universal_lv_report);
-      if (this.rowOffset == 0){
-         /*first page*/
-         this.renderOnPageChanged();
+      if (rootView == null){
+         rootView = currentView;
       }
    }
-   public class AsyncRenderOnPageChanged extends AsyncTask<Boolean,Void,InspectJobMapper>
+   /* (non-Javadoc)
+    * @see com.epro.psmobile.fragment.InspectReportListFragment#onActivityCreated(android.os.Bundle)
+    */
+   @Override
+   public void onActivityCreated(Bundle savedInstanceState) {
+      // TODO Auto-generated method stub
+      activity = getSherlockActivity();
+      if (rootView == null)
+         rootView = currentView;
+      
+      super.onActivityCreated(savedInstanceState);
+      if (this.rowOffset == 0){
+         /*first page*/
+         this.renderOnPageChanged(activity);
+      }
+      
+   }
+   public class AsyncRenderOnPageChanged extends AsyncTask<Holder,Void,InspectJobMapper>
    {
 
-      ArrayList<InspectFormView>  formViewList = null;
-      InspectJobMapper jobMapper = null;
-      ProgressDialog dialog = null;
+      private ArrayList<InspectFormView>  formViewList = null;
+      private InspectJobMapper jobMapper = null;
+      private ProgressDialog dialog = null;
+      private View vContainer;
       
-      public AsyncRenderOnPageChanged(){
-         dialog = new ProgressDialog(getSherlockActivity());
+      public AsyncRenderOnPageChanged(Activity activity)
+      {
+         try{
+            dialog = new ProgressDialog(activity);
+         }catch(Exception ex){}
       }
       /* (non-Javadoc)
        * @see android.os.AsyncTask#onPreExecute()
@@ -63,15 +99,27 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
       protected void onPreExecute() {
          // TODO Auto-generated method stub
          super.onPreExecute();
-         dialog.setMessage("Fetching..");
-         dialog.show();
+         try{
+            if (dialog != null){
+               dialog.setMessage("Fetching..");
+               dialog.show();
+            }
+         }catch(Exception ex){}
       }
 
       @Override
-      protected InspectJobMapper doInBackground(Boolean... params) {
+      protected InspectJobMapper doInBackground(Holder... params) {
          // TODO Auto-generated method stub
-         PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
          try{
+            jrpList = null;
+            if (activity == null){
+               return null;
+            }
+            Holder holder = params[0];
+            vContainer = params[0].vContainer;
+            
+            PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(holder.aActivity);
+            
             jobMapper = 
                   dataAdapter.getInspectJobMapper(jobRequest.getJobRequestID(), currentTask.getTaskCode());
             
@@ -79,10 +127,13 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
             {
                formViewList = 
                      dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
-               jobRequestProducts = dataAdapter.findJobRequestProductsByJobRequestIDWithSiteID(jobRequest.getJobRequestID(),
+               jrpList = dataAdapter.findJobRequestProductsByJobRequestIDWithSiteID(jobRequest.getJobRequestID(),
                      customerSurveySite.getCustomerSurveySiteID(),
                      InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE,
                      rowOffset);
+               if (jrpList == null){
+                  Log.d("DEBUG_D_D","empty");
+               }
                
             }
          }catch(Exception ex){
@@ -99,20 +150,32 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
          // TODO Auto-generated method stub
          super.onPostExecute(result);
          if (jobMapper != null){
-            setupList(currentView,formViewList,
-                  jobRequestProducts,
-                  jobMapper.isAudit()
-               );
-            if (dialog != null){
-               dialog.dismiss();
+
+            int maxWidth = 0;
+            if (formViewList != null){
+               maxWidth = setupHeader(vContainer,formViewList);  
             }
+            if (jrpList != null){
+            setupList(vContainer,formViewList,
+                  jrpList,
+                  jobMapper.isAudit(),maxWidth
+               );
+            }
+            try{
+            if (dialog != null){
+                  dialog.dismiss();
+               }
+            }catch(Exception ex){}
          }
       }
 
 
    }
-   public void renderOnPageChanged(){
-      new AsyncRenderOnPageChanged().execute();
+   public void renderOnPageChanged(Activity activity){
+      Holder h = new Holder();
+      h.vContainer = currentView;
+      h.aActivity = activity;
+      new AsyncRenderOnPageChanged(h.aActivity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,h);
    }
    @Override
    protected boolean saveAllData() {
@@ -126,12 +189,50 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
 
    }
 
+   private int setupHeader(View vRoot,ArrayList<InspectFormView> inspectViewList){
+      if (vRoot == null)return 0;
+      
+      ViewGroup headerContainer = (ViewGroup)vRoot.findViewById(R.id.universal_col_container);
+      headerContainer.removeAllViews();
+      
+      int maxWidth = 0;
+      for(InspectFormView formView : inspectViewList)
+      {
+         LayoutInflater  inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+         View v = inflater.inflate(R.layout.ps_activity_report_list_entry_column_v2, null);
+         
+         float colWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+               100, 
+               this.getSherlockActivity().getResources().getDisplayMetrics());
+         if (formView.getColWidth() >= 0){
+            colWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                  formView.getColWidth(), 
+                  this.getSherlockActivity().getResources().getDisplayMetrics());
+         }
+    
+         TextView tvHeader = (TextView)v.findViewById(R.id.tv_car_list_header);
+         tvHeader.getLayoutParams().width = (int) colWidth;
+         maxWidth += (int)colWidth;
+         
+         tvHeader.setText(formView.getColTextDisplay());
+         if (formView.isColHidden()){
+            v.setVisibility(View.GONE);
+         }
+         headerContainer.addView(v);
+      }
+      headerContainer.getLayoutParams().width = maxWidth;
+      return maxWidth;
+   }
    
    @SuppressWarnings("unused")
    private void setupList(final View vRoot,ArrayList<InspectFormView> inspectViewList,
-         ArrayList<JobRequestProduct> jobRequestProductList,boolean isAudit)
+         ArrayList<JobRequestProduct> jobRequestProductList,boolean isAudit,int maxWidth)
    {
+      if (vRoot == null)return;
+      
       final ListView ls = (ListView)vRoot.findViewById(R.id.universal_lv_report);
+      ls.getLayoutParams().width = maxWidth;
+      
       if (ls.getAdapter() instanceof UniversalListEntryAdapter){
          return; /*already binded*/
       }
@@ -139,11 +240,13 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
       ls.setScrollingCacheEnabled(false);
       ls.setCacheColorHint(Color.parseColor("#00000000"));
       final UniversalListEntryAdapter adapter = 
-            new UniversalListEntryAdapter(getSherlockActivity(),
+            new UniversalListEntryAdapter(activity,
                   jobRequest,
                   currentTask,
                   customerSurveySite,
-                  inspectViewList,jobRequestProductList,isAudit);
+                  inspectViewList,
+                  jobRequestProductList,
+                  isAudit);
       adapter.setOnTakeCameraListener(this);
       adapter.setColumnInputChangeListener(new OnColumnInputChangeListener(){
 
@@ -235,7 +338,7 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
    public void onActivityResult(int requestCode, int resultCode, Intent data){
       // TODO Auto-generated method stub
       super.onActivityResult(requestCode, resultCode, data);
-      final ListView ls = (ListView)currentView.findViewById(R.id.universal_lv_report);      
+      final ListView ls = (ListView)rootView.findViewById(R.id.universal_lv_report);      
       super.doActivityResultForTakePhoto(requestCode, 
             resultCode, 
             data, 
@@ -244,7 +347,7 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
 
    private boolean saveSingleRowData(JobRequestProduct jrp){
       boolean bRet = false;
-      PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
+      PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(activity);
       try {
          dataAdapter.insertSingleRowUniversalJobRequestProduct(InspectReportListFragment.jobRequest.getJobRequestID(),
                         InspectReportListFragment.customerSurveySite.getCustomerSurveySiteID(),
@@ -258,8 +361,8 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
       return bRet;
    }
    public void addNewRowNoAudit(int lastRowProductIdOfCurrentPage){
-      if (currentView != null){
-         final ListView ls = (ListView)currentView.findViewById(R.id.universal_lv_report);      
+      if (rootView != null){
+         final ListView ls = (ListView)rootView.findViewById(R.id.universal_lv_report);      
          if (ls.getAdapter() instanceof UniversalListEntryAdapter)
          {
             ((UniversalListEntryAdapter)(ls.getAdapter())).addNewRowNoAudit(lastRowProductIdOfCurrentPage);
@@ -268,13 +371,17 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
    }
 
    public ArrayList<JobRequestProduct> getAllJobRequestProduct(){
-      ListView ls = (ListView)currentView.findViewById(R.id.universal_lv_report);   
-      if (ls.getAdapter() instanceof UniversalListEntryAdapter){
-         //PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
-         UniversalListEntryAdapter adapter = (UniversalListEntryAdapter)ls.getAdapter();
-         return adapter.getAllJobRequestProducts();
+      /*
+      if (rootView != null){
+         ListView ls = (ListView)rootView.findViewById(R.id.universal_lv_report);   
+         if (ls.getAdapter() instanceof UniversalListEntryAdapter){
+            //PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
+            UniversalListEntryAdapter adapter = (UniversalListEntryAdapter)ls.getAdapter();
+            return adapter.getAllJobRequestProducts();
+         }
       }
-      return null;
+      return null;*/
+      return jrpList;
    }
    public OnDataReloadCompleted getDataReloadCompleted() {
       return dataReloadCompleted;

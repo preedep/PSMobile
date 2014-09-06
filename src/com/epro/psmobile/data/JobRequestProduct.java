@@ -111,6 +111,25 @@ public class JobRequestProduct implements DbCursorHolder,
 	
 	public final static String COLUMN_IS_AUDIT = "isAudit";
 	
+	public final static String COLUMN_CHAR_1 = "char1";
+	public final static String COLUMN_CHAR_2 = "char2";
+	public final static String COLUMN_CHAR_3 = "char3";
+	public final static String COLUMN_CHAR_4 = "char4";
+	public final static String COLUMN_CHAR_5 = "char5";
+	public final static String COLUMN_NUM_1 = "num1";
+	public final static String COLUMN_NUM_2 = "num2";
+	public final static String COLUMN_NUM_3= "num3";
+	public final static String COLUMN_NUM_4 = "num4";
+	public final static String COLUMN_NUM_5 = "num5";
+	public final static String COLUMN_DEC_1 = "dec1";
+	public final static String COLUMN_DEC_2 = "dec2";
+	public final static String COLUMN_DEC_3 = "dec3";
+	public final static String COLUMN_DATE_1 = "date1";
+	public final static String COLUMN_DATE_2 = "date2";
+	public final static String COLUMN_DATE_3 = "date3";
+
+	
+	
 	protected int jobRowId;
 	protected int jobLocationId;
 	protected int customerSurveySiteID;
@@ -168,7 +187,7 @@ public class JobRequestProduct implements DbCursorHolder,
 	protected String tNo;
 	protected String tCode;
 	protected String tSize;
-	protected String tWeight;
+	protected double tWeight;
 	protected String mContractNo;
 	protected String mFixedAssetNumber;
 	protected String mAssetName;
@@ -201,6 +220,24 @@ public class JobRequestProduct implements DbCursorHolder,
 	protected String remark;
 	
 	protected boolean isAudit;
+	
+	protected String char1;
+	protected String char2;// :String
+	protected String char3;// :String
+	protected String char4;// :String
+	protected String char5;// :String
+	protected int num1;// :int
+	protected int num2;// :int
+	protected int num3;// :int
+	protected int num4;// :int
+	protected int num5;// :int
+	protected double dec1;// : decimal
+	protected double dec2;//: decimal
+	protected double dec3;//: decimal
+	protected String date1;// :String
+	protected String date2;// :String
+	protected String date3;// :String
+
 	
 	public static final Parcelable.Creator<JobRequestProduct> CREATOR = new Parcelable.Creator<JobRequestProduct>()
 			{
@@ -302,7 +339,7 @@ public class JobRequestProduct implements DbCursorHolder,
 		this.tNo = source.readString();
 		this.tCode = source.readString();
 		this.tSize = source.readString();
-		this.tWeight = source.readString();
+		this.tWeight = source.readDouble();
 
 		/*
 		dest.writeString(this.mContractNo);
@@ -468,7 +505,24 @@ public class JobRequestProduct implements DbCursorHolder,
 		strBld.append(COLUMN_PRODUCT_PRICE+",");
 		strBld.append(COLUMN_REMARK+",");
 		strBld.append(COLUMN_IS_AUDIT+",");
-		strBld.append(COLUMN_JOB_LOCATION_ID);
+		strBld.append(COLUMN_JOB_LOCATION_ID+",");
+		
+		strBld.append(COLUMN_CHAR_1+",");//
+		strBld.append(COLUMN_CHAR_2+",");// = "char2";
+		strBld.append(COLUMN_CHAR_3+",");// = "char3";
+		strBld.append(COLUMN_CHAR_4+",");// = " char4";
+		strBld.append(COLUMN_CHAR_5+",");// = "char5";
+		strBld.append(COLUMN_NUM_1+",");// = "num1";
+		strBld.append(COLUMN_NUM_2+",");// = "num2";
+		strBld.append(COLUMN_NUM_3+",");//= "num3";
+		strBld.append(COLUMN_NUM_4+",");// = "num4";
+		strBld.append(COLUMN_NUM_5+",");// = "num5";
+	    strBld.append(COLUMN_DEC_1+",");// = "dec1";
+	    strBld.append(COLUMN_DEC_2+",");// = "dec2";
+	    strBld.append(COLUMN_DEC_3+",");// = "dec3";
+	    strBld.append(COLUMN_DATE_1+",");// = "date1";
+	    strBld.append(COLUMN_DATE_2+",");// = "date2";
+	    strBld.append(COLUMN_DATE_3+"");// = "date3";
 		strBld.append(")");
 		strBld.append(" values");
 		strBld.append("(");
@@ -555,7 +609,7 @@ public class JobRequestProduct implements DbCursorHolder,
 		strBld.append("'"+this.tNo+"',");
 		strBld.append("'"+this.tCode+"',");
 		strBld.append("'"+this.tSize+"',");
-		strBld.append("'"+this.tWeight+"',");
+		strBld.append(""+this.tWeight+",");
 		/*
 		 strBld.append(COLUMN_M_CONTRACT_NO+",");
 		 strBld.append(COLUMN_M_FIXED_ASSET_NO +",");
@@ -605,7 +659,26 @@ public class JobRequestProduct implements DbCursorHolder,
 		strBld.append(""+this.productPrice+",");
 		strBld.append("'"+this.remark+"',");
 		strBld.append("'"+this.isAudit+"',");
-		strBld.append(""+this.jobLocationId+"");
+		strBld.append(""+this.jobLocationId+",");
+		
+		strBld.append("'"+char1+"',");
+		strBld.append("'"+char2+"',");// :String
+		strBld.append("'"+char3+"',");// :String
+		strBld.append("'"+char4+"',");// :String
+		strBld.append("'"+char5+"',");// :String
+	    strBld.append(""+num1+",");// :int
+	    strBld.append(""+num2+",");// :int
+	    strBld.append(""+num3+",");// :int
+	    strBld.append(""+num4+",");// :int
+	    strBld.append(""+ num5+",");// :int
+	    strBld.append(""+dec1+",");// : decimal
+	    strBld.append(""+dec2+",");//: decimal
+	    strBld.append(""+dec3+",");//: decimal
+	    strBld.append("'"+date1+"',");// :String
+	    strBld.append("'"+date2+"',");// :String
+	    strBld.append("'"+date3+"'");// :String
+
+	    
 		strBld.append(")");
 		return strBld.toString();
 	}
@@ -661,6 +734,7 @@ public class JobRequestProduct implements DbCursorHolder,
 		  this.tNo = JSONDataUtil.getString(jsonObj, JobRequestProduct.COLUMN_T_NO);
 		  this.tCode = JSONDataUtil.getString(jsonObj, JobRequestProduct.COLUMN_T_CODE);
 		  this.tSize = JSONDataUtil.getString(jsonObj, JobRequestProduct.COLUMN_T_SIZE);
+		  this.tWeight = JSONDataUtil.getDouble(jsonObj,JobRequestProduct.COLUMN_T_WEIGHT);
 		  //m
 		  this.mContractNo = JSONDataUtil.getString(jsonObj, JobRequestProduct.COLUMN_M_CONTRACT_NO);
 		  this.mFixedAssetNumber = JSONDataUtil.getString(jsonObj, JobRequestProduct.COLUMN_M_FIXED_ASSET_NO);
@@ -685,6 +759,25 @@ public class JobRequestProduct implements DbCursorHolder,
 		  this.photoSetID = JSONDataUtil.getInt(jsonObj, JobRequestProduct.COLUMN_PHOTO_SET_ID);
 		  
 		  this.customerSurveySiteID = JSONDataUtil.getInt(jsonObj, JobRequestProduct.COLUMN_CUSTOMER_SURVEY_SITE_ID);
+		  
+		  
+		  this.char1 = JSONDataUtil.getString(jsonObj, COLUMN_CHAR_1);//
+		  this.char2 = JSONDataUtil.getString(jsonObj,COLUMN_CHAR_2);// = "char2";
+		  this.char3 = JSONDataUtil.getString(jsonObj,COLUMN_CHAR_3);// = "char3";
+		  this.char4 = JSONDataUtil.getString(jsonObj,COLUMN_CHAR_4);// = " char4";
+		  this.char5 = JSONDataUtil.getString(jsonObj,COLUMN_CHAR_5);// = "char5";
+		  this.num1 = JSONDataUtil.getInt(jsonObj,COLUMN_NUM_1);// = "num1";
+		  this.num2 = JSONDataUtil.getInt(jsonObj,COLUMN_NUM_2);// = "num2";
+		  this.num3 = JSONDataUtil.getInt(jsonObj,COLUMN_NUM_3);//= "num3";
+		  this.num4 = JSONDataUtil.getInt(jsonObj,COLUMN_NUM_4);// = "num4";
+		  this.num5 = JSONDataUtil.getInt(jsonObj,COLUMN_NUM_5);// = "num5";
+		  this.dec1 = JSONDataUtil.getDouble(jsonObj,COLUMN_DEC_1);// = "dec1";
+		  this.dec2 = JSONDataUtil.getDouble(jsonObj,COLUMN_DEC_2);// = "dec2";
+		  this.dec3 = JSONDataUtil.getDouble(jsonObj,COLUMN_DEC_3);// = "dec3";
+		  this.date1 = JSONDataUtil.getString(jsonObj,COLUMN_DATE_1);// = "date1";
+		  this.date2 = JSONDataUtil.getString(jsonObj,COLUMN_DATE_2);// = "date2";
+		  this.date3 = JSONDataUtil.getString(jsonObj,COLUMN_DATE_3);// = "date3";
+
 	}
 
 	@Override
@@ -875,6 +968,7 @@ public class JobRequestProduct implements DbCursorHolder,
 		  this.tNo =  cursor.getString(cursor.getColumnIndex( JobRequestProduct.COLUMN_T_NO));
 		  this.tCode = cursor.getString(cursor.getColumnIndex(JobRequestProduct.COLUMN_T_CODE));
 		  this.tSize = cursor.getString(cursor.getColumnIndex( JobRequestProduct.COLUMN_T_SIZE));
+		  this.tWeight = cursor.getDouble(cursor.getColumnIndex(JobRequestProduct.COLUMN_T_WEIGHT));
 		  //m
 		  this.mContractNo = cursor.getString(cursor.getColumnIndex( JobRequestProduct.COLUMN_M_CONTRACT_NO));
 		  this.mFixedAssetNumber = cursor.getString(cursor.getColumnIndex( JobRequestProduct.COLUMN_M_FIXED_ASSET_NO));
@@ -917,6 +1011,26 @@ public class JobRequestProduct implements DbCursorHolder,
 		  
 		  this.customerSurveySiteID = 
 		        cursor.getInt(cursor.getColumnIndex(JobRequestProduct.COLUMN_CUSTOMER_SURVEY_SITE_ID));
+		  
+		  
+		  
+		  this.char1 = cursor.getString(cursor.getColumnIndex( COLUMN_CHAR_1));//
+          this.char2 = cursor.getString(cursor.getColumnIndex(COLUMN_CHAR_2));// = "char2";
+          this.char3 = cursor.getString(cursor.getColumnIndex(COLUMN_CHAR_3));// = "char3";
+          this.char4 = cursor.getString(cursor.getColumnIndex(COLUMN_CHAR_4));// = " char4";
+          this.char5 = cursor.getString(cursor.getColumnIndex(COLUMN_CHAR_5));// = "char5";
+          this.num1 = cursor.getInt(cursor.getColumnIndex(COLUMN_NUM_1));// = "num1";
+          this.num2 = cursor.getInt(cursor.getColumnIndex(COLUMN_NUM_2));// = "num2";
+          this.num3 = cursor.getInt(cursor.getColumnIndex(COLUMN_NUM_3));//= "num3";
+          this.num4 = cursor.getInt(cursor.getColumnIndex(COLUMN_NUM_4));// = "num4";
+          this.num5 = cursor.getInt(cursor.getColumnIndex(COLUMN_NUM_5));// = "num5";
+          this.dec1 = cursor.getDouble(cursor.getColumnIndex(COLUMN_DEC_1));// = "dec1";
+          this.dec2 = cursor.getDouble(cursor.getColumnIndex(COLUMN_DEC_2));// = "dec2";
+          this.dec3 = cursor.getDouble(cursor.getColumnIndex(COLUMN_DEC_3));// = "dec3";
+          this.date1 = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_1));// = "date1";
+          this.date2 = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_2));// = "date2";
+          this.date3 = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_3));// = "date3";
+
 		  
 	}
 
@@ -1429,14 +1543,14 @@ public class JobRequestProduct implements DbCursorHolder,
 	/**
 	 * @return the tWeight
 	 */
-	public String gettWeight() {
+	public double gettWeight() {
 		return tWeight;
 	}
 
 	/**
 	 * @param tWeight the tWeight to set
 	 */
-	public void settWeight(String tWeight) {
+	public void settWeight(double tWeight) {
 		this.tWeight = tWeight;
 	}
 
@@ -1780,7 +1894,7 @@ public class JobRequestProduct implements DbCursorHolder,
 		dest.writeString(this.tNo);
 		dest.writeString(this.tCode);
 		dest.writeString(this.tSize);
-		dest.writeString(this.tWeight);
+		dest.writeDouble(this.tWeight);
 		/*
 		JSONDataUtil.put(jsonObj, COLUMN_M_CONTRACT_NO ,mContractNo);
 		JSONDataUtil.put(jsonObj, COLUMN_M_FIXED_ASSET_NO ,mFixedAssetNumber);
@@ -2022,5 +2136,197 @@ public class JobRequestProduct implements DbCursorHolder,
     */
    public void setAudit(boolean isAudit) {
       this.isAudit = isAudit;
+   }
+   /**
+    * @return the char1
+    */
+   public String getChar1() {
+      return char1;
+   }
+   /**
+    * @param char1 the char1 to set
+    */
+   public void setChar1(String char1) {
+      this.char1 = char1;
+   }
+   /**
+    * @return the char2
+    */
+   public String getChar2() {
+      return char2;
+   }
+   /**
+    * @param char2 the char2 to set
+    */
+   public void setChar2(String char2) {
+      this.char2 = char2;
+   }
+   /**
+    * @return the char3
+    */
+   public String getChar3() {
+      return char3;
+   }
+   /**
+    * @param char3 the char3 to set
+    */
+   public void setChar3(String char3) {
+      this.char3 = char3;
+   }
+   /**
+    * @return the char4
+    */
+   public String getChar4() {
+      return char4;
+   }
+   /**
+    * @param char4 the char4 to set
+    */
+   public void setChar4(String char4) {
+      this.char4 = char4;
+   }
+   /**
+    * @return the char5
+    */
+   public String getChar5() {
+      return char5;
+   }
+   /**
+    * @param char5 the char5 to set
+    */
+   public void setChar5(String char5) {
+      this.char5 = char5;
+   }
+   /**
+    * @return the num1
+    */
+   public int getNum1() {
+      return num1;
+   }
+   /**
+    * @param num1 the num1 to set
+    */
+   public void setNum1(int num1) {
+      this.num1 = num1;
+   }
+   /**
+    * @return the num2
+    */
+   public int getNum2() {
+      return num2;
+   }
+   /**
+    * @param num2 the num2 to set
+    */
+   public void setNum2(int num2) {
+      this.num2 = num2;
+   }
+   /**
+    * @return the num3
+    */
+   public int getNum3() {
+      return num3;
+   }
+   /**
+    * @param num3 the num3 to set
+    */
+   public void setNum3(int num3) {
+      this.num3 = num3;
+   }
+   /**
+    * @return the num4
+    */
+   public int getNum4() {
+      return num4;
+   }
+   /**
+    * @param num4 the num4 to set
+    */
+   public void setNum4(int num4) {
+      this.num4 = num4;
+   }
+   /**
+    * @return the num5
+    */
+   public int getNum5() {
+      return num5;
+   }
+   /**
+    * @param num5 the num5 to set
+    */
+   public void setNum5(int num5) {
+      this.num5 = num5;
+   }
+   /**
+    * @return the dec1
+    */
+   public double getDec1() {
+      return dec1;
+   }
+   /**
+    * @param dec1 the dec1 to set
+    */
+   public void setDec1(double dec1) {
+      this.dec1 = dec1;
+   }
+   /**
+    * @return the dec2
+    */
+   public double getDec2() {
+      return dec2;
+   }
+   /**
+    * @param dec2 the dec2 to set
+    */
+   public void setDec2(double dec2) {
+      this.dec2 = dec2;
+   }
+   /**
+    * @return the dec3
+    */
+   public double getDec3() {
+      return dec3;
+   }
+   /**
+    * @param dec3 the dec3 to set
+    */
+   public void setDec3(double dec3) {
+      this.dec3 = dec3;
+   }
+   /**
+    * @return the date1
+    */
+   public String getDate1() {
+      return date1;
+   }
+   /**
+    * @param date1 the date1 to set
+    */
+   public void setDate1(String date1) {
+      this.date1 = date1;
+   }
+   /**
+    * @return the date2
+    */
+   public String getDate2() {
+      return date2;
+   }
+   /**
+    * @param date2 the date2 to set
+    */
+   public void setDate2(String date2) {
+      this.date2 = date2;
+   }
+   /**
+    * @return the date3
+    */
+   public String getDate3() {
+      return date3;
+   }
+   /**
+    * @param date3 the date3 to set
+    */
+   public void setDate3(String date3) {
+      this.date3 = date3;
    }
 }

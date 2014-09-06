@@ -67,26 +67,7 @@
     
     </LinearLayout>
 </RelativeLayout>
-<HorizontalScrollView 
-    	android:layout_width="match_parent"
-    	android:layout_height="wrap_content"
-    	android:layout_marginTop="10dp"
-    >
-     <LinearLayout 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-    <LinearLayout 
-        android:id="@+id/universal_col_container"
-        android:layout_width="wrap_content"
-        android:orientation="horizontal"
-        android:layout_height="@dimen/car_row_height"
-        android:background="#cccccc"
-        
-   />
-    </LinearLayout>
-</HorizontalScrollView>
+
 
 <com.epro.psmobile.view.NonSwipeableViewPager
     android:id="@+id/universal_pager"

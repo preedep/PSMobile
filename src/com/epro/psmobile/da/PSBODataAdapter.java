@@ -1116,13 +1116,32 @@ public class PSBODataAdapter {
 	       int rowEffected = 0;
 	       SQLiteDatabase sqliteDb  = null;
 	       try{
+	           Hashtable<Integer,ArrayList<JobRequestProduct>> mapTable = new Hashtable<Integer,ArrayList<JobRequestProduct>>();
+	           ArrayList<JobRequestProduct> 
+	              tmp_jobRequestProducts = new ArrayList<JobRequestProduct>();
+
+	           for(JobRequestProduct jrp : jobRequestProducts){
+	              if (!mapTable.containsKey(jrp.getProductRowID())){
+	                 mapTable.put(jrp.getProductRowID(), new ArrayList<JobRequestProduct>());
+	                 mapTable.get(jrp.getProductRowID()).add(jrp);
+	                 tmp_jobRequestProducts.add(jrp);
+	              }
+	           }
+	           
+	           
+	           jobRequestProducts = tmp_jobRequestProducts;
+	           
 	           sqliteDb = databaseBuilder.open();
-	           String delete = "delete from JobRequestProduct where jobRequestID="+jobRequestID+" and cWarehouse="+siteID;
-	           String[] stmts = new String[jobRequestProducts.size()+1];
-	           stmts[0] = delete;
-	           for(int i = 0;i < jobRequestProducts.size();i++)
+	           String delete = "delete from JobRequestProduct where jobRequestID="+jobRequestID+" and customerSurveySiteID="+siteID;
+	           String[] stmts = new String[jobRequestProducts.size()*2];
+	           for(int i = 0; i < jobRequestProducts.size();i++)
 	           {
-	              stmts[i+1] = jobRequestProducts.get(i).insertStatement();
+	              stmts[i] = delete + " and productRowId = "+jobRequestProducts.get(i).getProductRowID();
+	           }
+	           int objIdx = 0;
+	           for(int i = jobRequestProducts.size();i < jobRequestProducts.size()*2;i++)
+	           {
+	              stmts[i] = jobRequestProducts.get(objIdx++).insertStatement();
 	           }
 	           rowEffected = DbUtils.executeSqlStatementsInTx(sqliteDb, stmts);
 	       }finally{

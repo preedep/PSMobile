@@ -109,8 +109,12 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
          //ListView ls = (ListView)v.findViewById(R.id.universal_lv_report);
          //ls.setAnimationCacheEnabled(false);
          //ls.setScrollingCacheEnabled(false);
-         
-
+         /*
+         int currentPage = 0;
+         String strTextCurrentPageNo = 
+               this.getString(R.string.text_current_page, currentPage+1,pages);
+         TextView tvCurrentPageNo = (TextView)currentView.findViewById(R.id.tv_current_page_no);
+         tvCurrentPageNo.setText(strTextCurrentPageNo);*/
          //super.doPopupCheckIn();
          
          try{
@@ -265,11 +269,12 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                      
                   });
                }
+               /*
                ArrayList<InspectFormView>  formViewList = 
                      dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
                if (formViewList != null){
                   setupHeader(v,formViewList);  
-               }
+               }*/
 
                
                /*
@@ -309,6 +314,25 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                
                ////////////
                final ViewPager viewPager = (ViewPager)v.findViewById(R.id.universal_pager);
+               viewPager.setOnTouchListener(new OnTouchListener(){
+
+                  @Override
+                  public boolean onTouch(View v, MotionEvent event) {
+                     // TODO Auto-generated method stub
+                     switch (event.getAction()) {
+                        case MotionEvent.ACTION_MOVE:
+                           viewPager.requestDisallowInterceptTouchEvent(true);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                           viewPager.requestDisallowInterceptTouchEvent(false);
+                            break;
+                        }
+                     
+                     return true;
+                  }
+                  
+               });
                viewPager.setOnPageChangeListener(new OnPageChangeListener(){
 
                   @Override
@@ -330,14 +354,14 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                         UniversalListPageFragmentAdapter adapter = (UniversalListPageFragmentAdapter)viewPager.getAdapter();
                         Fragment f = adapter.getItem(arg0);
                         if (f instanceof UniversalInspectListFragmentItem){
-                           ((UniversalInspectListFragmentItem)f).renderOnPageChanged();
+                           ((UniversalInspectListFragmentItem)f).renderOnPageChanged(getSherlockActivity());
                         }
                      }
                   }
                   
                });
                String strTextCurrentPageNo = 
-                     this.getString(R.string.text_current_page, viewPager.getCurrentItem()+1,pages);
+                     this.getString(R.string.text_current_page, 1,pages);/*first time default to page 1*/
                TextView tvCurrentPageNo = (TextView)currentView.findViewById(R.id.tv_current_page_no);
                tvCurrentPageNo.setText(strTextCurrentPageNo);
 
@@ -382,50 +406,24 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                   }
                   fragments.add(f);
                }
-               UniversalListPageFragmentAdapter lpFragment = new UniversalListPageFragmentAdapter(
-                     this.getSherlockActivity().getSupportFragmentManager(),fragments);
-               viewPager.setAdapter(lpFragment);
-               if (fragments.size() > 0){
-                  viewPager.setCurrentItem(0);/*default first time*/
-                  /*
-                  UniversalInspectListFragmentItem f = (UniversalInspectListFragmentItem)fragments.get(0);
-                  f.renderOnPageChanged();*/
+
+               if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
+                  ((UniversalListPageFragmentAdapter)viewPager.getAdapter()).clearAll();
+                   viewPager.setAdapter(null);
                }
+               UniversalListPageFragmentAdapter lpFragment = new UniversalListPageFragmentAdapter(
+                        this.getChildFragmentManager(),fragments);
+               viewPager.setAdapter(lpFragment);
+                  if (fragments.size() > 0){
+                     viewPager.setCurrentItem(0);/*default first time*/
+                  }                  
             }
          }catch(Exception ex){
             MessageBox.showMessage(getSherlockActivity(), 
                   R.string.message_box_title_error, ex.getMessage());
          }       
    }
-   private void setupHeader(View vRoot,ArrayList<InspectFormView> inspectViewList){
-      ViewGroup headerContainer = (ViewGroup)vRoot.findViewById(R.id.universal_col_container);
-      headerContainer.removeAllViews();
-      
-      
-      for(InspectFormView formView : inspectViewList)
-      {
-         LayoutInflater  inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-         View v = inflater.inflate(R.layout.ps_activity_report_list_entry_column_v2, null);
-         
-         float colWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-               100, 
-               this.getSherlockActivity().getResources().getDisplayMetrics());
-         if (formView.getColWidth() >= 0){
-            colWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                  formView.getColWidth(), 
-                  this.getSherlockActivity().getResources().getDisplayMetrics());
-         }
-    
-         TextView tvHeader = (TextView)v.findViewById(R.id.tv_car_list_header);
-         tvHeader.getLayoutParams().width = (int) colWidth;
-         tvHeader.setText(formView.getColTextDisplay());
-         if (formView.isColHidden()){
-            v.setVisibility(View.GONE);
-         }
-         headerContainer.addView(v);
-      }
-   }
-   
+  
 
 
    @Override
@@ -438,23 +436,30 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
       
       
       ViewPager viewPager = (ViewPager)currentView.findViewById(R.id.universal_pager);
-      if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
-         UniversalListPageFragmentAdapter adapter =
-               (UniversalListPageFragmentAdapter)viewPager.getAdapter();
-         for(int i = 0; i < adapter.getCount();i++)
+      if (viewPager != null){
+         if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter)
          {
-            Fragment f = adapter.getItem(i);
-            if ( f instanceof UniversalInspectListFragmentItem){
-               UniversalInspectListFragmentItem universal_f = (UniversalInspectListFragmentItem)f;
-               if (universal_f.getAllJobRequestProduct() != null){
-                  jobRequestProductList.addAll(universal_f.getAllJobRequestProduct());
-               }
-            }            
-         }
+            UniversalListPageFragmentAdapter adapter =
+                  (UniversalListPageFragmentAdapter)viewPager.getAdapter();
+            for(int i = 0; i < adapter.getCount();i++)
+            {
+              // String name = makeFragmentName(viewPager.getId(),i);
+               //Fragment viewPagerFragment = getChildFragmentManager().findFragmentByTag(name);
+               
+               //Fragment f = viewPagerFragment;//adapter.getItem(i);
+               Fragment f = adapter.getRegisteredFragment(i);
+               if ( f instanceof UniversalInspectListFragmentItem){
+                  UniversalInspectListFragmentItem universal_f = (UniversalInspectListFragmentItem)f;
+                  if (universal_f.getAllJobRequestProduct() != null){
+                     jobRequestProductList.addAll(universal_f.getAllJobRequestProduct());
+                  }
+               }            
+            }
+         }        
       }
       
      // if (ls.getAdapter() instanceof UniversalListEntryAdapter)
-      {
+     // {
          PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
          
          if (jobRequestProductList.size() > 0 )
@@ -480,10 +485,12 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
             bRet = true;/*first time get all jobRequestProducts*/
          }
          
-      }
+     // }
       return bRet;
    }
-
+   private static String makeFragmentName(int viewId, int position) {
+      return "android:switcher:" + viewId + ":" + position;
+   }
    @Override
    protected void onListViewUpdated() {
       // TODO Auto-generated method stub
@@ -533,5 +540,22 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
       TextView tvCurrentPageNo = (TextView)currentView.findViewById(R.id.tv_current_page_no);
       tvCurrentPageNo.setText(strTextCurrentPageNo);
 
+   }
+
+   /* (non-Javadoc)
+    * @see android.support.v4.app.Fragment#onActivityResult(int, int, android.content.Intent)
+    */
+   @Override
+   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      // TODO Auto-generated method stub
+      super.onActivityResult(requestCode, resultCode, data);
+      
+      ViewPager viewPager = (ViewPager)currentView.findViewById(R.id.universal_pager);
+      int currentViewIdx = viewPager.getCurrentItem();  
+      if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
+         UniversalListPageFragmentAdapter adapter = (UniversalListPageFragmentAdapter)viewPager.getAdapter();
+         UniversalInspectListFragmentItem f = (UniversalInspectListFragmentItem)adapter.getItem(currentViewIdx);
+         f.onActivityResult(requestCode, resultCode, data);
+      }
    }
 }

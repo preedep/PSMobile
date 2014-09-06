@@ -1063,8 +1063,10 @@ implements  OnItemClickListener,
 		                    R.string.text_error_title, 
 		                    R.string.text_error_layout_not_saved_yet);
 		        }else{
-		           if (getSherlockActivity().getSupportFragmentManager().getBackStackEntryCount() > 1){
+		           if (getSherlockActivity().getSupportFragmentManager().getBackStackEntryCount() > 1)
+		           {
 		              getSherlockActivity().getSupportFragmentManager().popBackStack();
+		              
 		           }
 		        }
 		    }break;

@@ -23,7 +23,7 @@ public class NonSwipeableViewPager extends ViewPager {
        if (ret)
            getParent().requestDisallowInterceptTouchEvent(true);
        return ret;*/
-      return false;
+      return super.onInterceptTouchEvent(ev);
    }
 
    @Override
@@ -33,6 +33,6 @@ public class NonSwipeableViewPager extends ViewPager {
        if (ret)
            getParent().requestDisallowInterceptTouchEvent(true);
        return ret;*/
-      return false;
+      return super.onTouchEvent(ev);
    }
 }

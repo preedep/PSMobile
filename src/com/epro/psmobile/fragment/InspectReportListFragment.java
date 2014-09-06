@@ -33,6 +33,7 @@ import com.epro.psmobile.util.InspectServiceSupportUtil;
 import com.epro.psmobile.util.MessageBox;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +46,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,10 +77,13 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 
 	private Uri imageUri;
 	
+	//public static View subView;
 	//private JobRequestProduct currentJobRequestProduct;	
 	private MediaScannerConnection conn;
 	
 	protected ArrayList<JobRequestProduct> jobRequestProducts;
+	
+	private LayoutInflater inflater = null;
 	
 	/*
 	 * for default supported old function
@@ -130,7 +136,8 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	@Override
 	public View onCreateView(LayoutInflater arg0, ViewGroup arg1, Bundle arg2) {
 		// TODO Auto-generated method stub
-	      
+	     
+	    inflater = arg0;
 	    this.getSherlockActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 	    jobRequest = this.getArguments().getParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL);
@@ -149,13 +156,15 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	        }	       
 	    }else{
 	       /*show in paging use for universal only*/
-	       currentView = arg0.inflate(R.layout.universal_inspect_list_view_fragment_item, arg1, false);
+	       currentView = arg0.inflate(R.layout.universal_inspect_list_view_fragment_item, arg1, false);	       
+//	       InspectReportListFragment.subView = currentView;
 	    }
 	    
 	    
-		initial(currentView);
 		if (!showInPaging){
 		   doPopupCheckIn();
+		}else{
+	      // initial(currentView);
 		}
 		//this.setRetainInstance(true);
 		
@@ -165,6 +174,27 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	protected abstract void initial(View currentView);
 	
 	/* (non-Javadoc)
+    * @see com.epro.psmobile.fragment.ContentViewBaseFragment#onPause()
+    */
+   @Override
+   public void onPause() {
+      // TODO Auto-generated method stub
+      super.onPause();
+   }
+   /* (non-Javadoc)
+    * @see com.epro.psmobile.fragment.ContentViewBaseFragment#onResume()
+    */
+   @Override
+   public void onResume() {
+      // TODO Auto-generated method stub
+      if (this.showInPaging){
+         if (inflater != null){
+//            currentView = inflater.inflate(R.layout.universal_inspect_list_view_fragment_item, arg1, false);        
+         }
+      }
+      super.onResume();
+   }
+   /* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
 	 */
 	@Override
@@ -304,11 +334,14 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 		switch(id)
 		{
 		    case R.id.menu_switch_to_universal:
-		    {
+		    {/*
 		       if (this.saveAllData())
 		       {
 		         this.doOpenUniversalLayout();
-		       }
+		       }*/
+		       SaveParam saveParam = new SaveParam();
+		       saveParam.needOpenUniversalLayout = true;
+		       new SaveAsyncTask(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, saveParam);
 		    }break;
 		    case R.id.menu_car_inspect_general_take_photo:{
 		       this.doTakeGeneralPhoto();
@@ -327,35 +360,77 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 				   MessageBox.showSaveCompleteMessage(getActivity());
 				}*/
 			   if (!showInPaging)
-			      new SaveAsyncTask().execute();
+			      new SaveAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			   
 			}break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
-	class SaveAsyncTask extends AsyncTask<Void,Void,Boolean>{
+	class SaveResult{
+	   boolean isSuccess;
+	   boolean needOpenUniversalLayout;
+	}
+	class SaveParam{
+	   boolean needOpenUniversalLayout;
+	}
+	class SaveAsyncTask extends AsyncTask<SaveParam,Void,SaveResult>{
+
+	   private boolean showWaiting = false;
+	   private ProgressDialog dlg;
+	   public SaveAsyncTask(){
+	      this(false);
+       }
+	   public SaveAsyncTask(boolean showWaiting){
+	      this.showWaiting = showWaiting;
+	   }
+	   /* (non-Javadoc)
+	       * @see android.os.AsyncTask#onPreExecute()
+	       */
+	      @Override
+	      protected void onPreExecute() {
+	         // TODO Auto-generated method stub
+	         super.onPreExecute();
+	         if (showWaiting){
+	            dlg = ProgressDialog.show(getSherlockActivity(), "", "Waiting...");
+	            dlg.show();
+	         }
+	      }
 
       @Override
-      protected Boolean doInBackground(Void... params) {
+      protected SaveResult doInBackground(SaveParam... params) {
          // TODO Auto-generated method stub
-         return saveAllData();
+         SaveResult saveResult = new SaveResult();
+         saveResult.isSuccess = saveAllData();
+         if ((params != null)&&(params.length > 0)){
+            saveResult.needOpenUniversalLayout = params[0].needOpenUniversalLayout;
+         }
+         return saveResult;
       }
 
       /* (non-Javadoc)
        * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
        */
       @Override
-      protected void onPostExecute(Boolean result) {
+      protected void onPostExecute(SaveResult result) {
          // TODO Auto-generated method stub
          super.onPostExecute(result);
-         if (result.booleanValue()){
-            MessageBox.showSaveCompleteMessage(getActivity());
+         if (result.isSuccess)
+         {
+            if (result.needOpenUniversalLayout){
+               if (dlg != null){
+                  dlg.dismiss();
+               }
+               doOpenUniversalLayout();
+            }else{
+               MessageBox.showSaveCompleteMessage(getActivity());
+            }
          }else{
             MessageBox.showMessage(getActivity(), R.string.text_error_title, R.string.text_insert_error_msg);
          }
       }
 
+     
      
 	   
 	}
@@ -416,6 +491,8 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 
    protected void doOpenUniversalLayout()
 	{
+       if (this.showInPaging)return;
+       
        Bundle argument = new Bundle();
        
        argument.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL, InspectReportListFragment.jobRequest);
@@ -427,7 +504,23 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
        argument.putBoolean(InstanceStateKey.KEY_ARGUMENT_SCREEN_STATE, isShown);
        argument.putBoolean(InstanceStateKey.KEY_ARGUMENT_IS_UNIVERSAL_LAYOUT, true);
        
-       FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+       final FragmentManager fm = getActivity().getSupportFragmentManager();
+       fm.addOnBackStackChangedListener(new OnBackStackChangedListener(){
+
+         int count = 0;
+         @Override
+         public void onBackStackChanged() {
+            // TODO Auto-generated method stub
+            //Log.d("DEBUG_D_D", "back stack");
+            if (count > 0){
+               initial(currentView);
+               fm.removeOnBackStackChangedListener(this);
+            }
+            count++;
+         }
+          
+       });
+       FragmentTransaction ft = fm.beginTransaction();
     
        DrawingInspectFragment drawingFragment = new DrawingInspectFragment();                 
        drawingFragment.setArguments(argument);
@@ -504,9 +597,10 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	                          super.getDataAdapter().updateUniversalPhotoSetIDInJobRequestProduct(currentJobRequestProduct);
 	                       }
                            BaseAdapter adapter = (BaseAdapter)(lsView.getAdapter());
-                           adapter.notifyDataSetChanged();
-                           adapter.notifyDataSetInvalidated();
-
+                           if (adapter != null){
+                              adapter.notifyDataSetChanged();
+                              adapter.notifyDataSetInvalidated();
+                           }
 	                    }
 	                    catch (Exception e) {
 	                       // TODO Auto-generated catch block

@@ -117,6 +117,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
    
    static class Holder{
       View[] viewRows;
+      boolean shown;
    };
 
    static class EachColViewHolder{
@@ -125,6 +126,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       View viewRow;
       JobRequestProduct jrp;
       InspectFormView formView;
+      Object value;
    };
    private ArrayList<JobRequestProduct> jobRequestProductList;
    private ArrayList<InspectFormView>  formViewList;
@@ -158,6 +160,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       private int position;
       //private String previousText;
       private View viewRow;
+      private AsyncCalculate syncCaluclate;
       
       @Override
       public void afterTextChanged(Editable s) {
@@ -185,59 +188,17 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             View vParent = (View)editText.getParent();
             if (vParent.getTag() != null)
             {
-               InspectFormView formView = (InspectFormView)vParent.getTag();
-               final JobRequestProduct jrp = jobRequestProductList.get(this.getPosition());
-               
-               invokeSetValue(jrp,
-                     formView,
-                     s);
-               
-               Log.d("DEBUG_D_D",getPosition()+" Active -> Comment -> "+jrp.getRemark());
-
-               /*
-                * 
-                */
-               if (viewCol.getTag() != null)
-               {
-                  /*
-                   * if current col isn't decimal value i'll ignore calculate by formula
-                   */
-                  
-                  if (isArgumentOfGetterMethodIsDecimal(jrp,formView.getColInvokeField()))
-                  {
-                     calculateByFormula(jrp,formView,
-                           (Holder)viewCol.getTag());
-                     
-                     /*
-                      * re set value to control
-                      */
-                    // displayEachRow(viewCol,position);
-                     Holder holder = (Holder)viewCol.getTag();
-                     for(View vItem_col  : holder.viewRows){
-                        InspectFormView inspectViewForm = (InspectFormView)vItem_col.getTag();
-                        UniversalControlType ctrlType = UniversalControlType.getControlType(
-                              inspectViewForm.getColType());
-                        if (ctrlType == UniversalControlType.SimpleTextDecimal){
-                           if (!inspectViewForm.isColEditable())
-                           {
-                              if ((inspectViewForm.getColFormula() != null)&&(!inspectViewForm.getColFormula().isEmpty())){
-                                 EditText edt = 
-                                       (EditText)vItem_col.findViewById(R.id.et_report_list_entry_column_text);
-                                 edt.setText(setFormat(jrp.getProductValue(),inspectViewForm));
-                                 break;
-                              }
-                           }
-                        }
-                     }
-                     
-                     /*
-                   if (getColumnInputChangeListener() != null){
-                      getColumnInputChangeListener().onColumnInputChanged(viewCol,position);
-                      //getColumnInputChangeListener().onReload();
-                   }*/
-                    ////////////
-                  }
-               }
+               EachColViewHolder holder = new EachColViewHolder();
+               holder.formView = (InspectFormView)vParent.getTag();
+               holder.position = position;
+               holder.viewCol = viewCol;
+               holder.viewRow = viewRow;
+               holder.value = s;
+               //if (syncCaluclate == null)
+                  syncCaluclate = new AsyncCalculate();
+               //if (syncCaluclate.getStatus() != AsyncTask.Status.FINISHED)
+               //   syncCaluclate.cancel(true);
+               syncCaluclate.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, holder);
             }                           
          }
       }
@@ -273,9 +234,80 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       public void setViewRow(View viewRow) {
          this.viewRow = viewRow;
       }
+   }
+   
+   class AsyncCalculate extends AsyncTask<EachColViewHolder,Void,String>
+   {
 
-  
-      
+      private EachColViewHolder holder;
+      private EditText edtText;
+      private JobRequestProduct jrp;
+      private InspectFormView inspectViewForm;
+      @Override
+      protected String doInBackground(EachColViewHolder... params) {
+         // TODO Auto-generated method stub
+         holder = params[0];
+         String value = "";
+         InspectFormView formView = holder.formView;
+         
+        jrp = jobRequestProductList.get(holder.position);
+         
+         invokeSetValue(jrp,
+               formView,
+               holder.value);
+         
+         if (isArgumentOfGetterMethodIsDecimal(jrp,formView.getColInvokeField()))
+         {
+            calculateByFormula(jrp,formView,
+                  (Holder)holder.viewCol.getTag());
+            
+            /*
+             * re set value to control
+             */
+           // displayEachRow(viewCol,position);
+            //Holder holder = (Holder).getTag();
+            Holder colHolder = (Holder)holder.viewCol.getTag();
+            for(View vItem_col  : colHolder.viewRows)
+            {
+               inspectViewForm = (InspectFormView)vItem_col.getTag();
+               UniversalControlType ctrlType = UniversalControlType.getControlType(
+                     inspectViewForm.getColType());
+               if (ctrlType == UniversalControlType.SimpleTextDecimal)
+               {
+                  value = inspectViewForm.getColDefaultValue();
+                  //if (!inspectViewForm.isColEditable())
+                  //{
+                     if ((inspectViewForm.getColFormula() != null)&&(!inspectViewForm.getColFormula().isEmpty()))
+                     {
+                        EditText edt = 
+                              (EditText)vItem_col.findViewById(R.id.et_report_list_entry_column_text);
+                        edtText = edt;
+                        Object retObj = invokeGetValue(jrp,inspectViewForm);
+                        value = setFormat(
+                              retObj,
+                              inspectViewForm);
+                        break;
+                     }
+                  //}
+               }
+            }
+         }
+         return value;
+      }
+
+      /* (non-Javadoc)
+       * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+       */
+      @Override
+      protected void onPostExecute(String result) {
+         // TODO Auto-generated method stub
+         super.onPostExecute(result);
+         if (edtText != null)
+         {
+            edtText.setText(result);
+         }
+      }
+
    }
    public UniversalListEntryAdapter(Context context,
          JobRequest jobRequest,
@@ -401,48 +433,6 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             /*
              * 
              */
-            /*
-            if (viewRow != null)
-            {
-               if (viewRow.getTag() != null){
-                  Holder holder = (Holder)viewRow.getTag();
-                  for(View vEachCol : holder.viewRows)
-                  {
-                     if (vEachCol != null)
-                     {
-                        InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
-                        UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
-                        if (ctrlType == UniversalControlType.Product)
-                        {
-                           final ProductSpinner proSpinner = (ProductSpinner)vEachCol.findViewById(R.id.sp_product);
-                           proSpinner.initial(productGroup.getProductGroupID());
-                           
-                           int productId = jobRequestProductList.get(position).getProductId();
-                           int idx = 0;
-                           if (proSpinner.getProducts() != null)
-                           {
-                              for (int i = 0; i < proSpinner.getProducts().size();i++)
-                              {
-                                 if (productId == proSpinner.getProducts().get(i).getProductID())
-                                 {
-                                    idx = i;
-                                    jobRequestProductList.get(position).setProductId(productId);
-                                    if (proSpinner.getOnItemSelectedListener() instanceof ProductSelectImpl){
-                                       ((ProductSelectImpl)proSpinner.getOnItemSelectedListener()).setViewRow(viewRow);
-                                       ((ProductSelectImpl)proSpinner.getOnItemSelectedListener()).setPosition(position);
-                                    }
-                                    proSpinner.setSelection(idx, false);
-                                    break;
-                                 }
-                              }
-                           }
-                           break;
-                        }
-                     }
-                  }
-               }                                
-            }
-            */
             //////////////
          }
       }
@@ -494,9 +484,9 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                      eachColViewHolder.viewRow = viewRow;
                      
                      if (ctrlType == UniversalControlType.MarketPrice){
-                        new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, eachColViewHolder);
+                        new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, eachColViewHolder);
                      }else if (ctrlType == UniversalControlType.ProductUnit){
-                        new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, eachColViewHolder);                        
+                        new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, eachColViewHolder);                        
                      }
                   }
                }
@@ -897,8 +887,12 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       
       //final JobRequestProduct jrp = jobRequestProductList.get(position);
       Log.d("DEBUG_D_D", "position -> "+position);
-      displayEachRow(view,position);
       
+      Holder holder = (Holder)view.getTag();
+      if (!holder.shown){
+         displayEachRow(view,position);
+         holder.shown = true;
+      }
       return view;
    }
    @SuppressWarnings("unused")
@@ -906,11 +900,8 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       /*
        * display each row
        */
-
       final JobRequestProduct jrp = jobRequestProductList.get(position);
-      
       Holder holder = (Holder)rowView.getTag();
-      
       for( View vEachCol : holder.viewRows)
       {
          final InspectFormView formView =  (InspectFormView)vEachCol.getTag();
@@ -998,7 +989,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                         }
                      }
                   });*/
-                  new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,eachColViewHolder);
+                  new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,eachColViewHolder);
                   
                   
                      /*
@@ -1123,7 +1114,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                eachColViewHolder.jrp = jrp;
                eachColViewHolder.formView = formView;
                
-               new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,eachColViewHolder);
+               new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,eachColViewHolder);
                
                
                /*
@@ -1196,14 +1187,14 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                eachColViewHolder.jrp = jrp;
                eachColViewHolder.formView = formView;
                
-               new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,eachColViewHolder);
+               new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,eachColViewHolder);
               
                
             }break;
             case Layout:
             {
                final LayoutSpinner sp_layout = (LayoutSpinner)vEachCol.findViewById(R.id.sp_layout_inspect);
-               sp_layout.initial(task.getTaskCode(), jrp.getcWareHouse(),true);
+               sp_layout.initial(task.getTaskCode(), jrp.getCustomerSurveySiteID(),true);
                SpinnerAdapter adapter  = sp_layout.getAdapter();
                for(int i = 0; i < adapter.getCount();i++){
                   Object obj = adapter.getItem(i);
@@ -1483,10 +1474,10 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                }
                
                if (marketPriceeachColViewHolder != null){
-                  new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, marketPriceeachColViewHolder);
+                  new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, marketPriceeachColViewHolder);
                }
                if (productUniteachColViewHolder != null){
-                  new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, productUniteachColViewHolder);                  
+                  new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, productUniteachColViewHolder);                  
                }
             }
          }else if (ctrlType == UniversalControlType.ProductUnit)
@@ -1578,7 +1569,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       }
    }
    @SuppressWarnings("unused")
-   private Object invokeGetValue(JobRequestProduct jobRequestProduct,
+   private synchronized Object invokeGetValue(JobRequestProduct jobRequestProduct,
          InspectFormView viewForm){
       
       Object objRet = null;
@@ -1600,29 +1591,30 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          {
             objRet = fInvoke.invoke(jobRequestProduct);  
          }else{
-            throw new NoSuchFieldException(invokeField);
+            //throw new NoSuchFieldException(invokeField);
+            Log.d("DEBUG_D", "No such field -> "+invokeField);
          }
       }
-      catch (NoSuchFieldException e) {
+      //catch (NoSuchFieldException e) {
          // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
+         //e.printStackTrace();
+      //}
       catch (IllegalAccessException e) {
          // TODO Auto-generated catch block
-         e.printStackTrace();
+         //e.printStackTrace();
       }
       catch (IllegalArgumentException e) {
          // TODO Auto-generated catch block
-         e.printStackTrace();
+         //e.printStackTrace();
       }
       catch (InvocationTargetException e) {
          // TODO Auto-generated catch block
-         e.printStackTrace();
+         //e.printStackTrace();
       }
       return (objRet == null)?"":objRet;
    }
    @SuppressWarnings({ "unused", "rawtypes"})
-   private void invokeSetValue(final JobRequestProduct jobRequestProduct,
+   private synchronized void invokeSetValue(final JobRequestProduct jobRequestProduct,
          final InspectFormView viewForm,final Object value)
    {
       String invokeField = "set"+viewForm.getColInvokeField();
@@ -1656,24 +1648,26 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             }
             //fInvoke.invoke(jobRequestProduct, value);  
          }else{
-            throw new NoSuchFieldException(invokeField);
+           // throw new NoSuchFieldException(invokeField);
+            Log.d("DEBUG_D", "No such field -> "+invokeField);
+
          }
       }
-      catch (NoSuchFieldException e) {
+//      catch (NoSuchFieldException e) {
          // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
+         //e.printStackTrace();
+//      }
       catch (IllegalAccessException e) {
          // TODO Auto-generated catch block
-         e.printStackTrace();
+         //e.printStackTrace();
       }
       catch (IllegalArgumentException e) {
          // TODO Auto-generated catch block
-         e.printStackTrace();
+        // e.printStackTrace();
       }
       catch (InvocationTargetException e) {
          // TODO Auto-generated catch block
-         e.printStackTrace();
+        // e.printStackTrace();
       }
    }
    private String setFormat(Object objValue,InspectFormView formView)
