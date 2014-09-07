@@ -118,6 +118,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
    static class Holder{
       View[] viewRows;
       boolean shown;
+      int position = -1;
    };
 
    static class EachColViewHolder{
@@ -137,6 +138,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
    private CustomerSurveySite site;
    
    private PSBODataAdapter dataAdapter;
+   private int lastPosition; //after add new
    
    private MarketPriceFinder marketPriceGlobalFinder;
    private MarketPriceFinder marketPriceForProvince;
@@ -153,7 +155,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
    private long mLastClickTime;
    
    class UniversalTextWatcher implements TextWatcher{
-
+   
       //private JobRequestProduct jobRequestProduct;
       private EditText editText;
       private View viewCol;
@@ -167,7 +169,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          // TODO Auto-generated method stub
          
       }
-
+   
       @Override
       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
          // TODO Auto-generated method stub
@@ -175,16 +177,25 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          //previousText = s.toString();
          
       }
-
+   
       @Override
       public void onTextChanged(CharSequence s, int start, int before, int count) {
          // TODO Auto-generated method stub
-         calculateOnTextChanged(s.toString());
+         if (!s.toString().isEmpty())
+         {
+            double d = 0;
+            try{
+               d = Double.parseDouble(s.toString());
+            }catch(Exception ex){}
+            if (d > 0){
+               calculateOnTextChanged(s.toString());
+            }
+         }
       }
       
       private void calculateOnTextChanged(final String s){
          {
-            
+            /*
             View vParent = (View)editText.getParent();
             if (vParent.getTag() != null)
             {
@@ -199,38 +210,89 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                //if (syncCaluclate.getStatus() != AsyncTask.Status.FINISHED)
                //   syncCaluclate.cancel(true);
                syncCaluclate.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, holder);
-            }                           
+            }                           */
+            
+            View vParent = (View)editText.getParent();
+            if (vParent.getTag() != null)
+            {
+               
+               InspectFormView formView = (InspectFormView)vParent.getTag();
+               final JobRequestProduct jrp = jobRequestProductList.get(this.getPosition());
+               
+               invokeSetValue(jrp,
+                     formView,
+                     s);
+               
+               //Log.d("DEBUG_D_D",getPosition()+" Active -> Comment -> "+jrp.getRemark());
+
+               if (viewCol.getTag() != null)
+               {
+                   // if current col isn't decimal value i'll ignore calculate by formula
+                   
+                  
+                  if (isArgumentOfGetterMethodIsDecimal(jrp,formView.getColInvokeField()))
+                  {
+                     calculateByFormula(jrp,formView,
+                           (Holder)viewCol.getTag());
+                     
+                     /*
+                      * re set value to control
+                      */
+                    // displayEachRow(viewCol,position);
+                     Holder holder = (Holder)viewCol.getTag();
+                     for(View vItem_col  : holder.viewRows){
+                        InspectFormView inspectViewForm = (InspectFormView)vItem_col.getTag();
+                        UniversalControlType ctrlType = UniversalControlType.getControlType(
+                              inspectViewForm.getColType());
+                        if (ctrlType == UniversalControlType.SimpleTextDecimal){
+                           if (!inspectViewForm.isColEditable())
+                           {
+                              if ((inspectViewForm.getColFormula() != null)&&(!inspectViewForm.getColFormula().isEmpty())){
+                                 EditText edt = 
+                                       (EditText)vItem_col.findViewById(R.id.et_report_list_entry_column_text);
+                                 
+                                 Object value = 
+                                       invokeGetValue(jrp,inspectViewForm);
+                                 edt.setText(setFormat(value,inspectViewForm));
+                                 break;
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
          }
       }
-    
+   
       public EditText getEditText() {
          return editText;
       }
-
+   
       public void setEditText(EditText editText) {
          this.editText = editText;
       }
-
+   
       public View getViewCol() {
          return viewCol;
       }
-
+   
       public void setViewCol(View viewCol) {
          this.viewCol = viewCol;
       }
-
+   
       public int getPosition() {
          return position;
       }
-
+   
       public void setPosition(int poisition) {
          this.position = poisition;
       }
-
+   
       public View getViewRow() {
          return viewRow;
       }
-
+   
       public void setViewRow(View viewRow) {
          this.viewRow = viewRow;
       }
@@ -318,6 +380,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       // TODO Auto-generated constructor stub
       this.context = context;
       this.jobRequestProductList = jobRequestProductList;
+//      this.jobRequestProductList.addAll(jobRequestProductList);
       this.formViewList = formViewList;
       this.jobRequest = jobRequest;
       this.task = task;
@@ -643,6 +706,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          View vContainer = viewRow.findViewById(R.id.ll_report_list_entry_row_containers);
          
          Holder holder = new Holder();
+         //holder.position = position;
          holder.viewRows = new View[formViewList.size()];
          for(int i = 0; i < formViewList.size();i++)
          {
@@ -889,9 +953,16 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       Log.d("DEBUG_D_D", "position -> "+position);
       
       Holder holder = (Holder)view.getTag();
-      if (!holder.shown){
-         displayEachRow(view,position);
-         holder.shown = true;
+      if ((lastPosition >= 0) && (position == lastPosition))
+      {
+         holder.shown = false;
+         lastPosition = -1;
+      }
+      if (!holder.shown)
+      {
+            displayEachRow(view,position);
+            holder.shown = true;                     
+            holder.position = position;
       }
       return view;
    }
@@ -1268,7 +1339,46 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       if (this.jobRequestProductList == null){
          this.jobRequestProductList = new ArrayList<JobRequestProduct>();
       }
-      new AsyncTaskAddNewRowNoAudit().execute(lastRowProductIdOfCurrentPage);
+      //new AsyncTaskAddNewRowNoAudit().execute(lastRowProductIdOfCurrentPage);
+      int maxRowId = lastRowProductIdOfCurrentPage;//params[0];
+      for(JobRequestProduct item : jobRequestProductList)
+      {
+         if (item.getProductRowID() > maxRowId){
+            maxRowId = item.getProductRowID();
+         }
+      }
+      JobRequestProduct jrp = new JobRequestProduct();
+      jrp.setProductRowID(maxRowId+1);
+      jrp.setJobRequestID(jobRequest.getJobRequestID());
+      jrp.setcWareHouse(site.getCustomerSurveySiteID());
+      jrp.setJobLocationId(site.getCustomerSurveySiteID());
+      jrp.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
+      jrp.setAudit(isAudit);
+      jrp.setJobNo(task.getTaskCode());
+      
+      int teamId = SharedPreferenceUtil.getTeamID(context);      
+      jrp.setcTeamId(teamId);
+      
+      //////////
+      jobRequestProductList.add(jrp);
+      
+      Collections.sort(jobRequestProductList,new Comparator<JobRequestProduct>(){
+
+         @Override
+         public int compare(JobRequestProduct lhs, JobRequestProduct rhs) {
+            // TODO Auto-generated method stub
+            return lhs.getProductRowID() - rhs.getProductRowID();
+         }
+         
+      });
+      
+      if (getColumnInputChangeListener() != null){
+         //save to data base
+         getColumnInputChangeListener().onRowSaved(jrp);
+         lastPosition = jobRequestProductList.size()-1;
+         notifyDataSetChanged();
+         getColumnInputChangeListener().onReload(jobRequestProductList.size()-1);
+      }
    }
    class AsyncTaskReloadColumn extends AsyncTask<EachColViewHolder,Void,Void>{
 
@@ -1514,7 +1624,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          // TODO Auto-generated method stub
          
          int maxRowId = params[0];
-         for(JobRequestProduct item : jobRequestProductList)
+         for(JobRequestProduct item : UniversalListEntryAdapter.this.jobRequestProductList)
          {
             if (item.getProductRowID() > maxRowId){
                maxRowId = item.getProductRowID();
@@ -1533,9 +1643,9 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          jrp.setcTeamId(teamId);
          
          //////////
-         jobRequestProductList.add(jrp);
+         UniversalListEntryAdapter.this.jobRequestProductList.add(jrp);
          
-         Collections.sort(jobRequestProductList,new Comparator<JobRequestProduct>(){
+         Collections.sort(UniversalListEntryAdapter.this.jobRequestProductList,new Comparator<JobRequestProduct>(){
 
             @Override
             public int compare(JobRequestProduct lhs, JobRequestProduct rhs) {
@@ -1563,7 +1673,8 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          //notifyDataSetChanged();
          //notifyDataSetInvalidated();
          if (getColumnInputChangeListener() != null){
-            getColumnInputChangeListener().onReload(jobRequestProductList.size()-1);
+            notifyDataSetChanged();
+            getColumnInputChangeListener().onReload(UniversalListEntryAdapter.this.jobRequestProductList.size()-1);
          }
 
       }

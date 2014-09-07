@@ -158,40 +158,54 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                            e.printStackTrace();
                         }
                         
-                        if (!addToNewPage){
+                        if (!addToNewPage)
+                        {
                            if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
                               UniversalListPageFragmentAdapter adapter =
                                     (UniversalListPageFragmentAdapter)viewPager.getAdapter();
-                              Fragment f = adapter.getItem(currentViewIdx);
-                              if ( f instanceof UniversalInspectListFragmentItem){
-                                 UniversalInspectListFragmentItem universal_f = (UniversalInspectListFragmentItem)f;
-                                 btnAddNoAudit.setEnabled(false);
-                                 
-                                 View vgNavigator = v.findViewById(R.id.ll_page_navigator);
-                                 vgNavigator.setVisibility(View.GONE);
-                                 if (pages > 1){
-                                    vgNavigator.setVisibility(View.VISIBLE);
-                                    Button btnNext = (Button)vgNavigator.findViewById(R.id.btn_nav_next);
-                                    Button btnPrev = (Button)vgNavigator.findViewById(R.id.btn_nav_back);
-                                    btnNext.setEnabled(false);
-                                    btnPrev.setEnabled(false);
-                                 }
+                              
+                              if (viewPager.getCurrentItem() != adapter.getCount()-1)
+                              {
+                                 /*if current page is not last page i'll move to last page first*/
                                  viewPager.setCurrentItem(adapter.getCount()-1);
                                  
                                  
-                                 int lastRowProductId = 0;
-                                 if (universal_f.getAllJobRequestProduct() != null){
-                                    lastRowProductId = 
-                                          universal_f.getAllJobRequestProduct().get(universal_f.getAllJobRequestProduct().size()-1).getProductRowID();
+                                 int currentPage = viewPager.getCurrentItem();
+                                 String strTextCurrentPageNo = 
+                                       getString(R.string.text_current_page, currentPage+1,pages);
+                                 TextView tvCurrentPageNo = (TextView)currentView.findViewById(R.id.tv_current_page_no);
+                                 tvCurrentPageNo.setText(strTextCurrentPageNo);
+
+                              }else{
+                                 Fragment f = adapter.getItem(currentViewIdx);                              
+                                 if ( f instanceof UniversalInspectListFragmentItem){
+                                    UniversalInspectListFragmentItem universal_f = (UniversalInspectListFragmentItem)f;
+                                    btnAddNoAudit.setEnabled(false);
+                                    
+                                    View vgNavigator = v.findViewById(R.id.ll_page_navigator);
+                                    vgNavigator.setVisibility(View.GONE);
+                                    if (pages > 1){
+                                       vgNavigator.setVisibility(View.VISIBLE);
+                                       Button btnNext = (Button)vgNavigator.findViewById(R.id.btn_nav_next);
+                                       Button btnPrev = (Button)vgNavigator.findViewById(R.id.btn_nav_back);
+                                       btnNext.setEnabled(false);
+                                       btnPrev.setEnabled(false);
+                                    }
+                                    
+                                    int lastRowProductId = 0;
+                                    if (universal_f.getAllJobRequestProduct() != null){
+                                       lastRowProductId = 
+                                             universal_f.getAllJobRequestProduct().get(universal_f.getAllJobRequestProduct().size()-1).getProductRowID();
+                                    }
+                                    universal_f.addNewRowNoAudit(lastRowProductId);
                                  }
-                                 universal_f.addNewRowNoAudit(lastRowProductId);
+
                               }
                            }                           
                         }else{
-                           if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
-                              
+                           if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter)
+                           {
                               btnAddNoAudit.setEnabled(false);
-                              
                               View vgNavigator = v.findViewById(R.id.ll_page_navigator);
                               vgNavigator.setVisibility(View.GONE);
                               if (pages > 1){
@@ -204,43 +218,61 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                               
                               final UniversalListPageFragmentAdapter adapter =
                                     (UniversalListPageFragmentAdapter)viewPager.getAdapter();
-                              UniversalInspectListFragmentItem f = 
+                              final UniversalInspectListFragmentItem f = 
                                     (UniversalInspectListFragmentItem)InspectReportListFragment.newInstance(jobRequest, 
                                           currentTask, 
                                           customerSurveySite,
-                                          (rowCount - 1) * (InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE), true);
+                                          (pages - 1) * (InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE), true);
                               
                               f.setDataReloadCompleted(new OnDataReloadCompleted(){
 
                                  @Override
-                                 public void onReloadComplete() {
+                                 public void onReloadComplete(boolean isNewRow) 
+                                 {
                                     // TODO Auto-generated method stub
                                     Button btnAddNoAudit = (Button)v.findViewById(R.id.btn_add_no_audit);
                                     btnAddNoAudit.setEnabled(true);              
                                     
                                     View vgNavigator = v.findViewById(R.id.ll_page_navigator);
                                     vgNavigator.setVisibility(View.GONE);
-                                    if (pages > 1){
+                                    if (pages > 1)
+                                    {
                                        vgNavigator.setVisibility(View.VISIBLE);
                                        Button btnNext = (Button)vgNavigator.findViewById(R.id.btn_nav_next);
                                        Button btnPrev = (Button)vgNavigator.findViewById(R.id.btn_nav_back);
                                        btnNext.setEnabled(true);
                                        btnPrev.setEnabled(true);
-                                       
+                                       btnNext.setOnClickListener(UniversalInspectListFragment.this);
+                                       btnPrev.setOnClickListener(UniversalInspectListFragment.this);
                                        
                                        
                                        String strTextCurrentPageNo = 
                                              getString(R.string.text_current_page, adapter.getCount(),pages);
                                        TextView tvCurrentPageNo = (TextView)currentView.findViewById(R.id.tv_current_page_no);
                                        tvCurrentPageNo.setText(strTextCurrentPageNo);
-                                    
-                                       
-                                       
                                     }
                                     if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
                                        UniversalListPageFragmentAdapter adapter =
                                              (UniversalListPageFragmentAdapter)viewPager.getAdapter();
                                        viewPager.setCurrentItem(adapter.getCount()-1);
+                                    }
+                                    
+                                    if (isNewRow)
+                                    {
+                                       int lastRowProductId = 0;
+                                       try {
+                                          ArrayList<JobRequestProduct> jrpList = 
+                                                dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(),
+                                                customerSurveySite.getCustomerSurveySiteID());
+                                          if (jrpList != null){
+                                             lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
+                                          }
+                                       }
+                                       catch (Exception e) {
+                                          // TODO Auto-generated catch block
+                                          e.printStackTrace();
+                                       }
+                                       f.addNewRowNoAudit(lastRowProductId);
                                     }
                                  }
                                  
@@ -369,8 +401,14 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                ArrayList<Fragment> fragments = 
                      new ArrayList<Fragment>();
                
-               for(int i = 0; i < pages ;i++){
-                  Fragment f = 
+               if (rowCount == 0){
+                  /*should be no audit*/
+                  //i'll set to first page
+                  pages = 1;
+               }
+               for(int i = 0; i < pages ;i++)
+               {
+                  final Fragment f = 
                         InspectReportListFragment.newInstance(jobRequest, 
                               currentTask, 
                               customerSurveySite,
@@ -380,7 +418,8 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                      universal_f.setDataReloadCompleted(new OnDataReloadCompleted(){
 
                         @Override
-                        public void onReloadComplete() {
+                        public void onReloadComplete(boolean isNewRow) 
+                        {
                            // TODO Auto-generated method stub
                            Button btnAddNoAudit = (Button)v.findViewById(R.id.btn_add_no_audit);
                            btnAddNoAudit.setEnabled(true);              
@@ -393,6 +432,10 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                               Button btnPrev = (Button)vgNavigator.findViewById(R.id.btn_nav_back);
                               btnNext.setEnabled(true);
                               btnPrev.setEnabled(true);
+                              
+                              btnNext.setOnClickListener(UniversalInspectListFragment.this);
+                              btnPrev.setOnClickListener(UniversalInspectListFragment.this);
+
                            }
                            if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
                               UniversalListPageFragmentAdapter adapter =
@@ -400,6 +443,24 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                               viewPager.setCurrentItem(adapter.getCount()-1);
                            }
                            
+                           
+                           if (isNewRow)
+                           {
+                              int lastRowProductId = 0;
+                              try {
+                                 ArrayList<JobRequestProduct> jrpList = 
+                                       dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(),
+                                       customerSurveySite.getCustomerSurveySiteID());
+                                 if (jrpList != null){
+                                    lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
+                                 }
+                              }
+                              catch (Exception e) {
+                                 // TODO Auto-generated catch block
+                                 e.printStackTrace();
+                              }
+                              ((UniversalInspectListFragmentItem) f).addNewRowNoAudit(lastRowProductId);
+                           }
                         }
                      });
 
@@ -447,7 +508,7 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                //Fragment viewPagerFragment = getChildFragmentManager().findFragmentByTag(name);
                
                //Fragment f = viewPagerFragment;//adapter.getItem(i);
-               Fragment f = adapter.getRegisteredFragment(i);
+               Fragment f = adapter.getItem(i);
                if ( f instanceof UniversalInspectListFragmentItem){
                   UniversalInspectListFragmentItem universal_f = (UniversalInspectListFragmentItem)f;
                   if (universal_f.getAllJobRequestProduct() != null){
@@ -554,7 +615,7 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
       int currentViewIdx = viewPager.getCurrentItem();  
       if (viewPager.getAdapter() instanceof UniversalListPageFragmentAdapter){
          UniversalListPageFragmentAdapter adapter = (UniversalListPageFragmentAdapter)viewPager.getAdapter();
-         UniversalInspectListFragmentItem f = (UniversalInspectListFragmentItem)adapter.getItem(currentViewIdx);
+         UniversalInspectListFragmentItem f = (UniversalInspectListFragmentItem)adapter.getRegisteredFragment(currentViewIdx);
          f.onActivityResult(requestCode, resultCode, data);
       }
    }

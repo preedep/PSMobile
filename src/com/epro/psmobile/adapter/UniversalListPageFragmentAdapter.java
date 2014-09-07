@@ -68,11 +68,12 @@ public class UniversalListPageFragmentAdapter extends FragmentStatePagerAdapter 
    /* (non-Javadoc)
     * @see android.support.v4.view.PagerAdapter#getItemPosition(java.lang.Object)
     */
+   /*
    @Override
    public int getItemPosition(Object object) {
       // TODO Auto-generated method stub
       return POSITION_NONE;//super.getItemPosition(object);
-   }
+   }*/
    
    @Override
    public Object instantiateItem(ViewGroup container, int position) {

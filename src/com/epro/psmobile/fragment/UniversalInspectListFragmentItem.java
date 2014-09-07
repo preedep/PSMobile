@@ -36,16 +36,17 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
    @SuppressWarnings("unused")
    private JobRequestProduct currentJobRequestProduct;
    
-   private static Activity activity = null;
-   private static View rootView;;
-   private static ArrayList<JobRequestProduct> jrpList;
+   private  Activity activity = null;
+   private  View rootView;;
+   //private  ArrayList<JobRequestProduct> jrpList;
+   private  ListView lvItems;
    
    static class Holder{
      View vContainer;
      Activity aActivity;
    };
    public interface OnDataReloadCompleted{
-      void onReloadComplete();
+      void onReloadComplete(boolean isNewRow);
    }
    private OnDataReloadCompleted dataReloadCompleted;
    
@@ -60,6 +61,8 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
       if (rootView == null){
          rootView = currentView;
       }
+      
+//      lvItems = (ListView)currentView.findViewById(R.id.universal_lv_report);
    }
    /* (non-Javadoc)
     * @see com.epro.psmobile.fragment.InspectReportListFragment#onActivityCreated(android.os.Bundle)
@@ -68,9 +71,11 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
    public void onActivityCreated(Bundle savedInstanceState) {
       // TODO Auto-generated method stub
       activity = getSherlockActivity();
-      if (rootView == null)
-         rootView = currentView;
-      
+//      if (rootView == null)
+      rootView = currentView;
+      if (currentView != null){
+         lvItems = (ListView)currentView.findViewById(R.id.universal_lv_report);
+      }
       super.onActivityCreated(savedInstanceState);
       if (this.rowOffset == 0){
          /*first page*/
@@ -80,7 +85,7 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
    }
    public class AsyncRenderOnPageChanged extends AsyncTask<Holder,Void,InspectJobMapper>
    {
-
+      private ArrayList<JobRequestProduct> jrpList;
       private ArrayList<InspectFormView>  formViewList = null;
       private InspectJobMapper jobMapper = null;
       private ProgressDialog dialog = null;
@@ -131,9 +136,7 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
                      customerSurveySite.getCustomerSurveySiteID(),
                      InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE,
                      rowOffset);
-               if (jrpList == null){
-                  Log.d("DEBUG_D_D","empty");
-               }
+               
                
             }
          }catch(Exception ex){
@@ -149,23 +152,31 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
       protected void onPostExecute(InspectJobMapper result) {
          // TODO Auto-generated method stub
          super.onPostExecute(result);
-         if (jobMapper != null){
+         if (jobMapper != null)
+         {
 
             int maxWidth = 0;
             if (formViewList != null){
                maxWidth = setupHeader(vContainer,formViewList);  
             }
-            if (jrpList != null){
-            setupList(vContainer,formViewList,
+            //if (jrpList != null)
+            //{
+               setupList(lvItems,formViewList,
                   jrpList,
                   jobMapper.isAudit(),maxWidth
                );
-            }
+            //}
             try{
             if (dialog != null){
                   dialog.dismiss();
                }
             }catch(Exception ex){}
+         }
+         
+         if (jrpList == null){
+            if (dataReloadCompleted != null){
+               dataReloadCompleted.onReloadComplete(true);
+            }
          }
       }
 
@@ -225,12 +236,15 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
    }
    
    @SuppressWarnings("unused")
-   private void setupList(final View vRoot,ArrayList<InspectFormView> inspectViewList,
-         ArrayList<JobRequestProduct> jobRequestProductList,boolean isAudit,int maxWidth)
+   private void setupList(ListView lvItems,
+         ArrayList<InspectFormView> inspectViewList,
+         ArrayList<JobRequestProduct> jobRequestProductList,
+         boolean isAudit,int maxWidth)
    {
-      if (vRoot == null)return;
+//      if (vRoot == null)return;
+      if (lvItems == null)return;
       
-      final ListView ls = (ListView)vRoot.findViewById(R.id.universal_lv_report);
+      final ListView ls = lvItems;// (ListView)vRoot.findViewById(R.id.universal_lv_report);
       ls.getLayoutParams().width = maxWidth;
       
       if (ls.getAdapter() instanceof UniversalListEntryAdapter){
@@ -268,19 +282,19 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
          }
 
          @Override
-         public void onReload(int position) {
+         public void onReload(int position) 
+         {
             // TODO Auto-generated method stub
             //ls.invalidateViews();
             //if (position >= 0)
             //   ls.getChildAt(position);
-            ((UniversalListEntryAdapter)ls.getAdapter()).notifyDataSetChanged();
+            //((UniversalListEntryAdapter)ls.getAdapter()).notifyDataSetChanged();
             
             //View v = ls.getAdapter().getView(position, null, ls);
             //onModified(v,position);
             if (dataReloadCompleted != null){
-               dataReloadCompleted.onReloadComplete();
+               dataReloadCompleted.onReloadComplete(false);
             }
-            
          }
 
          @Override
@@ -338,11 +352,14 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
    public void onActivityResult(int requestCode, int resultCode, Intent data){
       // TODO Auto-generated method stub
       super.onActivityResult(requestCode, resultCode, data);
-      final ListView ls = (ListView)rootView.findViewById(R.id.universal_lv_report);      
-      super.doActivityResultForTakePhoto(requestCode, 
-            resultCode, 
-            data, 
-            currentJobRequestProduct, ls,false);
+      if (lvItems != null)
+      {
+         final ListView ls = lvItems;//(ListView)rootView.findViewById(R.id.universal_lv_report);      
+         super.doActivityResultForTakePhoto(requestCode, 
+               resultCode, 
+               data, 
+               currentJobRequestProduct, ls,false);         
+      }
    }
 
    private boolean saveSingleRowData(JobRequestProduct jrp){
@@ -361,11 +378,18 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
       return bRet;
    }
    public void addNewRowNoAudit(int lastRowProductIdOfCurrentPage){
-      if (rootView != null){
-         final ListView ls = (ListView)rootView.findViewById(R.id.universal_lv_report);      
+      if (lvItems != null){
+         final ListView ls = lvItems;// (ListView)rootView.findViewById(R.id.universal_lv_report);      
          if (ls.getAdapter() instanceof UniversalListEntryAdapter)
          {
             ((UniversalListEntryAdapter)(ls.getAdapter())).addNewRowNoAudit(lastRowProductIdOfCurrentPage);
+            //jrpList = ((UniversalListEntryAdapter)(ls.getAdapter())).getAllJobRequestProducts();
+         }else{
+            /*
+             * isAudit is false
+             * first time no record ls don't have Adapter
+             */
+            
          }
       }
    }
@@ -381,7 +405,15 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
          }
       }
       return null;*/
-      return jrpList;
+      //return jrpList;
+      if (lvItems != null){
+         ListView ls = lvItems;// (ListView)rootView.findViewById(R.id.universal_lv_report);   
+         if (ls.getAdapter() instanceof UniversalListEntryAdapter){
+            UniversalListEntryAdapter adapter = (UniversalListEntryAdapter)ls.getAdapter();
+            return adapter.getAllJobRequestProducts();
+         }         
+      }
+      return null;
    }
    public OnDataReloadCompleted getDataReloadCompleted() {
       return dataReloadCompleted;
