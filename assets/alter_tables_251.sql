@@ -111,12 +111,46 @@ ALTER TABLE JobRequestProductBackup ADD COLUMN jobLocationId INTEGER;
 ALTER TABLE JobRequestProductBackup ADD COLUMN productGroupID INTEGER;
 ALTER TABLE JobRequestProductBackup ADD COLUMN customerSurveySiteID INTEGER;
 
+ALTER TABLE JobRequestProductBackup ADD COLUMN  char1 TEXT;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  char2 TEXT;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  char3 TEXT;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  char4 TEXT;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  char5 TEXT;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  num1 INTEGER;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  num2 INTEGER;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  num3 INTEGER;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  num4 INTEGER;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  num5 INTEGER;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  dec1 REAL;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  dec2 REAL;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  dec3 REAL;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  date1 TEXT;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  date2 TEXT;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  date3 TEXT;
 
 ALTER TABLE JobRequestProduct ADD COLUMN remark TEXT;
 ALTER TABLE JobRequestProduct ADD COLUMN isAudit TEXT DEFAULT('true');
 ALTER TABLE JobRequestProduct ADD COLUMN jobLocationId INTEGER;
 ALTER TABLE JobRequestProduct ADD COLUMN productGroupID INTEGER;
 ALTER TABLE JobRequestProduct ADD COLUMN customerSurveySiteID INTEGER;
+ALTER TABLE JobRequestProduct ADD COLUMN  char1 TEXT;
+ALTER TABLE JobRequestProduct ADD COLUMN  char2 TEXT;
+ALTER TABLE JobRequestProduct ADD COLUMN  char3 TEXT;
+ALTER TABLE JobRequestProduct ADD COLUMN  char4 TEXT;
+ALTER TABLE JobRequestProduct ADD COLUMN  char5 TEXT;
+ALTER TABLE JobRequestProduct ADD COLUMN  num1 INTEGER;
+ALTER TABLE JobRequestProduct ADD COLUMN  num2 INTEGER;
+ALTER TABLE JobRequestProduct ADD COLUMN  num3 INTEGER;
+ALTER TABLE JobRequestProduct ADD COLUMN  num4 INTEGER;
+ALTER TABLE JobRequestProduct ADD COLUMN  num5 INTEGER;
+ALTER TABLE JobRequestProduct ADD COLUMN  dec1 REAL;
+ALTER TABLE JobRequestProduct ADD COLUMN  dec2 REAL;
+ALTER TABLE JobRequestProduct ADD COLUMN  dec3 REAL;
+ALTER TABLE JobRequestProduct ADD COLUMN  date1 TEXT;
+ALTER TABLE JobRequestProduct ADD COLUMN  date2 TEXT;
+ALTER TABLE JobRequestProduct ADD COLUMN  date3 TEXT;
+
+
 
 ALTER TABLE InspectDataObjectSaved ADD COLUMN isCustomMarketPrice TEXT DEFAULT('N');
 ALTER TABLE InspectDataObjectSaved ADD COLUMN objectName TEXT;
