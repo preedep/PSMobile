@@ -8,6 +8,7 @@ import java.util.Hashtable;
 
 import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.Product;
+import com.epro.psmobile.data.ProductGroup;
 
 import android.R;
 import android.content.Context;
@@ -91,12 +92,44 @@ public class ProductSpinner extends Spinner {
        }
        return products;
 	}
-	public void initial(int productGroupID){
+	public void initialWithJobRequestID(int jobRequestId)
+	{
+	    products = new ArrayList<Product>();
+	    PSBODataAdapter dbAdapter = PSBODataAdapter.getDataAdapter(this.getContext());
+	    try{
+	    ArrayList<ProductGroup> productGroups = dbAdapter.findProductGroupByJobRequestId(jobRequestId);
+	       for(ProductGroup productGroup : productGroups){
+	          try {
+	             ArrayList<Product> tmp_products = 
+	                   dbAdapter.findProductWithUnitByProductGroupId(productGroup.getProductGroupID());
+	             if (tmp_products != null){
+	                products.addAll(tmp_products);
+	             }
+	          }
+	          catch (Exception e) {
+	             // TODO Auto-generated catch block
+	                e.printStackTrace();
+	          }   	       
+	       }
+	    }
+	    catch(Exception ex){}
+	    if (products != null)
+        {
+            ArrayAdapter<Product> adapter = new ArrayAdapter<Product>(
+                  this.getContext(),android.R.layout.simple_spinner_item,
+                  products);
+
+            this.setAdapter(adapter);
+        }
+	}
+	public void initial(int productGroupID)
+	{
 		PSBODataAdapter dbAdapter = PSBODataAdapter.getDataAdapter(this.getContext());
 		try {
 		    products = null;
 			 //products =  dbAdapter.findProductByProductGroupId(productGroupID);
-		    if (!ProductSpinner.productTable.containsKey(productGroupID)){
+		    if (!ProductSpinner.productTable.containsKey(productGroupID))
+		    {
 	            products = dbAdapter.findProductWithUnitByProductGroupId(productGroupID);	
 	            if (products != null){
 	               ProductSpinner.productTable.put(productGroupID, products);
@@ -108,15 +141,6 @@ public class ProductSpinner extends Spinner {
 		    
 			if (products != null)
 			{
-			   /*
-				String strProducts[] = new String[products.size()];
-			
-				for(int i = 0; i < products.size();i++)
-				{
-					strProducts[i] = products.get(i).getProductName();
-				}
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_spinner_item,strProducts);
-				*/
 	            ArrayAdapter<Product> adapter = new ArrayAdapter<Product>(
 	                  this.getContext(),android.R.layout.simple_spinner_item,
 	                  products);

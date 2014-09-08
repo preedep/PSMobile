@@ -9,20 +9,28 @@ import com.epro.psmobile.InspectPhotoEntryActivity;
 import com.epro.psmobile.R;
 import com.epro.psmobile.adapter.UniversalListEntryAdapter;
 import com.epro.psmobile.adapter.UniversalListEntryAdapter.OnColumnInputChangeListener;
+import com.epro.psmobile.adapter.UniversalListEntryAdapter.UniversalControlType;
 import com.epro.psmobile.adapter.UniversalListPageFragmentAdapter;
 import com.epro.psmobile.adapter.callback.OnTakeCameraListener;
 import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.CustomerSurveySite;
+import com.epro.psmobile.data.InspectDataObjectSaved;
 import com.epro.psmobile.data.InspectFormView;
 import com.epro.psmobile.data.InspectJobMapper;
 import com.epro.psmobile.data.JobRequest;
 import com.epro.psmobile.data.JobRequestProduct;
+import com.epro.psmobile.data.Product;
+import com.epro.psmobile.data.ProductGroup;
 import com.epro.psmobile.data.Task;
 import com.epro.psmobile.fragment.ContentViewBaseFragment.InspectOptMenuType;
 import com.epro.psmobile.fragment.UniversalInspectListFragmentItem.OnDataReloadCompleted;
 import com.epro.psmobile.key.params.InstanceStateKey;
 import com.epro.psmobile.util.ActivityUtil;
 import com.epro.psmobile.util.MessageBox;
+import com.epro.psmobile.view.LayoutSpinner;
+import com.epro.psmobile.view.ProductGroupSpinner;
+import com.epro.psmobile.view.ProductSpinner;
+import com.epro.psmobile.view.UniversalListFormViewColSpinner;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -32,6 +40,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -39,7 +50,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -70,7 +86,7 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
    @SuppressWarnings("unused")
    private JobRequestProduct currentJobRequestProduct;
    private int pages;
-   
+   private String keyFilter = "";
    public UniversalInspectListFragment() {
       // TODO Auto-generated constructor stub
    }
@@ -123,9 +139,21 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
             
             if (jobMapper != null)
             {
-               if (!jobMapper.isAudit()){
+               ArrayList<InspectFormView>  formViewList = 
+                     dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
+               if (formViewList != null){
+                  setupFilterPanel(currentView, formViewList);
+               }
+               
+               ////////////////////
+               if (!jobMapper.isAudit())
+               {
                   final Button btnAddNoAudit = (Button)v.findViewById(R.id.btn_add_no_audit);
-                  btnAddNoAudit.setVisibility(View.VISIBLE);
+                  if (!keyFilter.isEmpty()){
+                     btnAddNoAudit.setVisibility(View.GONE);
+                  }else{
+                     btnAddNoAudit.setVisibility(View.VISIBLE);
+                  }
                   btnAddNoAudit.setOnClickListener(new OnClickListener(){
 
                      @Override
@@ -137,7 +165,7 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                         int rowCount = 0;
                         try {
                             rowCount = dataAdapter.getRowCountOfJobRequestProduct(jobRequest.getJobRequestID(),
-                                 customerSurveySite.getCustomerSurveySiteID())+1;
+                                 customerSurveySite.getCustomerSurveySiteID(),keyFilter)+1;
                            
                            int tmp_pages = rowCount % InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
                            if (tmp_pages == 0){
@@ -222,7 +250,7 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                                     (UniversalInspectListFragmentItem)InspectReportListFragment.newInstance(jobRequest, 
                                           currentTask, 
                                           customerSurveySite,
-                                          (pages - 1) * (InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE), true);
+                                          (pages - 1) * (InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE), true,keyFilter);
                               
                               f.setDataReloadCompleted(new OnDataReloadCompleted(){
 
@@ -312,7 +340,10 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                /*
                 * 
                 */
-               int rowCount = dataAdapter.getRowCountOfJobRequestProduct(jobRequest.getJobRequestID(), customerSurveySite.getCustomerSurveySiteID());
+               int rowCount = dataAdapter.getRowCountOfJobRequestProduct(
+                     jobRequest.getJobRequestID(), 
+                     customerSurveySite.getCustomerSurveySiteID(),keyFilter);
+               
                pages = rowCount % InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
                if (pages == 0){
                   pages = rowCount / InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
@@ -412,7 +443,7 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                         InspectReportListFragment.newInstance(jobRequest, 
                               currentTask, 
                               customerSurveySite,
-                              i * (InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE), true);
+                              i * (InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE), true,keyFilter);
                   if (f instanceof UniversalInspectListFragmentItem){
                      UniversalInspectListFragmentItem universal_f = (UniversalInspectListFragmentItem)f;
                      universal_f.setDataReloadCompleted(new OnDataReloadCompleted(){
@@ -577,9 +608,6 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
       // TODO Auto-generated method stub
       ViewPager viewPager = (ViewPager)currentView.findViewById(R.id.universal_pager);
       int currentViewIdx = viewPager.getCurrentItem();  
-      
-      
-      
       int currentPage = 0;
       int id = v.getId();
       switch(id){
@@ -592,6 +620,12 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
             if (currentViewIdx > 0){
                viewPager.setCurrentItem(currentViewIdx - 1);               
             }
+         }break;
+         case R.id.btn_universal_col_search:{
+            doSearch();
+         }break;
+         case R.id.btn_universal_col_clear_result:{
+            doClear();
          }break;
       }
       
@@ -617,6 +651,190 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
          UniversalListPageFragmentAdapter adapter = (UniversalListPageFragmentAdapter)viewPager.getAdapter();
          UniversalInspectListFragmentItem f = (UniversalInspectListFragmentItem)adapter.getRegisteredFragment(currentViewIdx);
          f.onActivityResult(requestCode, resultCode, data);
+      }
+   }
+   
+   @SuppressWarnings("unused")
+   private void setupFilterPanel(final View root,ArrayList<InspectFormView> colList){
+      Button btnSearch = (Button)root.findViewById(R.id.btn_universal_col_search);
+      Button btnClear = (Button)root.findViewById(R.id.btn_universal_col_clear_result);
+      btnSearch.setOnClickListener(this);
+      btnClear.setOnClickListener(this);
+      UniversalListFormViewColSpinner  colFilterSpinner = (UniversalListFormViewColSpinner)root.findViewById(R.id.sp_universal_col_filter);
+      colFilterSpinner.initial(colList);
+      colFilterSpinner.setSelection(0);
+      
+      colFilterSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+         @Override
+         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            // TODO Auto-generated method stub
+            InspectFormView col = (InspectFormView)parent.getSelectedItem();
+            setupCriterialInput(root,col);
+         }
+
+         @Override
+         public void onNothingSelected(AdapterView< ? > arg0) {
+            // TODO Auto-generated method stub
+            
+         }
+         
+      });
+   }
+   private void doSearch(){
+      initial(currentView);
+   }
+   private void doClear(){
+      keyFilter = "";
+      initial(currentView);
+   }
+   private void setupCriterialInput(View root,
+         final InspectFormView col){
+      UniversalControlType ctrlType = UniversalControlType.getControlType(col.getColType());
+
+      ViewGroup vContainer = 
+            (ViewGroup)root.findViewById(R.id.universal_col_filter_criterial_container);
+      vContainer.removeAllViews();
+      View v = null;
+      
+      int heightCtrl = 
+            (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, this.getSherlockActivity().getResources().getDisplayMetrics());
+      
+      switch(ctrlType)
+      {
+         case Label:
+         case SimpleText:
+         {
+            v = View.inflate(getSherlockActivity(), R.layout.ps_activity_report_list_entry_column_text, null);
+            EditText edt = (EditText)v.findViewById(R.id.et_report_list_entry_column_text);
+            edt.getLayoutParams().width = vContainer.getLayoutParams().width;
+            edt.getLayoutParams().height = heightCtrl;//root.getLayoutParams().height;
+            
+            
+            edt.addTextChangedListener(new TextWatcher(){
+
+               @Override
+               public void afterTextChanged(Editable s) {
+                  // TODO Auto-generated method stub
+//                  keyFilter = s.toString();
+                  String colName = col.getColInvokeField();
+                  keyFilter = colName+" like '%"+s.toString()+"%'";
+                  Log.d("DEBUG_D_D_D", keyFilter);
+               }
+
+               @Override
+               public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                  // TODO Auto-generated method stub
+                  
+               }
+
+               @Override
+               public void onTextChanged(CharSequence s, int start, int before, int count) {
+                  // TODO Auto-generated method stub
+                  
+               }
+               
+            });
+         }break;
+         case ProductType:
+         {
+            v = View.inflate(getSherlockActivity(), R.layout.ps_activity_report_list_entry_column_product_group_spinner, null);
+            final ProductGroupSpinner pgSpinner = 
+                  (ProductGroupSpinner)v.findViewById(R.id.sp_product_group);
+            pgSpinner.getLayoutParams().width = vContainer.getLayoutParams().width;
+            pgSpinner.getLayoutParams().height = heightCtrl;//root.getLayoutParams().height;
+            
+            pgSpinner.initial(jobRequest.getJobRequestID());
+            pgSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+               @Override
+               public void onItemSelected(AdapterView< ? > arg0, View arg1, int arg2, long arg3) {
+                  // TODO Auto-generated method stub
+                  ProductGroup pg = (ProductGroup)pgSpinner.getProductGroups().get(arg2);
+                  String colName = col.getColInvokeField();
+                  if ((colName == null)||(colName.isEmpty())){
+                     colName = "productGroup";
+                  }
+                  keyFilter = colName+" = '"+pg.getProductGroupName()+"'";
+                  Log.d("DEBUG_D_D_D", keyFilter);
+                  
+               }
+
+               @Override
+               public void onNothingSelected(AdapterView< ? > arg0) {
+                  // TODO Auto-generated method stub
+                  
+               }
+               
+            });
+         }break;
+         case Product:{
+            v = View.inflate(getSherlockActivity(), R.layout.ps_activity_report_list_entry_column_product_spinner, null);
+            final ProductSpinner pdSPinner = 
+                  (ProductSpinner)v.findViewById(R.id.sp_product);
+            pdSPinner.getLayoutParams().width = vContainer.getLayoutParams().width;
+            pdSPinner.getLayoutParams().height = heightCtrl;//root.getLayoutParams().height;
+            
+            pdSPinner.initialWithJobRequestID(jobRequest.getJobRequestID());
+            pdSPinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+               @Override
+               public void onItemSelected(AdapterView< ? > arg0, View arg1, int arg2, long arg3) {
+                  // TODO Auto-generated method stub
+                  Product pg = (Product)pdSPinner.getProducts().get(arg2);
+                  String colName = col.getColInvokeField();
+                  if ((colName == null)||(colName.isEmpty())){
+                     colName = "productId";
+                  }
+                  keyFilter = colName+" = "+pg.getProductID()+"";
+                  Log.d("DEBUG_D_D_D", keyFilter);
+                  
+               }
+
+               @Override
+               public void onNothingSelected(AdapterView< ? > arg0) {
+                  // TODO Auto-generated method stub
+                  
+               }
+               
+            });
+         }break;
+         case Layout:{
+            v = View.inflate(getSherlockActivity(), R.layout.ps_activity_report_list_entry_column_layout_spinner, null);
+            LayoutSpinner layoutSpinner = (LayoutSpinner)v.findViewById(R.id.sp_layout_inspect);
+            layoutSpinner.getLayoutParams().width = vContainer.getLayoutParams().width;
+            layoutSpinner.getLayoutParams().height = heightCtrl;//root.getLayoutParams().height;
+            
+            layoutSpinner.initial(currentTask.getTaskCode(), customerSurveySite.getCustomerSurveySiteID());
+            layoutSpinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+               @Override
+               public void onItemSelected(AdapterView< ? > arg0, View arg1, int arg2, long arg3) {
+                  // TODO Auto-generated method stub
+                  InspectDataObjectSaved pg = (InspectDataObjectSaved)arg0.getSelectedItem();
+                  String colName = col.getColInvokeField();
+                  if ((colName == null)||(colName.isEmpty())){
+                     colName = "inspectDataObjectID";
+                  }
+                  keyFilter = colName+" = "+pg.getInspectDataObjectID()+"";
+                  Log.d("DEBUG_D_D_D", keyFilter);
+                  
+               }
+
+               @Override
+               public void onNothingSelected(AdapterView< ? > arg0) {
+                  // TODO Auto-generated method stub
+                  
+               }
+               
+            });
+         }break;
+      }
+      if (v != null){
+         //if (v.getLayoutParams() == null){
+         //   v.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+         //}
+         vContainer.addView(v);
       }
    }
 }

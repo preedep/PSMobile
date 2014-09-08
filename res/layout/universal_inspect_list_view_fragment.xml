@@ -14,7 +14,12 @@
        android:textSize="20sp"
        android:padding="10dp"
     />
- 
+<include
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:layout_marginTop="10dp"
+    layout="@layout/universal_filter_panel" 
+    />
 <RelativeLayout 
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

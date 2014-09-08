@@ -1032,21 +1032,27 @@ public class PSBODataAdapter {
 	public synchronized ArrayList<JobRequestProduct> findJobRequestProductsByJobRequestIDWithSiteID(int jobRequestID,
 	          int customerSurveySiteID,
 	          int maxRowPerPage,
-	          int rowOffset) throws Exception
+	          int rowOffset,String keyFilter) throws Exception
 	{
 	        String sql = "select * from JobRequestProduct where " +
-	        		   " jobRequestID="+jobRequestID + " and customerSurveySiteID="+customerSurveySiteID+" " +
-	        		   " order by productRowId";
+	        		   " jobRequestID="+jobRequestID + " and customerSurveySiteID="+customerSurveySiteID+" ";
+	        if (!keyFilter.isEmpty()){
+	           sql += " and "+keyFilter;
+	        }
+	        sql +=   " order by productRowId";
 	        sql += " limit "+maxRowPerPage+" offset "+rowOffset;
 	        
 	        return query(sql,JobRequestProduct.class);
 	}
 	public synchronized int getRowCountOfJobRequestProduct(int jobRequestID,
-              int customerSurveySiteID) throws Exception
+              int customerSurveySiteID,String keyFilter) throws Exception
     {
 	        String sql = "select * from JobRequestProduct where " +
-             " jobRequestID="+jobRequestID + " and customerSurveySiteID="+customerSurveySiteID+" " +
-             " order by productRowId";
+             " jobRequestID="+jobRequestID + " and customerSurveySiteID="+customerSurveySiteID+" ";
+	        if (!keyFilter.isEmpty()){
+	           sql += " and "+keyFilter;
+	        }
+             sql+= " order by productRowId";
 	        
 	        ArrayList<JobRequestProduct> jobRequestProducts = 
 	              query(sql,JobRequestProduct.class);
@@ -1279,9 +1285,12 @@ String sql = " select * , ( " +
 	public synchronized ArrayList<Product> findProductWithUnitByProductGroupId(int productGroupID)
 	         throws Exception
 	{
-	     String sql = "select product.*, ProductAmountUnit.unitName from product,ProductAmountUnit " +
-	     		" where product.productAmountUnitID = ProductAmountUnit.productAmountUnitID and " +
-	     		" product.productGroupID="+productGroupID+" order by product.productName";
+       String sql = "select product.*, ProductAmountUnit.unitName from product,ProductAmountUnit " +
+             " where product.productAmountUnitID = ProductAmountUnit.productAmountUnitID";
+	    if (productGroupID >= 0){
+	       sql += " and  product.productGroupID="+productGroupID+"";
+	    }
+	    sql += " order by product.productName";
 	     return query(sql,Product.class);
 	 }
 

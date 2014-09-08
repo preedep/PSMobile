@@ -74,6 +74,7 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
     protected int rowOffset;
 	protected View currentView;
 	protected boolean showInPaging;
+	protected String keyFilter = "";
 
 	private Uri imageUri;
 	
@@ -92,13 +93,14 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
           Task currentTask,
           CustomerSurveySite surveySite)
 	{
-	   return newInstance(jobRequest,currentTask,surveySite,0,false);
+	   return newInstance(jobRequest,currentTask,surveySite,0,false,"");
 	}
 	public static Fragment newInstance(JobRequest jobRequest,
 			Task currentTask,
 			CustomerSurveySite surveySite,
 			int rowOffset,
-			boolean showInPaging)
+			boolean showInPaging,
+			String keyFilter)
 	{
 		Fragment fragment = null;
 		if (jobRequest.getInspectType().getInspectTypeID() == InspectServiceSupportUtil.SERVICE_CAR_INSPECT)
@@ -120,6 +122,7 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 			bArgument.putParcelable(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY, surveySite);
 			bArgument.putInt(InstanceStateKey.KEY_ARGUMENT_ROW_OFFSET_LIST_DISPLAY, rowOffset);
 			bArgument.putBoolean(InstanceStateKey.KEY_ARGUMENT_SHOW_IN_PAGING, showInPaging);
+			bArgument.putString(InstanceStateKey.KEY_ARGUMENT_UNIVERSAL_KEY_FILTER, keyFilter);
 			fragment.setArguments(bArgument);
 		}
 		return fragment;
@@ -145,6 +148,8 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	    customerSurveySite = this.getArguments().getParcelable(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY);
 	    rowOffset = this.getArguments().getInt(InstanceStateKey.KEY_ARGUMENT_ROW_OFFSET_LIST_DISPLAY);
 	    showInPaging = this.getArguments().getBoolean(InstanceStateKey.KEY_ARGUMENT_SHOW_IN_PAGING);
+	    keyFilter = this.getArguments().getString(InstanceStateKey.KEY_ARGUMENT_UNIVERSAL_KEY_FILTER);
+	    
 	    
 	    if (!showInPaging)
 	    {

@@ -135,7 +135,7 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
                jrpList = dataAdapter.findJobRequestProductsByJobRequestIDWithSiteID(jobRequest.getJobRequestID(),
                      customerSurveySite.getCustomerSurveySiteID(),
                      InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE,
-                     rowOffset);
+                     rowOffset,keyFilter);
                
                
             }
@@ -209,7 +209,7 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
       int maxWidth = 0;
       for(InspectFormView formView : inspectViewList)
       {
-         LayoutInflater  inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+         LayoutInflater  inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
          View v = inflater.inflate(R.layout.ps_activity_report_list_entry_column_v2, null);
          
          float colWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,

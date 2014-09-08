@@ -14,6 +14,8 @@ public class InstanceStateKey {
 	public final static String KEY_ARGUMENT_ADD_NEW_LOCATION = "com.epro.psmobile.key.params.KEY_ARGUMENT_ADD_NEW_LOCATION";
 	public final static String KEY_ARGUMENT_ROW_OFFSET_LIST_DISPLAY = "com.epro.psmobile.key.params.KEY_ARGUMENT_ROW_OFFSET_LIST_DISPLAY";
 	public final static String KEY_ARGUMENT_SHOW_IN_PAGING = "com.epro.psmobile.key.params.KEY_ARGUMENT_SHOW_IN_PAGING";
+    public final static String KEY_ARGUMENT_UNIVERSAL_KEY_FILTER = "com.epro.psmobile.key.params.KEY_ARGUMENT_UNIVERSAL_KEY_FILTER";
+	
 	
 	public final static String KEY_ARGUMENT_CUSTOMER_MAP = "com.epro.psmobile.key.params.KEY_ARGUMENT_CUSTOMER_MAP";
 	public final static String KEY_ARGUMENT_TASK = "com.epro.psmobile.key.params.KEY_TASK";
