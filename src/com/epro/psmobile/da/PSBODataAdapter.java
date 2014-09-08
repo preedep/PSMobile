@@ -474,7 +474,7 @@ public class PSBODataAdapter {
    throws Exception
    {
       InspectJobMapper jobMapper = null;
-      String sql = "select * from InspectJobMapper where jobRequestID="+jobRequestID+" and taskCode='"+taskCode+"'";
+      String sql = "select * from UniversalJobMapper where jobRequestID="+jobRequestID+" and taskCode='"+taskCode+"'";
       ArrayList<InspectJobMapper> mapperList = 
             query(sql,InspectJobMapper.class);
       if (mapperList != null){
@@ -485,7 +485,7 @@ public class PSBODataAdapter {
    public synchronized ArrayList<InspectFormView> getInspectFormViewList(int inspectFormViewID)
    throws Exception
    {
-      String sql = "select * from InspectFormView where inspectFormViewID = "+inspectFormViewID;
+      String sql = "select * from UniversalListFormView where inspectFormViewID = "+inspectFormViewID;
       return query(sql,InspectFormView.class);
    }
    public synchronized ArrayList<CarInspectStampLocation> getAllCarInspectStampLocation(

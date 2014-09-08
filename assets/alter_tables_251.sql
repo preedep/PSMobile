@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS JobRequestProductBackup;
-DROP TABLE IF EXISTS InspectJobMapper;
-DROP TABLE IF EXISTS InspectFormView;
+DROP TABLE IF EXISTS UniversalJobMapper;
+DROP TABLE IF EXISTS UniversalListFormView;
 
-CREATE TABLE InspectJobMapper
+CREATE TABLE UniversalJobMapper
 (
 	inspectFormViewID INTEGER,
 	inspectFormViewNo INTEGER,
@@ -11,7 +11,7 @@ CREATE TABLE InspectJobMapper
 	isAudit TEXT
 );
 
-CREATE TABLE InspectFormView
+CREATE TABLE UniversalListFormView
 (
 	inspectFormViewID INTEGER,
 	colNo INTEGER,

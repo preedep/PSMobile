@@ -43,7 +43,7 @@ public class InspectJobMapper implements DbCursorHolder, JSONDataHolder, Transac
    public String insertStatement() throws Exception {
       // TODO Auto-generated method stub
       StringBuilder strBld = new StringBuilder();
-      strBld.append("insert into InspectJobMapper");
+      strBld.append("insert into UniversalJobMapper");
       strBld.append("(");
       strBld.append(COL_INSPECT_FORM_VIEW_ID+",");
       strBld.append(COL_INSPECT_FORM_VIEW_NO+",");

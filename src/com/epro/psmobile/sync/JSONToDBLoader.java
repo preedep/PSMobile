@@ -289,8 +289,8 @@ public class JSONToDBLoader {
 		mapType.put("licenseplate", new LicensePlate());
 		mapType.put("jobrequestproductgroup", new JobRequestProductGroup());
 		mapType.put("inspectdataobjectsaved", new InspectDataObjectSaved());
-		mapType.put("InspectJobMapper".toLowerCase(),new InspectJobMapper());
-		mapType.put("inspectFormView".toLowerCase(), new InspectFormView());
+		mapType.put("UniversalJobMapper".toLowerCase(),new InspectJobMapper());
+		mapType.put("UniversalListFormView".toLowerCase(), new InspectFormView());
 		return mapType;
 	}
 }
