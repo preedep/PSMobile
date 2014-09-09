@@ -91,7 +91,9 @@ public class InspectDataSavedSpinner extends Spinner {
 	      this.setAdapter(adapter);
 	   }
 	}
-    public void initial(JobRequestProduct jobRequestProduct,String taskCode,int customerSurveySiteId)
+    public void initial(JobRequestProduct jobRequestProduct,
+          String taskCode,
+          int customerSurveySiteId)
     {
        ArrayList<InspectDataSavedSpinnerDisplay> displayList =
              new ArrayList<InspectDataSavedSpinnerDisplay>();

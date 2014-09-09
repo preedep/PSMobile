@@ -154,6 +154,14 @@ public class DataUtil {
 	 return null;
    }
    
+   public static String universalDateToString(String format,Date date){
+      if (format.isEmpty()){
+         format = "dd-MM-yyyy";
+      }
+      DateFormat df = new SimpleDateFormat(format);
+      return df.format(date);
+
+   }
    public static String convertDateToStringYYYYMMDD(Date date)
    {
 	   //2013-07-22

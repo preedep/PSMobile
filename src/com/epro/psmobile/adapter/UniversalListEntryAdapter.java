@@ -4,10 +4,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.GregorianCalendar;
 
 import com.epro.psmobile.R;
 import com.epro.psmobile.adapter.callback.OnTakeCameraListener;
@@ -25,6 +28,7 @@ import com.epro.psmobile.data.ProductGroup;
 import com.epro.psmobile.data.ReasonSentence;
 import com.epro.psmobile.data.Task;
 import com.epro.psmobile.data.TaskControlTemplate.TaskControlType;
+import com.epro.psmobile.util.DataUtil;
 import com.epro.psmobile.util.MathEval;
 import com.epro.psmobile.util.SharedPreferenceUtil;
 import com.epro.psmobile.view.LayoutSpinner;
@@ -33,7 +37,11 @@ import com.epro.psmobile.view.ProductSpinner;
 import com.epro.psmobile.view.ProductUnitSpinner;
 import com.epro.psmobile.view.ReasonSentenceSpinner;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnShowListener;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.text.Editable;
@@ -52,10 +60,12 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 public class UniversalListEntryAdapter extends BaseAdapter  {
 
@@ -143,6 +153,8 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
    private MarketPriceFinder marketPriceGlobalFinder;
    private MarketPriceFinder marketPriceForProvince;
    
+   private int rowAtNeedToReload = -1;
+   
    private boolean isAudit;
    public interface OnColumnInputChangeListener{
       void onColumnInputChanged(View target,int rowPosition);
@@ -183,12 +195,29 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          // TODO Auto-generated method stub
          if (!s.toString().isEmpty())
          {
-            double d = 0;
-            try{
-               d = Double.parseDouble(s.toString());
-            }catch(Exception ex){}
-            if (d > 0){
-               calculateOnTextChanged(s.toString());
+            int inputType = editText.getInputType();
+            if (inputType == (InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL))
+            {
+               double d = 0;
+               try{
+                  d = Double.parseDouble(s.toString());
+               }catch(Exception ex){}
+               if (d > 0)
+               {
+                  calculateOnTextChanged(s.toString());
+               }               
+            }else{
+               View vParent = (View)editText.getParent();
+               if (vParent.getTag() != null)
+               {
+                  
+                  InspectFormView formView = (InspectFormView)vParent.getTag();
+                  final JobRequestProduct jrp = jobRequestProductList.get(this.getPosition());
+                  
+                  invokeSetValue(jrp,
+                        formView,
+                        s.toString());
+              }
             }
          }
       }
@@ -740,7 +769,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   holder.viewRows[i] = vEdit;
                   
                   if (ctrlType == UniversalControlType.SimpleTextDecimal){
-                     edt.setInputType(InputType.TYPE_CLASS_NUMBER);
+                     edt.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
                   }
                   /*
                   if (holder.textWatcher != null){
@@ -908,7 +937,15 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                }break;
                case DateInput:
                case DateTimeInput:{
+                  /*reuse btn camera*/
+                  View vDateTime = 
+                        inflater.inflate(R.layout.ps_activity_report_list_entry_column_camera, null, false);
+                  final Button btn = (Button)vDateTime.findViewById(R.id.btn_report_list_entry_column_camera);
+                  btn.getLayoutParams().width = (int)colWidth;
+                  btn.setText("");
+                  btn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
                   
+                  holder.viewRows[i] = vDateTime;
                }break;
                default:
                {
@@ -958,11 +995,17 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          holder.shown = false;
          lastPosition = -1;
       }
+      if (rowAtNeedToReload == position){
+         holder.shown = false;
+      }
+      //////////////
       if (!holder.shown)
       {
             displayEachRow(view,position);
             holder.shown = true;                     
             holder.position = position;
+            
+            //rowAtNeedToReload = -1;
       }
       return view;
    }
@@ -976,7 +1019,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       for( View vEachCol : holder.viewRows)
       {
          final InspectFormView formView =  (InspectFormView)vEachCol.getTag();
-         UniversalControlType ctrlType = UniversalControlType.getControlType(formView.getColType());
+         final UniversalControlType ctrlType = UniversalControlType.getControlType(formView.getColType());
          switch(ctrlType){
             case SimpleText:
             case SimpleTextDecimal:
@@ -993,9 +1036,9 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                         System.gc();
                      }                     
                   }
-                  
-                  edtText.setText(setFormat(objValue,formView));
-
+                  if (!objValue.toString().equalsIgnoreCase("null")){
+                     edtText.setText(setFormat(objValue,formView));
+                  }
                   
                   if (edtText.getOnFocusChangeListener() == null)
                   {
@@ -1288,6 +1331,109 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   sp_layout.setOnItemSelectedListener(layoutSelect);
                }
                //////////////////////////////
+            }break;
+            case DateInput:
+            case DateTimeInput:{
+               /*reuse btn camera*/
+               final Button btn = (Button)vEachCol.findViewById(R.id.btn_report_list_entry_column_camera);
+               
+               Object obj = invokeGetValue(jrp,formView);
+               if (!obj.toString().equalsIgnoreCase("null")){
+                  btn.setText(obj.toString());
+               }
+               
+               btn.setOnClickListener(new OnClickListener(){
+
+                  @Override
+                  public void onClick(View v) {
+                     // TODO Auto-generated method stub
+                     final View dialogView = View.inflate(context, R.layout.date_time_picker, null);
+                     final AlertDialog dateTimeDlg = new AlertDialog.Builder(context).create();
+                     dateTimeDlg.setOnShowListener(new OnShowListener(){
+
+                        @Override
+                        public void onShow(DialogInterface dialog) {
+                           // TODO Auto-generated method stub
+                           TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
+                           timePicker.setIs24HourView(true);
+                           timePicker.setCurrentHour(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+                           
+                           if (ctrlType == UniversalControlType.DateTimeInput){
+                              timePicker.setVisibility(View.VISIBLE);  
+                           }else{
+                              timePicker.setVisibility(View.GONE);
+                           }
+                        }
+                        
+                     });
+                     dateTimeDlg.setOnCancelListener(new OnCancelListener(){
+
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                           // TODO Auto-generated method stub
+                           dialog.dismiss();
+                        }
+                        
+                     });
+                     dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                             DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
+                             TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
+                             timePicker.setVisibility(View.GONE);
+                             
+                             Calendar calendar = new GregorianCalendar(datePicker.getYear(),
+                                                datePicker.getMonth(),
+                                                datePicker.getDayOfMonth(),
+                                                timePicker.getCurrentHour(),
+                                                timePicker.getCurrentMinute());
+
+                             long time = calendar.getTimeInMillis();
+                             
+                             String timestamp = DataUtil.universalDateToString(formView.getDateTimeFormate(), new Timestamp(time));
+                             
+                             btn.setText(timestamp);
+                                                         
+                             invokeSetValue(jrp,formView,timestamp);
+                             
+                             dateTimeDlg.dismiss();
+                             //bDatePickerShown = false;
+                        }});
+                     dateTimeDlg.setView(dialogView);
+                     dateTimeDlg.show();
+                  }
+                  
+               });
+            }break;
+            case Camera:{
+               /*
+                * if (requestProduct.getPhotoSetID() > 0){
+           holder.btnTakeCamera.setCompoundDrawablesWithIntrinsicBounds(
+                 R.drawable.ic_device_access_camera_active,0,0,0);
+           }else{
+           holder.btnTakeCamera.setCompoundDrawablesWithIntrinsicBounds(
+                 R.drawable.ic_device_access_camera,0,0,0);
+           }
+                */
+               final Button btn = (Button)vEachCol.findViewById(R.id.btn_report_list_entry_column_camera);
+               btn.post(new Runnable(){
+
+                  @Override
+                  public void run() {
+                     // TODO Auto-generated method stub
+                     if (jrp.getPhotoSetID() > 0){
+                        btn.setCompoundDrawablesWithIntrinsicBounds(
+                              R.drawable.ic_device_access_camera_active,0,0,0);
+                     }else{
+                        btn.setCompoundDrawablesWithIntrinsicBounds(
+                              R.drawable.ic_device_access_camera,0,0,0);
+                     }
+                     btn.invalidate();
+                  }
+                  
+               });
+                 
             }break;
              default:
             {
@@ -1775,6 +1921,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       catch (IllegalArgumentException e) {
          // TODO Auto-generated catch block
         // e.printStackTrace();
+         e.printStackTrace();
       }
       catch (InvocationTargetException e) {
          // TODO Auto-generated catch block
@@ -1899,5 +2046,14 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       this.columnInputChangeListener = columnInputChangeListener;
    }
 
+   public void refreshAtRowOfJobRequestProduct(JobRequestProduct currentJobRequestProduct){
+      for(int i = 0;i < this.jobRequestProductList.size();i++){
+         JobRequestProduct jrp = this.jobRequestProductList.get(i);
+         if (jrp.getProductRowID() == currentJobRequestProduct.getProductRowID()){
+            rowAtNeedToReload = i;
+            break;
+         }
+      }
+   }
   
 }

@@ -422,4 +422,18 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
    public void setDataReloadCompleted(OnDataReloadCompleted dataReloadCompleted) {
       this.dataReloadCompleted = dataReloadCompleted;
    }
+
+   @Override
+   protected void onPhotoSetIdUpdated(JobRequestProduct currentJobRequestProduct) {
+      // TODO Auto-generated method stub
+      /*notification*/
+      if (lvItems != null){
+         ListView ls = lvItems;// (ListView)rootView.findViewById(R.id.universal_lv_report);   
+         if (ls.getAdapter() instanceof UniversalListEntryAdapter){
+            UniversalListEntryAdapter adapter = (UniversalListEntryAdapter)ls.getAdapter();
+            adapter.refreshAtRowOfJobRequestProduct(currentJobRequestProduct);
+            adapter.notifyDataSetChanged();
+         }         
+      }
+   }
 }

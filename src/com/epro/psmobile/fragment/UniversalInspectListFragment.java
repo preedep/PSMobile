@@ -837,4 +837,10 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
          vContainer.addView(v);
       }
    }
+
+   @Override
+   protected void onPhotoSetIdUpdated(JobRequestProduct currentJobRequestProduct) {
+      // TODO Auto-generated method stub
+      
+   }
 }

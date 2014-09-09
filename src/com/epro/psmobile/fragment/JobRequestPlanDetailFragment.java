@@ -6,6 +6,7 @@ package com.epro.psmobile.fragment;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 
 import com.epro.psmobile.R;
 import com.epro.psmobile.da.PSBODataAdapter;
@@ -216,22 +217,40 @@ public class JobRequestPlanDetailFragment extends ContentViewBaseFragment {
 						dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID());
 				if (jobRequestProducts != null)
 				{
+				    /*
+				     * distinct product group name
+				     */
+				    Hashtable<String,String> productGroupTable = 
+				          new Hashtable<String,String>();
+				    
 					for(int i = 0; i < jobRequestProducts.size();i++)
 					{
 						JobRequestProduct jobRequestProduct = jobRequestProducts.get(i);
-						
-						String strProductDetail = "";
-						
-						strProductDetail = 
-								"" +jobRequestProduct.getItemNo()+" "+jobRequestProduct.getProductGroup() + " ";
-						TextView tvProductDetail = new TextView(this.getActivity());
-						FontUtil.replaceFontTextView(getActivity(), tvProductDetail, FontName.THSARABUN);
-						tvProductDetail.setTextSize(20);
-						tvProductDetail.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
-						tvProductDetail.setText(strProductDetail);
-
-						linearLayoutProducts.addView(tvProductDetail);
+												if ((jobRequestProduct.getProductGroup() != null)&&
+						     (!jobRequestProduct.getProductGroup().equalsIgnoreCase("null")))
+						{
+	                        if (!productGroupTable.containsKey(jobRequestProduct.getProductGroup()))
+	                        {
+	                           
+	                           productGroupTable.put(jobRequestProduct.getProductGroup(), jobRequestProduct.getProductGroup());
+	                        }						   
+						}
 					}
+					ArrayList<String> productGroupNameList = 
+					      new ArrayList<String>(productGroupTable.keySet());
+					for(int i = 0; i < productGroupNameList.size();i++)
+					{
+	                    String strProductDetail = "";
+	                    strProductDetail = 
+	                            "" +(i+1)+" "+productGroupNameList.get(i) + " ";
+	                    TextView tvProductDetail = new TextView(this.getActivity());
+	                    FontUtil.replaceFontTextView(getActivity(), tvProductDetail, FontName.THSARABUN);
+	                    tvProductDetail.setTextSize(20);
+	                    tvProductDetail.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+	                    tvProductDetail.setText(strProductDetail);
+	                    linearLayoutProducts.addView(tvProductDetail);					   
+					}
+					
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

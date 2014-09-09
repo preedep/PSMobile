@@ -974,5 +974,11 @@ public class InspectCarReportListEntryFragment extends InspectReportListFragment
       this.getActivity().openContextMenu(this.lsView);
    }
 
+   @Override
+   protected void onPhotoSetIdUpdated(JobRequestProduct currentJobRequestProduct) {
+      // TODO Auto-generated method stub
+      
+   }
+
  
 }

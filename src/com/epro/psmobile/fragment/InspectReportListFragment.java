@@ -601,11 +601,16 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	                       }else{
 	                          super.getDataAdapter().updateUniversalPhotoSetIDInJobRequestProduct(currentJobRequestProduct);
 	                       }
-                           BaseAdapter adapter = (BaseAdapter)(lsView.getAdapter());
-                           if (adapter != null){
-                              adapter.notifyDataSetChanged();
-                              adapter.notifyDataSetInvalidated();
-                           }
+	                       
+	                       if (isCarInspect){
+	                          BaseAdapter adapter = (BaseAdapter)(lsView.getAdapter());
+	                          if (adapter != null){
+	                             adapter.notifyDataSetChanged();
+	                             adapter.notifyDataSetInvalidated();
+	                          }
+	                       }else{
+	                          onPhotoSetIdUpdated(currentJobRequestProduct);
+	                       }
 	                    }
 	                    catch (Exception e) {
 	                       // TODO Auto-generated catch block
@@ -619,6 +624,7 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	         }
 	      }	   
 	}
+	protected abstract void onPhotoSetIdUpdated(JobRequestProduct currentJobRequestProduct);
 	protected abstract void onListViewUpdated();
 	
 	protected void doPopupCheckIn(){

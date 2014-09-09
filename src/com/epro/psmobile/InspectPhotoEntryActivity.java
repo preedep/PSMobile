@@ -405,7 +405,7 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 				   /*case need delete all and saved*/
 				   if (jobRequest != null)
 				   {
-				      if (jobRequest.getInspectType().getInspectTypeID() == InspectServiceSupportUtil.SERVICE_CAR_INSPECT){
+				      if (jobRequest.getInspectType().getInspectTypeID() > InspectServiceSupportUtil.SERVICE_FARM_LAND_2){
 				         PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(this);
 				         try{
 				            dataAdapter.deleteInspectPhotoEntryByPhotoSetID(photoSetId);
@@ -851,8 +851,18 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 	       /*
 	        *   show list for car
 	        */
-	       inspectDataSavedSpinner.initial(jobRequestProduct,taskCode,
-	              customersurveySiteId);
+	       if (jobRequest.getInspectType().getInspectProductType() == InspectServiceSupportUtil.SERVICE_CAR_INSPECT){
+	             inspectDataSavedSpinner.initial(
+	                   jobRequestProduct,
+	                   taskCode,
+	                   customersurveySiteId);
+	       }else{
+	          /*universal display*/
+	          inspectDataSavedSpinner.initial(
+                    jobRequestProduct,
+                    taskCode,
+                    customersurveySiteId);
+	       }
 	    }else{
 	       inspectDataSavedSpinner.initial(inspectDataSavedList,
 	          lastInspectDataSavedDisplay,
