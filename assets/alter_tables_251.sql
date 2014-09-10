@@ -8,7 +8,8 @@ CREATE TABLE UniversalJobMapper
 	inspectFormViewNo INTEGER,
 	jobRequestID INTEGER,
 	taskCode TEXT,
-	isAudit TEXT
+	isAudit TEXT,
+	colsInvokeForPhotoEntryItemDisplay TEXT
 );
 
 CREATE TABLE UniversalListFormView
@@ -127,6 +128,8 @@ ALTER TABLE JobRequestProductBackup ADD COLUMN  dec3 REAL;
 ALTER TABLE JobRequestProductBackup ADD COLUMN  date1 TEXT;
 ALTER TABLE JobRequestProductBackup ADD COLUMN  date2 TEXT;
 ALTER TABLE JobRequestProductBackup ADD COLUMN  date3 TEXT;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  productName TEXT;
+
 
 ALTER TABLE JobRequestProduct ADD COLUMN remark TEXT;
 ALTER TABLE JobRequestProduct ADD COLUMN isAudit TEXT DEFAULT('true');
@@ -149,6 +152,7 @@ ALTER TABLE JobRequestProduct ADD COLUMN  dec3 REAL;
 ALTER TABLE JobRequestProduct ADD COLUMN  date1 TEXT;
 ALTER TABLE JobRequestProduct ADD COLUMN  date2 TEXT;
 ALTER TABLE JobRequestProduct ADD COLUMN  date3 TEXT;
+ALTER TABLE JobRequestProduct ADD COLUMN  productName TEXT;
 
 
 
