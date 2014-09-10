@@ -3,10 +3,12 @@ package com.epro.psmobile.view;
 import java.util.ArrayList;
 
 import com.epro.psmobile.R;
+import com.epro.psmobile.adapter.UniversalListEntryAdapter;
 import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.InspectDataItem;
 import com.epro.psmobile.data.InspectDataObjectSaved;
 import com.epro.psmobile.data.InspectDataSavedSpinnerDisplay;
+import com.epro.psmobile.data.InspectJobMapper;
 import com.epro.psmobile.data.JobRequestProduct;
 import com.epro.psmobile.data.Product;
 import com.epro.psmobile.data.ProductGroup;
@@ -91,6 +93,86 @@ public class InspectDataSavedSpinner extends Spinner {
 	      this.setAdapter(adapter);
 	   }
 	}
+    public void initialUniversal(JobRequestProduct jobRequestProduct,
+          String taskCode,
+          int customerSurveySiteId)
+    {
+       
+       ArrayList<InspectDataSavedSpinnerDisplay> displayList =
+             new ArrayList<InspectDataSavedSpinnerDisplay>();
+
+      InspectDataSavedSpinnerDisplay displayFirst = new
+           InspectDataSavedSpinnerDisplay(this.getContext());
+      
+      InspectDataItem item = new InspectDataItem();
+      item.setInspectDataItemName(this.getContext().getString(R.string.photo_entry_default));
+      displayFirst.inspectDataItem = item;
+   
+      InspectDataObjectSaved dataSaved = new InspectDataObjectSaved();
+      dataSaved.setTaskCode(taskCode);
+      dataSaved.setCustomerSurveySiteID(customerSurveySiteId);
+      dataSaved.setInspectDataObjectID(-1);
+      displayFirst.dataSaved = dataSaved;
+      displayList.add(displayFirst);
+      
+       PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getContext());
+       try {
+          InspectJobMapper jobMapper = 
+                dataAdapter.getInspectJobMapper(jobRequestProduct.getJobRequestID(), taskCode);
+          if ((jobMapper.getColsInvokeForPhotoEntryItemDisplay() != null)&&
+                (!jobMapper.getColsInvokeForPhotoEntryItemDisplay().isEmpty()))
+          {
+             String colsInvokes 
+             = jobMapper.getColsInvokeForPhotoEntryItemDisplay();
+             String[] colInvokeArray 
+                = colsInvokes.split(",");
+             StringBuilder strBld = new StringBuilder();
+             for(String colInvoke : colInvokeArray){
+                Object objValue = 
+                      UniversalListEntryAdapter.invokeGetValue(jobRequestProduct, colInvoke.trim());
+                if (!objValue.toString().equalsIgnoreCase("null")){
+                   if (!objValue.toString().isEmpty()){
+                      strBld.append(objValue);
+                      strBld.append(" / ");                      
+                   }
+                }
+             }
+             
+             
+             InspectDataSavedSpinnerDisplay displaySecond = new
+                   InspectDataSavedSpinnerDisplay(this.getContext());
+             
+             
+             item = new InspectDataItem();
+             item.setInspectDataItemName(strBld.toString());
+             displaySecond.inspectDataItem = item;
+          
+             dataSaved = new InspectDataObjectSaved();
+             dataSaved.setTaskCode(taskCode);
+             dataSaved.setCustomerSurveySiteID(customerSurveySiteId);
+             dataSaved.setInspectDataObjectID(-1);
+             displaySecond.dataSaved = dataSaved;
+             displayList.add(displaySecond);
+             
+
+             //displaySecond.jobRequestProduct = jobRequestProduct;
+           
+            // displayList.add(displaySecond);
+           
+             originalDisplayList = displayList;
+            
+            ArrayAdapter<InspectDataSavedSpinnerDisplay> adapter = 
+                    new ArrayAdapter<InspectDataSavedSpinnerDisplay>(this.getContext(),
+                    android.R.layout.simple_spinner_item,displayList);
+            this.setAdapter(adapter);
+
+          }
+      }
+      catch (Exception e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+    }
     public void initial(JobRequestProduct jobRequestProduct,
           String taskCode,
           int customerSurveySiteId)

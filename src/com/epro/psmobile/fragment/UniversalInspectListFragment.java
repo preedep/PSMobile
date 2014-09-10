@@ -36,6 +36,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -157,7 +158,8 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                   btnAddNoAudit.setOnClickListener(new OnClickListener(){
 
                      @Override
-                     public void onClick(View vClick) {
+                     public void onClick(View vClick) 
+                     {
                         // TODO Auto-generated method stub
                        final ViewPager viewPager = (ViewPager)v.findViewById(R.id.universal_pager);
                         int currentViewIdx = viewPager.getCurrentItem();  
@@ -682,12 +684,32 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
       });
    }
    private void doSearch(){
-      initial(currentView);
+      new AsyncTask<Void,Void,Void>(){
+
+         @Override
+         protected Void doInBackground(Void... params) {
+            // TODO Auto-generated method stub
+            saveAllData();
+            return null;
+         }
+
+         /* (non-Javadoc)
+          * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+          */
+         @Override
+         protected void onPostExecute(Void result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+            initial(currentView);
+         }
+         
+      }.execute();
    }
    private void doClear(){
       keyFilter = "";
       initial(currentView);
    }
+   
    private void setupCriterialInput(View root,
          final InspectFormView col){
       UniversalControlType ctrlType = UniversalControlType.getControlType(col.getColType());

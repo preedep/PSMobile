@@ -22,12 +22,14 @@ public class InspectJobMapper implements DbCursorHolder, JSONDataHolder, Transac
    public final static String COL_JOBREQUEST_ID = "jobRequestID";
    public final static String COL_TASK_CODE = "taskCode";
    public final static String COL_IS_AUDIT = "isAudit";
+   public final static String COL_UNIVERSAL_PHOTO_ENTRY = "colsInvokeForPhotoEntryItemDisplay";
    
    private int inspectFormViewID;
    private int inspectFormViewNo;
    private int jobRequestID;
    private String taskCode;
    private boolean isAudit;
+   private String colsInvokeForPhotoEntryItemDisplay;
    
    public InspectJobMapper() {
       // TODO Auto-generated constructor stub
@@ -49,7 +51,8 @@ public class InspectJobMapper implements DbCursorHolder, JSONDataHolder, Transac
       strBld.append(COL_INSPECT_FORM_VIEW_NO+",");
       strBld.append(COL_JOBREQUEST_ID+",");
       strBld.append(COL_TASK_CODE+",");
-      strBld.append(COL_IS_AUDIT+"");
+      strBld.append(COL_IS_AUDIT+",");
+      strBld.append(COL_UNIVERSAL_PHOTO_ENTRY);
       strBld.append(")");
       strBld.append(" values");
       strBld.append("(");
@@ -57,7 +60,8 @@ public class InspectJobMapper implements DbCursorHolder, JSONDataHolder, Transac
       strBld.append(this.inspectFormViewNo+",");
       strBld.append(""+this.jobRequestID+",");
       strBld.append("'"+this.taskCode+"',");
-      strBld.append("'"+this.isAudit+"'");
+      strBld.append("'"+this.isAudit+"',");
+      strBld.append("'"+this.colsInvokeForPhotoEntryItemDisplay+"'");
       strBld.append(")");
       return strBld.toString();
    }
@@ -76,6 +80,7 @@ public class InspectJobMapper implements DbCursorHolder, JSONDataHolder, Transac
       this.jobRequestID = JSONDataUtil.getInt(jsonObj, COL_JOBREQUEST_ID );
       this.taskCode =  JSONDataUtil.getString(jsonObj, COL_TASK_CODE);
       this.isAudit = JSONDataUtil.getBoolean(jsonObj,COL_IS_AUDIT );
+      this.colsInvokeForPhotoEntryItemDisplay = JSONDataUtil.getString(jsonObj, COL_UNIVERSAL_PHOTO_ENTRY);
 
    }
 
@@ -95,6 +100,7 @@ public class InspectJobMapper implements DbCursorHolder, JSONDataHolder, Transac
       try{
          this.isAudit = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(COL_IS_AUDIT )));
       }catch(Exception ex){}
+      this.colsInvokeForPhotoEntryItemDisplay = cursor.getString(cursor.getColumnIndex(COL_UNIVERSAL_PHOTO_ENTRY));
    }
 
    /**
@@ -165,6 +171,14 @@ public class InspectJobMapper implements DbCursorHolder, JSONDataHolder, Transac
     */
    public void setAudit(boolean isAudit) {
       this.isAudit = isAudit;
+   }
+
+   public String getColsInvokeForPhotoEntryItemDisplay() {
+      return colsInvokeForPhotoEntryItemDisplay;
+   }
+
+   public void setColsInvokeForPhotoEntryItemDisplay(String colsInvokeForPhotoEntryItemDisplay) {
+      this.colsInvokeForPhotoEntryItemDisplay = colsInvokeForPhotoEntryItemDisplay;
    }
 
 }

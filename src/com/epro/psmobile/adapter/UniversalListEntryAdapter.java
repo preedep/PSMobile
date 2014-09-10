@@ -556,6 +556,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             
             Log.d("DEBUG_D_D_D", "Product select -> "+currentProduct.getProductID()+" , "+currentProduct.getProductName());
             jobRequestProductList.get(position).setProductId(currentProduct.getProductID());
+            jobRequestProductList.get(position).setProductName(currentProduct.getProductName());
             Log.d("DEBUG_D_D_D", "Set Product id -> object["+position+"] "+jobRequestProductList.get(position).getProductId());
             
             
@@ -1589,6 +1590,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                      objProductIdx = i;
                      product = sp_product.getProducts().get(i);
                      v.jrp.setProductId(product.getProductID());
+                     v.jrp.setProductName(product.getProductName());
                      break;
                   }
                }
@@ -1713,6 +1715,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                if (product == null){
                   product = sp_product.getProducts().get(0);
                   v.jrp.setProductId(product.getProductID());
+                  v.jrp.setProductName(product.getProductName());
                   sp_product.setSelection(0, false);/*must call onPostExecute*/
                }else{
                   sp_product.setSelection(objProductIdx, false);
@@ -1826,11 +1829,16 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       }
    }
    @SuppressWarnings("unused")
-   private synchronized Object invokeGetValue(JobRequestProduct jobRequestProduct,
-         InspectFormView viewForm){
+   public static synchronized Object invokeGetValue(JobRequestProduct jobRequestProduct,
+         InspectFormView viewForm)
+      {
+         return invokeGetValue(jobRequestProduct,viewForm.getColInvokeField());
+      }
+   public static synchronized Object invokeGetValue(JobRequestProduct jobRequestProduct,
+         String colInvokeField){
       
       Object objRet = null;
-      String invokeField = "get"+viewForm.getColInvokeField();
+      String invokeField = "get"+colInvokeField;//viewForm.getColInvokeField();
       @SuppressWarnings("rawtypes")
       Class jrpClass = jobRequestProduct.getClass();
       try {
@@ -1871,7 +1879,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       return (objRet == null)?"":objRet;
    }
    @SuppressWarnings({ "unused", "rawtypes"})
-   private synchronized void invokeSetValue(final JobRequestProduct jobRequestProduct,
+   public static synchronized void invokeSetValue(final JobRequestProduct jobRequestProduct,
          final InspectFormView viewForm,final Object value)
    {
       String invokeField = "set"+viewForm.getColInvokeField();
@@ -1928,7 +1936,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
         // e.printStackTrace();
       }
    }
-   private String setFormat(Object objValue,InspectFormView formView)
+   public static String setFormat(Object objValue,InspectFormView formView)
    {
       //if (objValue == null){
       //   objValue = formView.getColDefaultValue();

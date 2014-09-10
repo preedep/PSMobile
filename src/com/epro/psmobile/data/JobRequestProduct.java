@@ -128,7 +128,7 @@ public class JobRequestProduct implements DbCursorHolder,
 	public final static String COLUMN_DATE_2 = "date2";
 	public final static String COLUMN_DATE_3 = "date3";
 
-	
+	public final static String COLUMN_PRODUCT_NAME = "productName";
 	
 	protected int jobRowId;
 	protected int jobLocationId;
@@ -238,6 +238,7 @@ public class JobRequestProduct implements DbCursorHolder,
 	protected String date2;// :String
 	protected String date3;// :String
 
+	protected String productName;
 	
 	public static final Parcelable.Creator<JobRequestProduct> CREATOR = new Parcelable.Creator<JobRequestProduct>()
 			{
@@ -401,6 +402,28 @@ public class JobRequestProduct implements DbCursorHolder,
 		this.productPrice = source.readDouble();
 		this.productQty = source.readDouble();
 		this.productValue = source.readDouble();
+		
+		
+		this.char1  = source.readString();
+		this.char2 = source.readString();// :String
+		this.char3 = source.readString();// :String
+		this.char4 = source.readString();// :String
+		this.char5 = source.readString();// :String
+		this.num1 = source.readInt();// :int
+		this.num2 = source.readInt();// :int
+		this.num3 = source.readInt();// :int
+		this.num4 = source.readInt();// :int
+		this.num5 = source.readInt();// :int
+		this.dec1 = source.readDouble();// : decimal
+		this.dec2 = source.readDouble();//: decimal
+		this.dec3 = source.readDouble();//: decimal
+		this.date1 = source.readString();// :String
+		this.date2 = source.readString();// :String
+		this.date3 = source.readString();// :String
+
+		this.productName = source.readString();
+		this.productRowID = source.readInt();
+
 	}
 	public JobRequestProduct() {
 		// TODO Auto-generated constructor stub
@@ -522,7 +545,8 @@ public class JobRequestProduct implements DbCursorHolder,
 	    strBld.append(COLUMN_DEC_3+",");// = "dec3";
 	    strBld.append(COLUMN_DATE_1+",");// = "date1";
 	    strBld.append(COLUMN_DATE_2+",");// = "date2";
-	    strBld.append(COLUMN_DATE_3+"");// = "date3";
+	    strBld.append(COLUMN_DATE_3+",");// = "date3";
+	    strBld.append(COLUMN_PRODUCT_NAME);
 		strBld.append(")");
 		strBld.append(" values");
 		strBld.append("(");
@@ -676,9 +700,8 @@ public class JobRequestProduct implements DbCursorHolder,
 	    strBld.append(""+dec3+",");//: decimal
 	    strBld.append("'"+date1+"',");// :String
 	    strBld.append("'"+date2+"',");// :String
-	    strBld.append("'"+date3+"'");// :String
-
-	    
+	    strBld.append("'"+date3+"',");// :String
+	    strBld.append("'"+this.productName+"'");
 		strBld.append(")");
 		return strBld.toString();
 	}
@@ -778,6 +801,8 @@ public class JobRequestProduct implements DbCursorHolder,
 		  this.date2 = JSONDataUtil.getString(jsonObj,COLUMN_DATE_2);// = "date2";
 		  this.date3 = JSONDataUtil.getString(jsonObj,COLUMN_DATE_3);// = "date3";
 
+		  
+		  this.productName = JSONDataUtil.getString(jsonObj, COLUMN_PRODUCT_NAME);
 	}
 
 	@Override
@@ -1031,7 +1056,7 @@ public class JobRequestProduct implements DbCursorHolder,
           this.date2 = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_2));// = "date2";
           this.date3 = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_3));// = "date3";
 
-		  
+		  this.productName = cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_NAME));
 	}
 
 	public int getJobRequestID() {
@@ -1949,6 +1974,28 @@ public class JobRequestProduct implements DbCursorHolder,
 		dest.writeDouble(this.productPrice);
 		dest.writeDouble(this.productQty);
 		dest.writeDouble(this.productValue);
+		
+		  
+        dest.writeString(char1);//  = source.readString();
+        dest.writeString(char2);// = source.readString();// :String
+        dest.writeString(char3);// = source.readString();// :String
+        dest.writeString(char4);// = source.readString();// :String
+        dest.writeString(char5);// = source.readString();// :String
+        dest.writeInt(num1);// = source.readInt();// :int
+        dest.writeInt(num2);// = source.readInt();// :int
+        dest.writeInt(num3);// = source.readInt();// :int
+        dest.writeInt(num4);// = source.readInt();// :int
+        dest.writeInt(num5);// = source.readInt();// :int
+        dest.writeDouble(dec1);// = source.readDouble();// : decimal
+        dest.writeDouble(dec2);// = source.readDouble();//: decimal
+        dest.writeDouble(dec3);// = source.readDouble();//: decimal
+        dest.writeString(date1);// = source.readString();// :String
+        dest.writeString(date2);// = source.readString();// :String
+        dest.writeString(date3);// = source.readString();// :String
+        dest.writeString(productName);// = source.readString();
+        
+        dest.writeInt(this.productRowID);
+
 	}
 	public String getJobNo() {
 		return jobNo;
@@ -2328,5 +2375,17 @@ public class JobRequestProduct implements DbCursorHolder,
     */
    public void setDate3(String date3) {
       this.date3 = date3;
+   }
+   /**
+    * @return the productName
+    */
+   public String getProductName() {
+      return productName;
+   }
+   /**
+    * @param productName the productName to set
+    */
+   public void setProductName(String productName) {
+      this.productName = productName;
    }
 }

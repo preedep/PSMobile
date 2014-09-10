@@ -144,7 +144,7 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 		currentTaskCode = this.getIntent().getStringExtra(InstanceStateKey.KEY_ARGUMENT_TASK_CODE);
 		if (jobRequest != null)
 		{
-		   if (jobRequest.getInspectType().getInspectTypeID() == InspectServiceSupportUtil.SERVICE_CAR_INSPECT)
+		   if (jobRequest.getInspectType().getInspectTypeID() > InspectServiceSupportUtil.SERVICE_FARM_LAND_2)
 		   {
 		      jobRequestProduct = 
 		            this.getIntent().getParcelableExtra(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST);
@@ -858,7 +858,7 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 	                   customersurveySiteId);
 	       }else{
 	          /*universal display*/
-	          inspectDataSavedSpinner.initial(
+	          inspectDataSavedSpinner.initialUniversal(
                     jobRequestProduct,
                     taskCode,
                     customersurveySiteId);
