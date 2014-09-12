@@ -4,12 +4,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextWatcher;
 
 import com.epro.psmobile.remote.api.JSONDataHolder;
 import com.epro.psmobile.util.JSONDataUtil;
 
-public class InspectFormView implements DbCursorHolder, JSONDataHolder , TransactionStmtHolder {
+public class InspectFormView implements DbCursorHolder, JSONDataHolder , TransactionStmtHolder , Parcelable
+{
 
    /*
     * inspectFormViewID INTEGER,
@@ -58,6 +61,42 @@ public class InspectFormView implements DbCursorHolder, JSONDataHolder , Transac
    private String decimalFormat;
    
    public TextWatcher textWatcher;
+   
+   
+   public static final Parcelable.Creator<InspectFormView> CREATOR = new Parcelable.Creator<InspectFormView>()
+         {
+
+             @Override
+             public InspectFormView createFromParcel(Parcel source) {
+                 // TODO Auto-generated method stub
+                 return new InspectFormView(source);
+             }
+
+             @Override
+             public InspectFormView[] newArray(int size) {
+                 // TODO Auto-generated method stub
+                 return new InspectFormView[size];
+             }
+     
+         };
+   public InspectFormView(Parcel source)
+   {
+      inspectFormViewID = source.readInt();
+      colNo = source.readInt();
+      colFormula = source.readString();
+      source.readBooleanArray(new boolean[]{isColEditable});
+      source.readBooleanArray(new boolean[]{isColHidden});
+      colType = source.readInt();
+      colTextDisplay = source.readString();
+      colDefaultValue = source.readString();
+      colWidth = source.readFloat();
+      colInvokeField = source.readString();
+      reasonSentenceCode = source.readString();
+      taskFormTemplateID = source.readInt();
+      dateTimeFormate = source.readString();
+      decimalFormat = source.readString();
+
+   }
    public InspectFormView() {
       // TODO Auto-generated constructor stub
    }
@@ -368,6 +407,33 @@ public class InspectFormView implements DbCursorHolder, JSONDataHolder , Transac
 
    public void setDecimalFormat(String decimalFormat) {
       this.decimalFormat = decimalFormat;
+   }
+
+   @Override
+   public int describeContents() {
+      // TODO Auto-generated method stub
+      return 0;
+   }
+
+   @Override
+   public void writeToParcel(Parcel dest, int flags) {
+      // TODO Auto-generated method stub
+      dest.writeInt(inspectFormViewID);
+      dest.writeInt(colNo);
+      dest.writeString(colFormula);
+      dest.writeBooleanArray(new boolean[]{isColEditable});
+      dest.writeBooleanArray(new boolean[]{isColHidden});
+      dest.writeInt(colType);
+      dest.writeString(colTextDisplay);
+      dest.writeString(colDefaultValue);
+      dest.writeFloat(colWidth);
+      dest.writeString(colInvokeField);
+      dest.writeString(reasonSentenceCode);
+      dest.writeInt(taskFormTemplateID);
+      
+      dest.writeString(dateTimeFormate);
+      dest.writeString(decimalFormat);
+
    }
 
 }

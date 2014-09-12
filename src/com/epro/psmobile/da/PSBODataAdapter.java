@@ -1923,6 +1923,17 @@ isTaskCompleted BOOLEAN
 				"and jobRequestID="+jobRequestID+" order by taskcontrolno";
 		return query(sql,TaskFormDataSaved.class);
 	}
+	public synchronized ArrayList<TaskFormDataSaved> findUniversalTaskFormDataSavedList(int jobRequestID,
+          String taskCode,int siteID,int productRowID) throws Exception
+  {
+      String sql = "select * from TaskFormDataSaved where taskCode='"+taskCode+"' " +
+              " and jobRequestID="+jobRequestID+" " +
+              " and customerSurveySiteID="+siteID+" "+
+              " and productRowId="+productRowID+" "+
+              "order by taskcontrolno";
+      
+      return query(sql,TaskFormDataSaved.class);
+  }
 	public synchronized ArrayList<Product> getAllProduct() throws Exception
 	{
 		String sql = "select * from product";

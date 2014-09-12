@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.GregorianCalendar;
 
 import com.epro.psmobile.R;
+import com.epro.psmobile.adapter.callback.OnOpenCommentActivity;
 import com.epro.psmobile.adapter.callback.OnTakeCameraListener;
 import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.CustomerSurveySite;
@@ -164,6 +165,8 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
    }
    
    private OnColumnInputChangeListener columnInputChangeListener;
+   private OnOpenCommentActivity openCommentActivityListener;
+   
    private long mLastClickTime;
    
    class UniversalTextWatcher implements TextWatcher{
@@ -888,7 +891,19 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                  holder.viewRows[i] = vSpinner;
                }break;
                case CheckListForm:{
-                  
+                  View vCheckListForm = 
+                        inflater.inflate(R.layout.ps_activity_report_list_entry_column_camera, vGroup, false);
+                  //vCamera.getLayoutParams().width = (int)colWidth;
+                  if (vCheckListForm instanceof LinearLayout){
+                     ((LinearLayout)vCheckListForm).setGravity(Gravity.CENTER);
+                  }
+                  Button btn = (Button)vCheckListForm.findViewById(R.id.btn_report_list_entry_column_camera);
+                  btn.getLayoutParams().width = (int)colWidth;
+                  btn.setText("");
+                  btn.setGravity(Gravity.CENTER);
+                  btn.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_device_access_camera,0,0,0);
+                  holder.viewRows[i] = vCheckListForm;
                }break;
                case ProductType:{
                   View vSpinner = 
@@ -1090,53 +1105,14 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                //Log.d("DEBUG_D_D_D", "Display Market Price -> "+jrp.getProductGroupID()+", "+jrp.getProductId());
                //{
                  
-                  /*
-                  final EditText edtText = (EditText)vEachCol.findViewById(R.id.et_report_list_entry_column_text);
-                  edtText.post(new Runnable(){
-
-                     @Override
-                     public void run() {
-                        // TODO Auto-generated method stub
-                        if (jrp.getMarketPriceID() >= 0){
-                           edtText.setText(setFormat(jrp.getMarketPrice(),formView));
-                        }else{
-                           edtText.setText(formView.getColDefaultValue());
-                        }
-                     }
-                  });*/
+                  
                   new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,eachColViewHolder);
                   
                   
                      /*
                       * find market price ctrl to set value
                       */
-                  /*
-                     for(View tmp_vEachCol : holder.viewRows)
-                     {
-                        InspectFormView viewForm = (InspectFormView)tmp_vEachCol.getTag();
-                        ctrlType = UniversalControlType.getControlType(viewForm.getColType());
-                        if (ctrlType == UniversalControlType.MarketPrice)
-                        {   
-                           if (defaultMarket != null){
-                              jobRequestProductList.get(position).setMarketPriceID(defaultMarket.getMarketPriceID());
-                              jobRequestProductList.get(position).setMarketPrice(defaultMarket.getMarketPrice());
-                           }else{
-                              jobRequestProductList.get(position).setMarketPriceID(-1);
-                              jobRequestProductList.get(position).setMarketPrice(0.00);
-                           }
-                           
-                           EditText edt = (EditText)tmp_vEachCol.findViewById(
-                                 R.id.et_report_list_entry_column_text);
-                           if (jobRequestProductList.get(position).getMarketPriceID() >= 0)
-                           {
-                              edt.setText(
-                                 setFormat(defaultMarket.getMarketPrice(),viewForm));
-                           }else{
-                              edt.setText(viewForm.getColDefaultValue());
-                           }
-                           //////////
-                        }
-                     }*/
+
                  //}
             }break;
             case ProductType:
@@ -1231,70 +1207,10 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                
                new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,eachColViewHolder);
                
-               
-               /*
-               if (sp_product != null)
-               {
-                     if(sp_product.getProducts() != null)
-                     {
-                        Product product = null;
-                        for(int i = 0; i < sp_product.getProducts().size();i++)
-                        {
-                           if (sp_product.getProducts().get(i).getProductID() == jrp.getProductId())
-                           {
-                              sp_product.setSelection(i, false);
-                              product = sp_product.getProducts().get(i);
-                              break;
-                           }
-                        }
-
-                        if (product == null){
-                           product = sp_product.getProducts().get(0);
-                           jrp.setProductId(product.getProductID());
-                           sp_product.setSelection(0, false);
-                        }
-                      }
-                     
-                     final ProductSelectImpl productSelectImpl = new ProductSelectImpl();
-                     
-                     if (sp_product.getOnItemSelectedListener() instanceof ProductTypeSelectImpl){
-                        ((ProductSelectImpl)sp_product.getOnItemSelectedListener()).setViewRow(rowView);
-                        ((ProductSelectImpl)sp_product.getOnItemSelectedListener()).setPosition(position);
-                     }else
-                     {                  
-                        productSelectImpl.setViewRow(rowView);
-                        productSelectImpl.setPosition(position); 
-                       
-                        sp_product.setOnItemSelectedListener(productSelectImpl);
-
-                        
-                     }
-                }*/
             }break;
             case ProductUnit:
             {
                /*product unit*/
-               /*
-               final ProductUnitSpinner sp_product_unit = 
-                     (ProductUnitSpinner)vEachCol.findViewById(R.id.sp_product_unit);
-                  sp_product_unit.initial(null);
-                  for(int i = 0; i < sp_product_unit.getProductAmountUnits().size();i++){
-                     ProductAmountUnit productUnit = sp_product_unit.getProductAmountUnits().get(i);
-                     if (productUnit.getUnitName().equalsIgnoreCase(jrp.getProductUnit()))
-                     {
-                        sp_product_unit.setSelection(i, false);
-                        break;
-                     }
-                  final ProductUnitSelectImpl productUnitSelectImpl = new ProductUnitSelectImpl();
-                  if (sp_product_unit.getOnItemSelectedListener() instanceof ProductUnitSelectImpl){
-                      ((ProductUnitSelectImpl)sp_product_unit.getOnItemSelectedListener()).setViewRow(rowView);
-                      ((ProductUnitSelectImpl)sp_product_unit.getOnItemSelectedListener()).setPosition(position);
-                  }else{
-                     productUnitSelectImpl.setViewRow(rowView);
-                     productUnitSelectImpl.setPosition(position);
-                     sp_product_unit.setOnItemSelectedListener(productUnitSelectImpl);
-                  }
-               }*/
                EachColViewHolder eachColViewHolder = new EachColViewHolder();
                eachColViewHolder.position = position;
                eachColViewHolder.viewCol = vEachCol;
@@ -1333,6 +1249,28 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                }
                //////////////////////////////
             }break;
+            case CheckListForm:
+            {
+               Button btn = (Button)vEachCol.findViewById(R.id.btn_report_list_entry_column_camera);
+               final ArrayList<InspectFormView> colProperties = new ArrayList<InspectFormView>();
+               for( View tmp : holder.viewRows)
+               {
+                  InspectFormView tmpProperty =  (InspectFormView)vEachCol.getTag();
+                  colProperties.add(tmpProperty);
+               }
+               btn.setOnClickListener(new OnClickListener(){
+
+                  @Override
+                  public void onClick(View v) {
+                     // TODO Auto-generated method stub
+                     if (getOpenCommentActivityListener() != null){
+                        getOpenCommentActivityListener().onOpenCommentActivity(colProperties, jrp);
+                     }
+                  }
+                  
+               });
+            }
+            break;
             case DateInput:
             case DateTimeInput:{
                /*reuse btn camera*/
@@ -2062,6 +2000,14 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             break;
          }
       }
+   }
+
+   public OnOpenCommentActivity getOpenCommentActivityListener() {
+      return openCommentActivityListener;
+   }
+
+   public void setOpenCommentActivityListener(OnOpenCommentActivity openCommentActivityListener) {
+      this.openCommentActivityListener = openCommentActivityListener;
    }
   
 }

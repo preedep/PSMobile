@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -916,6 +917,28 @@ public class DataUploadGenerator {
 - cYear: String
 - cType: String
 			             */
+			            
+			            for(Method mGet : JobRequestProduct.class.getMethods())
+			            {
+			               String methodName = mGet.getName();
+			               if (methodName.startsWith("get")){
+			                  String setMethod = methodName.replace("get", "set");
+			                  try{
+	                              Method mSetMethod = 
+	                                    ResultCheckJobProduct.class.getMethod(setMethod,
+	                                          mGet.getReturnType());                              
+	                              if (mSetMethod != null){
+	                                 Object objValue = mGet.invoke(jobRequestProduct);
+	                                 mSetMethod.invoke(resultCheckJobProduct, 
+	                                       objValue);
+	                              }			                     
+			                  }catch(Exception ex){
+			                     ex.printStackTrace();
+			                  }
+			               }
+			            }
+			            
+			            /*
 			            resultCheckJobProduct.setcInvoiceDate(jobRequestProduct.getcInvoiceDate());
 			            resultCheckJobProduct.setcRegisterNumber(jobRequestProduct.getcRegisterNumber());
 			            resultCheckJobProduct.setcMid(jobRequestProduct.getcMid());
@@ -937,11 +960,6 @@ public class DataUploadGenerator {
 			            resultCheckJobProduct.setcDocument(jobRequestProduct.getcDocument());
                         resultCheckJobProduct.setcRemark(jobRequestProduct.getcRemark());
 
-			            /*
-			            if (inspectTypeID ==  InspectServiceSupportUtil.SERVICE_CAR_INSPECT){
-			            }else{
-			               resultCheckJobProduct.setcRemark(jobRequestProduct.getRemark());
-			            }*/
 			            resultCheckJobProduct.setcImage(jobRequestProduct.getcImage());
 			            resultCheckJobProduct.setcReasonID(jobRequestProduct.getcReasonID());
                         resultCheckJobProduct.setcReasonCode(jobRequestProduct.getcReasonCode());
@@ -964,6 +982,8 @@ public class DataUploadGenerator {
                         resultCheckJobProduct.setRemark(jobRequestProduct.getRemark());
                         
                         resultCheckJobProduct.setJobLocationId(jobRequestProduct.getJobLocationId());
+                        */
+                        
                         /*
                          * copy to folder image
                          */

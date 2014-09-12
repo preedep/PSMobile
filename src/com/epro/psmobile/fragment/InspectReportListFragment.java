@@ -11,11 +11,13 @@ import com.actionbarsherlock.view.MenuItem;
 import com.epro.psmobile.InspectPhotoEntryActivity;
 import com.epro.psmobile.PhotoGalleryActivity;
 import com.epro.psmobile.R;
+import com.epro.psmobile.UniversalCommentActivity;
 import com.epro.psmobile.adapter.CarReportListEntryAdapter;
 import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.CarInspectStampLocation;
 import com.epro.psmobile.data.CustomerSurveySite;
 import com.epro.psmobile.data.InspectDataObjectPhotoSaved;
+import com.epro.psmobile.data.InspectFormView;
 import com.epro.psmobile.data.JobRequest;
 import com.epro.psmobile.data.JobRequestProduct;
 import com.epro.psmobile.data.Task;
@@ -570,6 +572,20 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
              InspectPhotoEntryActivity.class, 
              argument, 
              InstanceStateKey.RESULT_INSPECT_PHOTO_ENTRY);
+	}
+	protected void doOpenUniversalComment(JobRequestProduct jobRequestProduct,
+	      ArrayList<InspectFormView> colProperties)
+	{
+	   Bundle argument = new Bundle();
+	   argument.putString(InstanceStateKey.KEY_ARGUMENT_TASK_CODE, InspectReportListFragment.currentTask.getTaskCode());
+       argument.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL, InspectReportListFragment.jobRequest);
+       argument.putInt(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY_ID, InspectReportListFragment.customerSurveySite.getCustomerSurveySiteID());
+       argument.putParcelableArrayList(InstanceStateKey.KEY_ARGUMENT_UNIVERSAL_COL_PROPERTIES,colProperties);
+       argument.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST, jobRequestProduct);
+       
+       ActivityUtil.startNewActivity(getActivity(),
+             UniversalCommentActivity.class,
+             argument);
 	}
 	protected void doActivityResultForTakePhoto(int requestCode,
 	      int resultCode,

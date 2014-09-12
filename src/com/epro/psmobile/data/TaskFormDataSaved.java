@@ -28,6 +28,10 @@ JSONDataHolder
 	public final static String COLUMN_REASON_SENTENCE_PATH = "chooseReasonSentencePath";
 	public final static String COLUMN_PARENT_ID = "parentID";
 	
+	public final static String COLUMN_CUSTOMER_SURVEY_SITE_ID = "customerSurveySiteID";
+	public final static String COLUMN_PRODUCT_ROW_ID = "productRowId";
+	
+	
 	private int taskFormTemplateID;
 	private TaskControlType taskControlType = TaskControlType.SimpleText;
 	private int taskControlNo;
@@ -38,6 +42,8 @@ JSONDataHolder
 	private String taskDataValues;
 	private String parentID;
 	private ReasonSentence reasonSentence;
+	private int customerSurveySiteID;
+	private int productRowId;
 	
 	public TaskFormDataSaved() {
 		// TODO Auto-generated constructor stub
@@ -70,7 +76,9 @@ JSONDataHolder
 		strBld.append(COLUMN_REASON_SENTENCE_ID+",");
 		strBld.append(COLUMN_REASON_SENTENCE_TEXT+",");
 		strBld.append(COLUMN_REASON_SENTENCE_PATH+",");
-		strBld.append(COLUMN_PARENT_ID);
+		strBld.append(COLUMN_PARENT_ID+",");
+		strBld.append(COLUMN_CUSTOMER_SURVEY_SITE_ID+",");
+		strBld.append(COLUMN_PRODUCT_ROW_ID);
 		strBld.append(")");
 		strBld.append(" values");
 		strBld.append("(");
@@ -86,7 +94,9 @@ JSONDataHolder
 		strBld.append(""+this.reasonSentence.getReasonID()+",");
 		strBld.append("'"+this.reasonSentence.getReasonText()+"',");
 		strBld.append("'"+this.reasonSentence.getReasonSentencePath()+"',");
-		strBld.append("'"+this.parentID+"'");
+		strBld.append("'"+this.parentID+"',");
+		strBld.append(""+this.customerSurveySiteID+",");
+		strBld.append(""+this.productRowId+"");
 		strBld.append(")");
 		return strBld.toString();
 	}
@@ -119,6 +129,9 @@ JSONDataHolder
 		
 		this.reasonSentence.setReasonSentencePath(cursor.getString(cursor.getColumnIndex(COLUMN_REASON_SENTENCE_PATH)));
 		this.parentID = cursor.getString(cursor.getColumnIndex(COLUMN_PARENT_ID));
+		
+		this.customerSurveySiteID = cursor.getInt(cursor.getColumnIndex(COLUMN_CUSTOMER_SURVEY_SITE_ID));
+		this.productRowId = cursor.getInt(cursor.getColumnIndex(COLUMN_PRODUCT_ROW_ID));
 	}
 
 	public int getTaskFormTemplateID() {
@@ -239,4 +252,20 @@ JSONDataHolder
 	public void setParentID(String parentID) {
 		this.parentID = parentID;
 	}
+
+   public int getCustomerSurveySiteID() {
+      return customerSurveySiteID;
+   }
+
+   public void setCustomerSurveySiteID(int customerSurveySiteID) {
+      this.customerSurveySiteID = customerSurveySiteID;
+   }
+
+   public int getProductRowId() {
+      return productRowId;
+   }
+
+   public void setProductRowId(int productRowId) {
+      this.productRowId = productRowId;
+   }
 }

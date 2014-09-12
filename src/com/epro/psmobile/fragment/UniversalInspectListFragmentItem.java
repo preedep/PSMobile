@@ -6,6 +6,7 @@ import com.epro.psmobile.InspectPhotoEntryActivity;
 import com.epro.psmobile.R;
 import com.epro.psmobile.adapter.UniversalListEntryAdapter;
 import com.epro.psmobile.adapter.UniversalListEntryAdapter.OnColumnInputChangeListener;
+import com.epro.psmobile.adapter.callback.OnOpenCommentActivity;
 import com.epro.psmobile.adapter.callback.OnTakeCameraListener;
 import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.InspectFormView;
@@ -31,7 +32,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class UniversalInspectListFragmentItem extends InspectReportListFragment implements OnTakeCameraListener<JobRequestProduct> {
+public class UniversalInspectListFragmentItem extends InspectReportListFragment 
+implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
 
    @SuppressWarnings("unused")
    private JobRequestProduct currentJobRequestProduct;
@@ -262,6 +264,7 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
                   jobRequestProductList,
                   isAudit);
       adapter.setOnTakeCameraListener(this);
+      adapter.setOpenCommentActivityListener(this);
       adapter.setColumnInputChangeListener(new OnColumnInputChangeListener(){
 
          @Override
@@ -435,5 +438,11 @@ public class UniversalInspectListFragmentItem extends InspectReportListFragment 
             adapter.notifyDataSetChanged();
          }         
       }
+   }
+
+   @Override
+   public void onOpenCommentActivity(ArrayList<InspectFormView> colProperties, JobRequestProduct type) {
+      // TODO Auto-generated method stub
+      super.doOpenUniversalComment(type, colProperties);
    }
 }

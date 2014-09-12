@@ -12,9 +12,13 @@ import com.epro.psmobile.InspectPhotoEntryActivity;
 import com.epro.psmobile.R;
 import com.epro.psmobile.adapter.TaskCommentAdapter;
 import com.epro.psmobile.adapter.TaskCommentAdapterV2;
+import com.epro.psmobile.adapter.UniversalListEntryAdapter.UniversalControlType;
 import com.epro.psmobile.da.PSBODataAdapter;
+import com.epro.psmobile.data.CustomerSurveySite;
 import com.epro.psmobile.data.InspectDataObjectPhotoSaved;
+import com.epro.psmobile.data.InspectFormView;
 import com.epro.psmobile.data.JobRequest;
+import com.epro.psmobile.data.JobRequestProduct;
 import com.epro.psmobile.data.ReasonSentence;
 import com.epro.psmobile.data.Task;
 import com.epro.psmobile.data.TaskControlTemplate.TaskControlType;
@@ -23,6 +27,7 @@ import com.epro.psmobile.data.TaskFormTemplate;
 import com.epro.psmobile.form.template.choice.single.SingleItemAdapter;
 import com.epro.psmobile.key.params.InstanceStateKey;
 import com.epro.psmobile.util.ActivityUtil;
+import com.epro.psmobile.util.InspectServiceSupportUtil;
 import com.epro.psmobile.util.MessageBox;
 import com.epro.psmobile.util.ReportInspectSummaryStatusHelper;
 import com.epro.psmobile.util.SharedPreferenceUtil;
@@ -46,9 +51,33 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 	private ListView lv_comments;
 	private Task currentTask;
 	private JobRequest jobRequest;
+	private CustomerSurveySite site;
+	private ArrayList<InspectFormView> formViewAllCols;
+	private JobRequestProduct jobRequestProduct;
+	
 	/**
 	 * 
 	 */
+	public static JobCommentFragment newUniversalInstance(JobRequest jobRequest,
+	      Task task,
+	      CustomerSurveySite site,
+	      ArrayList<InspectFormView> formViewAllCols,
+	      JobRequestProduct jobRequestProduct){
+	   
+	   JobCommentFragment comment = new JobCommentFragment();
+	   
+	   Bundle bArgument = new Bundle();
+	   
+	   bArgument.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL,jobRequest);
+       bArgument.putParcelable(InstanceStateKey.KEY_ARGUMENT_TASK,task);
+       bArgument.putParcelable(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY, site);
+       bArgument.putParcelableArrayList(InstanceStateKey.KEY_ARGUMENT_UNIVERSAL_COL_PROPERTIES, formViewAllCols);
+       bArgument.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST, jobRequestProduct);
+       
+       comment.setArguments(bArgument);
+       
+	   return comment;
+	}
 	public JobCommentFragment() {
 		// TODO Auto-generated constructor stub
 	}
@@ -89,18 +118,51 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 		{
 			ArrayList<TaskFormDataSaved> dataSavedList = null;
 			
-			 jobRequest =  (JobRequest)argument.getParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL);
-		    currentTask = (Task)argument.getParcelable(InstanceStateKey.KEY_ARGUMENT_TASK);
-			this.setCustomerInfoTitle(view,currentTask, jobRequest);
+			jobRequest =  argument.getParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL);
+		    currentTask = argument.getParcelable(InstanceStateKey.KEY_ARGUMENT_TASK);
+			site = argument.getParcelable(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY);
+			formViewAllCols = argument.getParcelableArrayList(InstanceStateKey.KEY_ARGUMENT_UNIVERSAL_COL_PROPERTIES);
+			jobRequestProduct = argument.getParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST);
+			
+			
+		    this.setCustomerInfoTitle(view,currentTask, jobRequest);
 			
 			PSBODataAdapter adapter = PSBODataAdapter.getDataAdapter(this.getActivity());
 			try {
+			   if (jobRequest.getInspectType().getInspectTypeID() > InspectServiceSupportUtil.SERVICE_FARM_LAND_2)
+               {
+	                dataSavedList = adapter.findUniversalTaskFormDataSavedList(jobRequest.getJobRequestID(), 
+	                        currentTask.getTaskCode(),
+	                        site.getCustomerSurveySiteID(),jobRequestProduct.getProductRowID()
+	                        );			      
+               }
+			   else{
 				dataSavedList = adapter.findTaskFormDataSavedListByJobRequestId(jobRequest.getJobRequestID(), 
 						currentTask.getTaskCode());
-			
+               }
 				
-				ArrayList<TaskFormTemplate> comments = 
-						adapter.findTaskFormTemplateListByTemplateFormId(currentTask.getTaskFormTemplateID());
+				ArrayList<TaskFormTemplate> comments = null;
+				if (jobRequest.getInspectType().getInspectTypeID() > InspectServiceSupportUtil.SERVICE_FARM_LAND_2)
+				{
+				   /*
+				    * for universal
+				    */
+				   InspectFormView vColCheckListForm = null;
+				   for(InspectFormView vCol : formViewAllCols)
+				   {
+				      UniversalControlType ctrlType = UniversalControlType.getControlType(vCol.getColType());
+				      if (ctrlType == UniversalControlType.CheckListForm)
+				      {
+				         vColCheckListForm = vCol;
+				         break;
+				      }
+				   }
+				   if (vColCheckListForm != null){
+	                   comments =   adapter.findTaskFormTemplateListByTemplateFormId(vColCheckListForm.getTaskFormTemplateID());				      
+				   }
+				}else{
+				   comments =	adapter.findTaskFormTemplateListByTemplateFormId(currentTask.getTaskFormTemplateID());
+				}
 				if (dataSavedList != null)
 				{
 					for(TaskFormTemplate formTemplate : comments)

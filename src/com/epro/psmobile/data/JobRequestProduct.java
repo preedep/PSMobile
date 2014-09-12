@@ -920,6 +920,24 @@ public class JobRequestProduct implements DbCursorHolder,
 		
 		JSONDataUtil.put(jsonObj, COLUMN_REMARK, remark);
 		
+		
+		 JSONDataUtil.put(jsonObj, COLUMN_CHAR_1,char1);//
+         JSONDataUtil.put(jsonObj,COLUMN_CHAR_2,char2);// = "char2";
+         JSONDataUtil.put(jsonObj,COLUMN_CHAR_3,char3);// = "char3";
+         JSONDataUtil.put(jsonObj,COLUMN_CHAR_4,char4);// = " char4";
+         JSONDataUtil.put(jsonObj,COLUMN_CHAR_5,char5);// = "char5";
+         JSONDataUtil.put(jsonObj,COLUMN_NUM_1,num1);// = "num1";
+         JSONDataUtil.put(jsonObj,COLUMN_NUM_2,num2);// = "num2";
+         JSONDataUtil.put(jsonObj,COLUMN_NUM_3,num3);//= "num3";
+         JSONDataUtil.put(jsonObj,COLUMN_NUM_4,num4);// = "num4";
+         JSONDataUtil.put(jsonObj,COLUMN_NUM_5,num5);// = "num5";
+         JSONDataUtil.put(jsonObj,COLUMN_DEC_1,dec1);// = "dec1";
+         JSONDataUtil.put(jsonObj,COLUMN_DEC_2,dec2);// = "dec2";
+         JSONDataUtil.put(jsonObj,COLUMN_DEC_3,dec3);// = "dec3";
+         JSONDataUtil.put(jsonObj,COLUMN_DATE_1,date1);// = "date1";
+         JSONDataUtil.put(jsonObj,COLUMN_DATE_2,date2);// = "date2";
+         JSONDataUtil.put(jsonObj,COLUMN_DATE_3,date3);// = "date3";
+
 		return jsonObj;
 	}
 

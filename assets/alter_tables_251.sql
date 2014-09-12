@@ -84,6 +84,10 @@ CREATE TABLE JobRequestProductBackup
 	crLastPayment TEXT
 );
 
+ALTER TABLE TaskFormDataSaved ADD COLUMN customerSurveySiteID INTEGER;
+ALTER TABLE TaskFormDataSaved ADD COLUMN productRowId INTEGER;
+
+
 ALTER TABLE JobRequestProductBackup ADD COLUMN cWareHouse INTEGER DEFAULT(0);
 ALTER TABLE JobRequestProductBackup ADD COLUMN cOrder INTEGER DEFAULT(0);
 ALTER TABLE JobRequestProductBackup ADD COLUMN cSight TEXT DEFAULT('N');

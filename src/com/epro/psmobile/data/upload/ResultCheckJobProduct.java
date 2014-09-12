@@ -11,7 +11,8 @@ import com.epro.psmobile.data.Task;
 import com.epro.psmobile.util.JSONDataUtil;
 
 public class ResultCheckJobProduct extends JobRequestProduct 
-   implements  UploadDataAdapter {
+   implements  UploadDataAdapter 
+   {
 
 	private final static String ATT_JOB_NO =  "jobDocumentNo";
 

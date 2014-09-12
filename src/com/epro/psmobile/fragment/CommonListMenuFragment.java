@@ -1005,9 +1005,12 @@ public class CommonListMenuFragment extends SherlockListFragment {
 						      /*
 						       * if car inspect not show 13questions exceped QC Team
 						       */
-	                              if (this.currentTask.getJobRequest().getInspectType().getInspectTypeID() 
-	                                    <= InspectServiceSupportUtil.SERVICE_FARM_LAND_2)
-	                              {
+	                              //if (this.currentTask.getJobRequest().getInspectType().getInspectTypeID() 
+	                              //      <= InspectServiceSupportUtil.SERVICE_FARM_LAND_2)
+						          if (InspectServiceSupportUtil.checkSupportQuestionare(
+						                currentTask.getJobRequest().
+						                getInspectType().
+						                getInspectTypeID())){
 	                                 subMenuItem.groupCmd = MenuGroupTypeCmd.SHOW_COMMENT;
 	                                 menus.add(subMenuItem);                              
 	                              }						         
