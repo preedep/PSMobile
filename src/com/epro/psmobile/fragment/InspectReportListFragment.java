@@ -577,9 +577,9 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	      ArrayList<InspectFormView> colProperties)
 	{
 	   Bundle argument = new Bundle();
-	   argument.putString(InstanceStateKey.KEY_ARGUMENT_TASK_CODE, InspectReportListFragment.currentTask.getTaskCode());
+	   argument.putParcelable(InstanceStateKey.KEY_ARGUMENT_TASK, InspectReportListFragment.currentTask);
        argument.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL, InspectReportListFragment.jobRequest);
-       argument.putInt(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY_ID, InspectReportListFragment.customerSurveySite.getCustomerSurveySiteID());
+       argument.putParcelable(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY, InspectReportListFragment.customerSurveySite);
        argument.putParcelableArrayList(InstanceStateKey.KEY_ARGUMENT_UNIVERSAL_COL_PROPERTIES,colProperties);
        argument.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST, jobRequestProduct);
        

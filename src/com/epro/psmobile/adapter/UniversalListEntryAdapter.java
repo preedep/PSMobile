@@ -902,7 +902,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   btn.setText("");
                   btn.setGravity(Gravity.CENTER);
                   btn.setCompoundDrawablesWithIntrinsicBounds(
-                        R.drawable.ic_device_access_camera,0,0,0);
+                        R.drawable.ic_list,0,0,0);
                   holder.viewRows[i] = vCheckListForm;
                }break;
                case ProductType:{
@@ -1252,6 +1252,17 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             case CheckListForm:
             {
                Button btn = (Button)vEachCol.findViewById(R.id.btn_report_list_entry_column_camera);
+               btn.post(new Runnable(){
+
+                  @Override
+                  public void run() {
+                     // TODO Auto-generated method stub
+                     /*
+                      * .setCompoundDrawablesWithIntrinsicBounds(
+                          R.drawable.ic_device_access_camera_active,0,0,0);
+                      */
+                  }
+               });
                final ArrayList<InspectFormView> colProperties = new ArrayList<InspectFormView>();
                for( View tmp : holder.viewRows)
                {

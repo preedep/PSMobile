@@ -9,6 +9,7 @@ import com.epro.psmobile.data.JobRequestProduct;
 import com.epro.psmobile.data.Task;
 import com.epro.psmobile.fragment.JobCommentFragment;
 import com.epro.psmobile.key.params.InstanceStateKey;
+import com.epro.psmobile.util.MessageBox;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,6 +46,26 @@ public class UniversalCommentActivity extends PsBaseActivity {
       ft.commit();
       
    }
-   
-   
+
+   /* (non-Javadoc)
+    * @see android.support.v4.app.FragmentActivity#onBackPressed()
+    */
+   @Override
+   public void onBackPressed() {
+      // TODO Auto-generated method stub
+      Fragment f = 
+            this.getSupportFragmentManager().findFragmentById(R.id.universal_check_list_view);
+      if (f instanceof JobCommentFragment){
+         try {
+            ((JobCommentFragment)f).saveAllData();
+            super.onBackPressed();
+            this.finish();
+         }
+         catch (Exception e) {
+            // TODO Auto-generated catch block
+//            e.printStackTrace();
+            MessageBox.showMessage(this, R.string.text_error_title, e.getMessage());
+         }
+      }
+   }
 }

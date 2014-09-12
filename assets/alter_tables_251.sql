@@ -84,7 +84,6 @@ CREATE TABLE JobRequestProductBackup
 	crLastPayment TEXT
 );
 
-ALTER TABLE TaskFormDataSaved ADD COLUMN customerSurveySiteID INTEGER;
 ALTER TABLE TaskFormDataSaved ADD COLUMN productRowId INTEGER;
 
 

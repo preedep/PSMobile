@@ -402,7 +402,7 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	private int saveAllData() throws Exception
+	public int saveAllData() throws Exception
 	{
 		int rowEffected = 0;
 		if (lv_comments != null )
@@ -454,6 +454,9 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 								dataSaved.setTaskControlNo(holder.taskFormTemplate.getTaskControlNo());
 								dataSaved.setTaskControlType(holder.taskFormTemplate.getControlType());
 								dataSaved.setTaskFormTemplateID(holder.taskFormTemplate.getTaskFormTemplateId());
+								dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
+								dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
+								
 								dataSavedList.add(dataSaved);
 								
 							}else if (holder.taskFormTemplate.getControlType() == TaskControlType.Dropdownlist)
@@ -471,6 +474,9 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 								dataSaved.setTaskControlType(holder.taskFormTemplate.getControlType());
 								dataSaved.setTaskFormTemplateID(holder.taskFormTemplate.getTaskFormTemplateId());
 								dataSaved.setParentID(holder.taskFormTemplate.getParentId());
+                                dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
+                                dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
+
 								dataSavedList.add(dataSaved);
 								
 								
@@ -493,6 +499,9 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 									dataSaved.setTaskControlType(holder.taskFormTemplate.getControlType());
 									dataSaved.setTaskFormTemplateID(holder.taskFormTemplate.getTaskFormTemplateId());
 									dataSaved.setReasonSentence(chooiceSentence);
+		                            dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
+		                            dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
+
 									dataSavedList.add(dataSaved);			
 									
 									/*
@@ -514,6 +523,8 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 	                                                    dataSaved.setTaskControlType(childTemplate.getControlType());
 	                                                    dataSaved.setTaskFormTemplateID(childTemplate.getTaskFormTemplateId());
 	                                                    dataSaved.setParentID(childTemplate.getParentId());
+	                                                    dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
+	                                                    dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
 
 	                                                    if (holder.choiceBaseAdapter != null)
 	                                                    {
@@ -549,6 +560,9 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 								dataSaved.setTaskControlNo(holder.taskFormTemplate.getTaskControlNo());
 								dataSaved.setTaskControlType(holder.taskFormTemplate.getControlType());
 								dataSaved.setTaskFormTemplateID(holder.taskFormTemplate.getTaskFormTemplateId());
+                                dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
+                                dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
+
 								dataSavedList.add(dataSaved);
 							}
 						}

@@ -67,6 +67,7 @@
         <activity android:name="ReportListEntryActivity" android:theme="@style/PSMobile.Light"></activity>
         <activity android:name="PhotoGalleryActivity" android:theme="@style/PSMobile.Light"></activity>
         <activity android:name="HtmlPreviewActivity" android:theme="@style/PSMobile.Light"></activity>
+        <activity android:name="UniversalCommentActivity" android:theme="@style/PSMobile.Light"></activity>
     </application>
 
 </manifest>
