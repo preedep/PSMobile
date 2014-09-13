@@ -12,6 +12,7 @@ import com.epro.psmobile.fragment.CommonListMenuFragment;
 import com.epro.psmobile.fragment.CommonListMenuFragment.MenuGroupType;
 import com.epro.psmobile.fragment.ReportFragment;
 import com.epro.psmobile.key.params.InstanceStateKey;
+import com.epro.psmobile.util.InspectServiceSupportUtil;
 import com.epro.psmobile.util.MessageBox;
 import com.epro.psmobile.util.SharedPreferenceUtil;
 
@@ -87,12 +88,14 @@ public class TabMenuListener<T extends android.support.v4.app.Fragment> implemen
 		           MessageBox.showMessage(mActivity, 
 		                 R.string.text_error_title, 
 		                 R.string.text_error_comment_qc_no13_not_saved_yet);
-		      }else{
+		      }else
+		      {
 		           MessageBox.showMessage(mActivity, 
 		                 R.string.text_error_title, 
 		                 R.string.text_error_comment_no13_not_saved_yet);
 		      }
 		   }else{
+		      
 		      MessageBox.showMessage(mActivity, 
                  R.string.text_error_title, 
                  R.string.text_error_comment_no13_not_saved_yet);

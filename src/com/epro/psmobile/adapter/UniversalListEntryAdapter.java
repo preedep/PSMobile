@@ -1251,7 +1251,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             }break;
             case CheckListForm:
             {
-               Button btn = (Button)vEachCol.findViewById(R.id.btn_report_list_entry_column_camera);
+               final Button btn = (Button)vEachCol.findViewById(R.id.btn_report_list_entry_column_camera);
                btn.post(new Runnable(){
 
                   @Override
@@ -1261,6 +1261,13 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                       * .setCompoundDrawablesWithIntrinsicBounds(
                           R.drawable.ic_device_access_camera_active,0,0,0);
                       */
+                     if (jrp.isHasCheckList()){
+                        btn.setCompoundDrawablesWithIntrinsicBounds(
+                              R.drawable.ic_list_active,0,0,0);
+                     }else{
+                        btn.setCompoundDrawablesWithIntrinsicBounds(
+                              R.drawable.ic_list,0,0,0);
+                     }
                   }
                });
                final ArrayList<InspectFormView> colProperties = new ArrayList<InspectFormView>();

@@ -240,6 +240,8 @@ public class JobRequestProduct implements DbCursorHolder,
 
 	protected String productName;
 	
+	private boolean hasCheckList;
+	
 	public static final Parcelable.Creator<JobRequestProduct> CREATOR = new Parcelable.Creator<JobRequestProduct>()
 			{
 
@@ -2405,5 +2407,11 @@ public class JobRequestProduct implements DbCursorHolder,
     */
    public void setProductName(String productName) {
       this.productName = productName;
+   }
+   public boolean isHasCheckList() {
+      return hasCheckList;
+   }
+   public void setHasCheckList(boolean hasCheckList) {
+      this.hasCheckList = hasCheckList;
    }
 }

@@ -134,7 +134,9 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
             {
                formViewList = 
                      dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
-               jrpList = dataAdapter.findJobRequestProductsByJobRequestIDWithSiteID(jobRequest.getJobRequestID(),
+               jrpList = dataAdapter.findJobRequestProductsByJobRequestIDWithSiteID(
+                     jobRequest.getJobRequestID(),
+                     currentTask.getTaskCode(),
                      customerSurveySite.getCustomerSurveySiteID(),
                      InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE,
                      rowOffset,keyFilter);

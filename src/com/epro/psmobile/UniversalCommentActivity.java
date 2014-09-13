@@ -10,6 +10,7 @@ import com.epro.psmobile.data.Task;
 import com.epro.psmobile.fragment.JobCommentFragment;
 import com.epro.psmobile.key.params.InstanceStateKey;
 import com.epro.psmobile.util.MessageBox;
+import com.epro.psmobile.util.SharedPreferenceUtil;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -58,7 +59,8 @@ public class UniversalCommentActivity extends PsBaseActivity {
       if (f instanceof JobCommentFragment){
          try {
             ((JobCommentFragment)f).saveAllData();
-            super.onBackPressed();
+            SharedPreferenceUtil.setAlreadyCommentSaved(this,true);
+            //super.onBackPressed();
             this.finish();
          }
          catch (Exception e) {

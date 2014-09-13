@@ -1030,6 +1030,7 @@ public class PSBODataAdapter {
         return query(sql,JobRequestProduct.class);
     }
 	public synchronized ArrayList<JobRequestProduct> findJobRequestProductsByJobRequestIDWithSiteID(int jobRequestID,
+	          String taskCode,
 	          int customerSurveySiteID,
 	          int maxRowPerPage,
 	          int rowOffset,String keyFilter) throws Exception
@@ -1042,7 +1043,18 @@ public class PSBODataAdapter {
 	        sql +=   " order by productRowId";
 	        sql += " limit "+maxRowPerPage+" offset "+rowOffset;
 	        
-	        return query(sql,JobRequestProduct.class);
+	        ArrayList<JobRequestProduct> jrpList = query(sql,JobRequestProduct.class);
+	        if (jrpList != null){
+	           for(JobRequestProduct jrp : jrpList){
+	              ArrayList<TaskFormDataSaved> dataSaveds = 
+	                    this.findUniversalTaskFormDataSavedList(jobRequestID, 
+	                          taskCode, customerSurveySiteID, jrp.getProductRowID());	              
+	              if (dataSaveds != null){
+	                 jrp.setHasCheckList(true);
+	              }
+	           }
+	        }
+	        return jrpList;
 	}
 	public synchronized int getRowCountOfJobRequestProduct(int jobRequestID,
               int customerSurveySiteID,String keyFilter) throws Exception
