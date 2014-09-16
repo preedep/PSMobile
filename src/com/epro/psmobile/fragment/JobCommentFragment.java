@@ -32,6 +32,8 @@ import com.epro.psmobile.util.MessageBox;
 import com.epro.psmobile.util.ReportInspectSummaryStatusHelper;
 import com.epro.psmobile.util.SharedPreferenceUtil;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -131,10 +133,17 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 			try {
 			   if (jobRequest.getInspectType().getInspectTypeID() > InspectServiceSupportUtil.SERVICE_FARM_LAND_2)
                {
-	                dataSavedList = adapter.findUniversalTaskFormDataSavedList(jobRequest.getJobRequestID(), 
-	                        currentTask.getTaskCode(),
-	                        site.getCustomerSurveySiteID(),jobRequestProduct.getProductRowID()
-	                        );			      
+			      if (jobRequestProduct != null)
+			      {
+	                    dataSavedList = adapter.findUniversalTaskFormDataSavedList(jobRequest.getJobRequestID(), 
+	                            jobRequest.getInspectType().getInspectTypeID(),
+	                            currentTask.getTaskCode(),
+	                            site.getCustomerSurveySiteID(),jobRequestProduct.getProductRowID()
+	                            );                			         
+			      }else{
+		                dataSavedList = adapter.findTaskFormDataSavedListByJobRequestId(jobRequest.getJobRequestID(), 
+		                        currentTask.getTaskCode());			         
+			      }
                }
 			   else{
 				dataSavedList = adapter.findTaskFormDataSavedListByJobRequestId(jobRequest.getJobRequestID(), 
@@ -146,21 +155,31 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 				{
 				   /*
 				    * for universal
+				    * 
+				    * 
 				    */
-				   InspectFormView vColCheckListForm = null;
-				   for(InspectFormView vCol : formViewAllCols)
+				   if (formViewAllCols != null)
 				   {
-				      UniversalControlType ctrlType = UniversalControlType.getControlType(vCol.getColType());
-				      if (ctrlType == UniversalControlType.CheckListForm)
-				      {
-				         vColCheckListForm = vCol;
-				         break;
-				      }
-				   }
-				   if (vColCheckListForm != null){
-	                   comments =   adapter.findTaskFormTemplateListByTemplateFormId(vColCheckListForm.getTaskFormTemplateID());				      
+				      /*generate comments for check list each row */
+	                   InspectFormView vColCheckListForm = null;
+	                   for(InspectFormView vCol : formViewAllCols)
+	                   {
+	                      UniversalControlType ctrlType = UniversalControlType.getControlType(vCol.getColType());
+	                      if (ctrlType == UniversalControlType.CheckListForm)
+	                      {
+	                         vColCheckListForm = vCol;
+	                         break;
+	                      }
+	                   }
+	                   if (vColCheckListForm != null){
+	                       comments =   adapter.findTaskFormTemplateListByTemplateFormId(vColCheckListForm.getTaskFormTemplateID());                      
+	                   }				      
+				   }else{
+				      ////////
+	                   comments =   adapter.findTaskFormTemplateListByTemplateFormId(currentTask.getTaskFormTemplateID());				      
 				   }
 				}else{
+				   ////////
 				   comments =	adapter.findTaskFormTemplateListByTemplateFormId(currentTask.getTaskFormTemplateID());
 				}
 				if (dataSavedList != null)
@@ -374,24 +393,38 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 	                /*
                     * reload data
                     */
-                    initialView(currentContentView);
-                    
-                    lv_comments.setSelectionFromTop(index, top);
-
-                    lv_comments.getViewTreeObserver().addOnScrollChangedListener(new OnScrollChangedListener(){
-
-                     @Override
-                     public void onScrollChanged() {
-                        // TODO Auto-generated method stub
-                      
-                        SharedPreferenceUtil.setAlreadyCommentSaved(getActivity(), true);
-                        
-                        MessageBox.showSaveCompleteMessage(getActivity());
-                      
-                        lv_comments.getViewTreeObserver().removeOnScrollChangedListener(this);
-                     }
+				   
+				    /*universal check list each object*/
+				    if (getCurrentJobRequestProduct() != null)
+				    {
+				       SharedPreferenceUtil.setAlreadyCommentSaved(getActivity(), true);
                        
-                    });
+			           Intent data = new Intent();
+			           data.putExtra(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST, getCurrentJobRequestProduct());
+			           getSherlockActivity().setResult(Activity.RESULT_OK, data);
+			           getSherlockActivity().finish();
+			           
+				    }else{
+	                    initialView(currentContentView);
+	                    
+	                    lv_comments.setSelectionFromTop(index, top);
+
+	                    lv_comments.getViewTreeObserver().addOnScrollChangedListener(new OnScrollChangedListener(){
+
+	                     @Override
+	                     public void onScrollChanged() {
+	                        // TODO Auto-generated method stub
+	                      
+	                        SharedPreferenceUtil.setAlreadyCommentSaved(getActivity(), true);
+	                        
+	                        MessageBox.showSaveCompleteMessage(getActivity());
+	                      
+	                        lv_comments.getViewTreeObserver().removeOnScrollChangedListener(this);
+	                     }
+	                       
+	                    });		       
+				    }
+
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -424,6 +457,7 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 			for(int i = 0; i < /*taskCommentAdapter.getActivedViews().length*/taskCommentAdapter.getCount();i++)
 			{
 				//View v = taskCommentAdapter.getActivedViews()[i];
+
 			    View convertView = null;
 			    boolean isShown = true;
 			    if (viewActivieds.length > i){
@@ -454,8 +488,12 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 								dataSaved.setTaskControlNo(holder.taskFormTemplate.getTaskControlNo());
 								dataSaved.setTaskControlType(holder.taskFormTemplate.getControlType());
 								dataSaved.setTaskFormTemplateID(holder.taskFormTemplate.getTaskFormTemplateId());
-								dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
-								dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
+								
+								if (jobRequestProduct != null)
+                                   dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
+								if (site != null)
+								   dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
+
 								
 								dataSavedList.add(dataSaved);
 								
@@ -474,8 +512,11 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 								dataSaved.setTaskControlType(holder.taskFormTemplate.getControlType());
 								dataSaved.setTaskFormTemplateID(holder.taskFormTemplate.getTaskFormTemplateId());
 								dataSaved.setParentID(holder.taskFormTemplate.getParentId());
-                                dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
-                                dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
+								
+								if (jobRequestProduct != null)
+                                   dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
+                                if (site != null)
+                                   dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
 
 								dataSavedList.add(dataSaved);
 								
@@ -487,6 +528,7 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 								ArrayList<ReasonSentence> chooceReasonSentences = 
 										holder.choiceBaseAdapter.getChooceReasonSentenceSelected();/*list for checkbox*/
 
+								
 								for(ReasonSentence chooiceSentence : chooceReasonSentences)
 								{
 									dataSaved = holder.choiceBaseAdapter.getValues();	
@@ -499,56 +541,66 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 									dataSaved.setTaskControlType(holder.taskFormTemplate.getControlType());
 									dataSaved.setTaskFormTemplateID(holder.taskFormTemplate.getTaskFormTemplateId());
 									dataSaved.setReasonSentence(chooiceSentence);
-		                            dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
-		                            dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
+									
+									if (jobRequestProduct != null)
+									   dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
+		                            if (site != null)
+		                               dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
 
 									dataSavedList.add(dataSaved);			
 									
 									/*
 									 * 
 									 */
-		                               if ((holder.taskFormTemplate.getChildTaskFormTemplate() != null)&&
-		                                        (holder.taskFormTemplate.getChildTaskFormTemplate().size() > 0))
-		                                {
-		                                        for(TaskFormTemplate childTemplate : holder.taskFormTemplate.getChildTaskFormTemplate())
-		                                        {
-		                                            if (childTemplate.getParentId().equalsIgnoreCase(chooiceSentence.getReasonSentencePath()))
-		                                            {
-		                                                dataSaved = new TaskFormDataSaved();
-	                                                    dataSaved.setTaskFormAttributeID(childTemplate.getTaskFormAttributeID());
-	                                                    dataSaved.setTaskID(currentTask.getTaskID());
-	                                                    dataSaved.setTaskCode(currentTask.getTaskCode());
-	                                                    dataSaved.setJobRequestID(jobRequest.getJobRequestID());
-	                                                    dataSaved.setTaskControlNo(childTemplate.getTaskControlNo());
-	                                                    dataSaved.setTaskControlType(childTemplate.getControlType());
-	                                                    dataSaved.setTaskFormTemplateID(childTemplate.getTaskFormTemplateId());
-	                                                    dataSaved.setParentID(childTemplate.getParentId());
-	                                                    dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
-	                                                    dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
+									   if (holder.taskFormTemplate != null)
+									   {
+	                                      if ((holder.taskFormTemplate.getChildTaskFormTemplate() != null)&&
+                                                (holder.taskFormTemplate.getChildTaskFormTemplate().size() > 0))
+                                        {
+                                                for(TaskFormTemplate childTemplate : holder.taskFormTemplate.getChildTaskFormTemplate())
+                                                {
+                                                    if (childTemplate.getParentId().equalsIgnoreCase(chooiceSentence.getReasonSentencePath()))
+                                                    {
+                                                        dataSaved = new TaskFormDataSaved();
+                                                        dataSaved.setTaskFormAttributeID(childTemplate.getTaskFormAttributeID());
+                                                        dataSaved.setTaskID(currentTask.getTaskID());
+                                                        dataSaved.setTaskCode(currentTask.getTaskCode());
+                                                        dataSaved.setJobRequestID(jobRequest.getJobRequestID());
+                                                        dataSaved.setTaskControlNo(childTemplate.getTaskControlNo());
+                                                        dataSaved.setTaskControlType(childTemplate.getControlType());
+                                                        dataSaved.setTaskFormTemplateID(childTemplate.getTaskFormTemplateId());
+                                                        dataSaved.setParentID(childTemplate.getParentId());
+                                                        
+                                                        if (jobRequestProduct != null)/*not null when show for universal check list each row*/
+                                                           dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
+                                                        if (site != null)
+                                                           dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
 
-	                                                    if (holder.choiceBaseAdapter != null)
-	                                                    {
-	                                                       if (isShown)
-	                                                       {
-	                                                             SingleItemAdapter sa = (SingleItemAdapter)holder.choiceBaseAdapter;
-	                                                                if (sa.getChildDropDownReasonSetence() != null)
-	                                                                {
-	                                                                   dataSaved.setReasonSentence(sa.getChildDropDownReasonSetence());
-	                                                                }
-	                                                       }else{
-	                                                          if (childTemplate.getDataSaved() != null){
-	                                                             dataSaved.setReasonSentence(
-	                                                                      childTemplate.getDataSaved().getReasonSentence()
-	                                                                   );                                                   
-	                                                         }                                                
-	                                                       }
-	                                                    }
-	                                                   dataSavedList.add(dataSaved); 
-		                                               break;
-		                                            }
-	          
-		                                        }
-		                                    }
+                                                        
+                                                        if (holder.choiceBaseAdapter != null)
+                                                        {
+                                                           if (isShown)
+                                                           {
+                                                                 SingleItemAdapter sa = (SingleItemAdapter)holder.choiceBaseAdapter;
+                                                                    if (sa.getChildDropDownReasonSetence() != null)
+                                                                    {
+                                                                       dataSaved.setReasonSentence(sa.getChildDropDownReasonSetence());
+                                                                    }
+                                                           }else{
+                                                              if (childTemplate.getDataSaved() != null){
+                                                                 dataSaved.setReasonSentence(
+                                                                          childTemplate.getDataSaved().getReasonSentence()
+                                                                       );                                                   
+                                                             }                                                
+                                                           }
+                                                        }
+                                                       dataSavedList.add(dataSaved); 
+                                                       break;
+                                                    }
+              
+                                                }
+                                            }								      
+									   }
 								}
 								
 							}else{
@@ -560,8 +612,11 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 								dataSaved.setTaskControlNo(holder.taskFormTemplate.getTaskControlNo());
 								dataSaved.setTaskControlType(holder.taskFormTemplate.getControlType());
 								dataSaved.setTaskFormTemplateID(holder.taskFormTemplate.getTaskFormTemplateId());
-                                dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
-                                dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
+								
+								if (jobRequestProduct != null)
+								   dataSaved.setProductRowId(jobRequestProduct.getProductRowID());
+                                if (site != null)
+                                   dataSaved.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
 
 								dataSavedList.add(dataSaved);
 							}
@@ -573,7 +628,7 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 			if ((dataSavedList != null)&&(dataSavedList.size() > 0))
 			{
 				PSBODataAdapter dbAdapter = PSBODataAdapter.getDataAdapter(getActivity());
-				rowEffected = dbAdapter.insertTaskFormDataSaved(dataSavedList);
+				rowEffected = dbAdapter.insertTaskFormDataSaved(dataSavedList,jobRequestProduct);
 				
 				Log.d("DEBUG_D", "insertTaskFormDataSaved rowEffected = "+rowEffected);
 			}else{
@@ -581,5 +636,8 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 			}
 		}
 		return rowEffected;
+	}
+	public JobRequestProduct getCurrentJobRequestProduct(){
+	   return jobRequestProduct;
 	}
 }

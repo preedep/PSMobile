@@ -52,6 +52,7 @@ import com.epro.psmobile.data.Team;
 import com.epro.psmobile.data.TeamCheckInHistory;
 import com.epro.psmobile.data.TeamCheckInHistory.HistoryType;
 import com.epro.psmobile.data.TransactionStmtHolder;
+import com.epro.psmobile.data.UniversalCheckListView;
 import com.epro.psmobile.util.DataUtil;
 
 import android.content.Context;
@@ -1020,7 +1021,10 @@ public class PSBODataAdapter {
 	public synchronized ArrayList<JobRequestProduct> findJobRequestProductsByJobRequestID(int jobRequestID,
 	      int customerSurveySiteID) throws Exception
 	{
-		String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + " and customerSurveySiteID="+customerSurveySiteID+" order by productRowId";
+		String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID;
+		if (customerSurveySiteID > 0){
+		 sql +=  " and customerSurveySiteID="+customerSurveySiteID+" order by productRowId";
+		}
 		return query(sql,JobRequestProduct.class);
 	}
 	public synchronized ArrayList<JobRequestProduct> findJobRequestProductsByJobRequestIDWithWarehouse(int jobRequestID,
@@ -1029,14 +1033,29 @@ public class PSBODataAdapter {
         String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + " and cWarehouse="+customerSurveySiteID+" order by productRowId";
         return query(sql,JobRequestProduct.class);
     }
+	public synchronized UniversalCheckListView findUniversalCheckListView(int taskFormTemplateID,int taskFormAttributeID) throws Exception
+	{
+	   String sql = "select * from UniversalCheckListView where taskFormTemplateID = "+taskFormTemplateID +" and taskFormAttributeID="+taskFormAttributeID;
+	   ArrayList<UniversalCheckListView> chkListViews = query(sql,UniversalCheckListView.class);
+	   if (chkListViews != null){
+	      return chkListViews.get(0);
+	   }
+	   return null;
+	}
 	public synchronized ArrayList<JobRequestProduct> findJobRequestProductsByJobRequestIDWithSiteID(int jobRequestID,
+	          int inspectTypeID,
 	          String taskCode,
 	          int customerSurveySiteID,
 	          int maxRowPerPage,
 	          int rowOffset,String keyFilter) throws Exception
 	{
 	        String sql = "select * from JobRequestProduct where " +
-	        		   " jobRequestID="+jobRequestID + " and customerSurveySiteID="+customerSurveySiteID+" ";
+	        		   " jobRequestID="+jobRequestID;
+	        if ((inspectTypeID == 5)||(inspectTypeID == 8))
+	        {
+	        }else{
+               sql += " and customerSurveySiteID="+customerSurveySiteID+" ";	           
+	        }
 	        if (!keyFilter.isEmpty()){
 	           sql += " and "+keyFilter;
 	        }
@@ -1047,7 +1066,7 @@ public class PSBODataAdapter {
 	        if (jrpList != null){
 	           for(JobRequestProduct jrp : jrpList){
 	              ArrayList<TaskFormDataSaved> dataSaveds = 
-	                    this.findUniversalTaskFormDataSavedList(jobRequestID, 
+	                    this.findUniversalTaskFormDataSavedList(jobRequestID,inspectTypeID,
 	                          taskCode, customerSurveySiteID, jrp.getProductRowID());	              
 	              if (dataSaveds != null){
 	                 jrp.setHasCheckList(true);
@@ -1060,11 +1079,14 @@ public class PSBODataAdapter {
               int customerSurveySiteID,String keyFilter) throws Exception
     {
 	        String sql = "select * from JobRequestProduct where " +
-             " jobRequestID="+jobRequestID + " and customerSurveySiteID="+customerSurveySiteID+" ";
+             " jobRequestID="+jobRequestID+"";
+	        if (customerSurveySiteID > 0){
+	           sql += " and customerSurveySiteID="+customerSurveySiteID+" ";
+	        }
 	        if (!keyFilter.isEmpty()){
 	           sql += " and "+keyFilter;
 	        }
-             sql+= " order by productRowId";
+            sql+= " order by productRowId";
 	        
 	        ArrayList<JobRequestProduct> jobRequestProducts = 
 	              query(sql,JobRequestProduct.class);
@@ -1127,7 +1149,8 @@ public class PSBODataAdapter {
        }
        return rowEffected;
 	}
-	   public synchronized int insertUniversalJobRequestProduct(int jobRequestID,int siteID,
+	   public synchronized int insertUniversalJobRequestProduct(int inspectTypeID ,
+	         int jobRequestID,int siteID,
 	          ArrayList<JobRequestProduct> jobRequestProducts)
 	    throws Exception
 	    {
@@ -1145,12 +1168,15 @@ public class PSBODataAdapter {
 	                 tmp_jobRequestProducts.add(jrp);
 	              }
 	           }
-	           
-	           
 	           jobRequestProducts = tmp_jobRequestProducts;
-	           
 	           sqliteDb = databaseBuilder.open();
-	           String delete = "delete from JobRequestProduct where jobRequestID="+jobRequestID+" and customerSurveySiteID="+siteID;
+	           String delete = "";
+	           if ((inspectTypeID == 5)||(inspectTypeID == 8)){
+                  delete = "delete from JobRequestProduct where jobRequestID="+jobRequestID;
+	           }
+	           else{
+	               delete = "delete from JobRequestProduct where jobRequestID="+jobRequestID+" and customerSurveySiteID="+siteID;	              
+	           }
 	           String[] stmts = new String[jobRequestProducts.size()*2];
 	           for(int i = 0; i < jobRequestProducts.size();i++)
 	           {
@@ -1879,7 +1905,7 @@ isTaskCompleted BOOLEAN
 		String sql = "select * from productAmountUnit";
 		return query(sql,ProductAmountUnit.class);
 	}
-	public synchronized int insertTaskFormDataSaved(ArrayList<TaskFormDataSaved> dataListSaved) throws Exception{
+	public synchronized int insertTaskFormDataSaved(ArrayList<TaskFormDataSaved> dataListSaved,JobRequestProduct jobRequestProduct) throws Exception{
 		
 		/*
 		public final static String COLUMN_TASK_ID = "taskID";
@@ -1894,6 +1920,9 @@ isTaskCompleted BOOLEAN
 			TaskFormDataSaved dataSaved = dataListSaved.get(0);
 			String del = "delete from TaskFormDataSaved where taskID = "+dataSaved.getTaskID()+" and " +
 					"taskCode='"+dataSaved.getTaskCode()+"' and jobRequestID="+dataSaved.getJobRequestID();
+			if (jobRequestProduct != null){
+			   del += " and productRowId="+jobRequestProduct.getProductRowID()+"";
+			}
 
 			String[] strSqls = new String[dataListSaved.size()+1];
 			strSqls[0] = del;//delete first
@@ -1935,14 +1964,20 @@ isTaskCompleted BOOLEAN
 				"and jobRequestID="+jobRequestID+" order by taskcontrolno";
 		return query(sql,TaskFormDataSaved.class);
 	}
-	public synchronized ArrayList<TaskFormDataSaved> findUniversalTaskFormDataSavedList(int jobRequestID,
+	public synchronized ArrayList<TaskFormDataSaved> findUniversalTaskFormDataSavedList(
+	      int jobRequestID,
+	      int inspectTypeID,
           String taskCode,int siteID,int productRowID) throws Exception
   {
       String sql = "select * from TaskFormDataSaved where taskCode='"+taskCode+"' " +
-              " and jobRequestID="+jobRequestID+" " +
-              " and customerSurveySiteID="+siteID+" "+
-              " and productRowId="+productRowID+" "+
-              "order by taskcontrolno";
+              " and jobRequestID="+jobRequestID+" ";
+       if ((inspectTypeID == 5)||(inspectTypeID == 8))
+       {
+       }else{
+          sql+=  " and customerSurveySiteID="+siteID+" ";          
+       }
+       sql +=  " and productRowId="+productRowID+" "+
+       "order by taskcontrolno";
       
       return query(sql,TaskFormDataSaved.class);
   }

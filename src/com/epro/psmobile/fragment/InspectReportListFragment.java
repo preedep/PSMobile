@@ -583,10 +583,29 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
        argument.putParcelableArrayList(InstanceStateKey.KEY_ARGUMENT_UNIVERSAL_COL_PROPERTIES,colProperties);
        argument.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST, jobRequestProduct);
        
-       ActivityUtil.startNewActivity(getActivity(),
+       ActivityUtil.startNewActivityWithResult(getActivity(),
              UniversalCommentActivity.class,
-             argument);
+             argument,
+             InstanceStateKey.RESULT_INSPECT_UNIVERSAL_SAVED_COMMENT);
 	}
+	protected void doActivityResultForCommentSaved(int requestCode,
+          int resultCode,
+          Intent data,
+          JobRequestProduct currentJobRequestProduct,
+          ListView lsViewt)
+    {
+       switch (requestCode) {
+             case InstanceStateKey.RESULT_INSPECT_UNIVERSAL_SAVED_COMMENT:{
+                 if (resultCode == Activity.RESULT_OK)
+                 {
+                    currentJobRequestProduct = data.getParcelableExtra(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST);
+                    currentJobRequestProduct.setHasCheckList(true);
+                    onPhotoSetIdUpdated(currentJobRequestProduct);/*reload row*/
+                 }
+             }break;
+       }
+    }
+             
 	protected void doActivityResultForTakePhoto(int requestCode,
 	      int resultCode,
 	      Intent data,

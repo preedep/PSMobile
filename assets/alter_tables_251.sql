@@ -1,7 +1,14 @@
 DROP TABLE IF EXISTS JobRequestProductBackup;
 DROP TABLE IF EXISTS UniversalJobMapper;
 DROP TABLE IF EXISTS UniversalListFormView;
+DROP TABLE IF EXISTS UniversalCheckListView;
 
+CREATE TABLE UniversalCheckListView
+(
+   taskFormTemplateID INTEGER,
+   taskFormAttributeID INTEGER,
+   colInvokeField TEXT
+);
 CREATE TABLE UniversalJobMapper
 (
 	inspectFormViewID INTEGER,

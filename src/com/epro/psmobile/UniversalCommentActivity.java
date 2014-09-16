@@ -12,6 +12,8 @@ import com.epro.psmobile.key.params.InstanceStateKey;
 import com.epro.psmobile.util.MessageBox;
 import com.epro.psmobile.util.SharedPreferenceUtil;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -61,6 +63,9 @@ public class UniversalCommentActivity extends PsBaseActivity {
             ((JobCommentFragment)f).saveAllData();
             SharedPreferenceUtil.setAlreadyCommentSaved(this,true);
             //super.onBackPressed();
+            Intent data = new Intent();
+            data.putExtra(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST, ((JobCommentFragment)f).getCurrentJobRequestProduct());
+            this.setResult(Activity.RESULT_OK, data);
             this.finish();
          }
          catch (Exception e) {

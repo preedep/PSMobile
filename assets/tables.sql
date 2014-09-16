@@ -552,8 +552,7 @@ chooseReasonSentenceID INTEGER,
 chooseReasonSentenceType TEXT,
 chooseReasonSentenceText TEXT,
 chooseReasonSentencePath TEXT,
-parentID TEXT,
-PRIMARY KEY (taskFormTemplateID,taskFormAttributeID,taskControlType,taskControlNo,taskID,taskCode,jobRequestID,customerSurveySiteID)
+parentID TEXT
 );
 
 CREATE TABLE InspectHistory

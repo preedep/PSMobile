@@ -57,6 +57,7 @@ public class InstanceStateKey {
 	public final static String KEY_BDX_LOC_UPDATED = "com.epro.psmobile.key.params.KEY_BDX_LOC_UPDATED";
 	public final static String BDX_LOC_UPDATED_ACTION = "com.epro.psmobile.location_updated";
 	
+	public final static int RESULT_INSPECT_UNIVERSAL_SAVED_COMMENT = 6;
 	public final static int RESULT_INSPECT_PHOTO_ENTRY = 5;
 	
 	public final static int RESULT_LOAD_IMAGE_FROM_GALLERY = 1;

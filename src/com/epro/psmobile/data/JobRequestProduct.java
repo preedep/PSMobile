@@ -426,6 +426,7 @@ public class JobRequestProduct implements DbCursorHolder,
 		this.productName = source.readString();
 		this.productRowID = source.readInt();
 
+		source.readBooleanArray(new boolean[]{hasCheckList});
 	}
 	public JobRequestProduct() {
 		// TODO Auto-generated constructor stub
@@ -783,7 +784,6 @@ public class JobRequestProduct implements DbCursorHolder,
 		  ///////////////////////////////////
 		  this.photoSetID = JSONDataUtil.getInt(jsonObj, JobRequestProduct.COLUMN_PHOTO_SET_ID);
 		  
-		  this.customerSurveySiteID = JSONDataUtil.getInt(jsonObj, JobRequestProduct.COLUMN_CUSTOMER_SURVEY_SITE_ID);
 		  
 		  
 		  this.char1 = JSONDataUtil.getString(jsonObj, COLUMN_CHAR_1);//
@@ -805,6 +805,7 @@ public class JobRequestProduct implements DbCursorHolder,
 
 		  
 		  this.productName = JSONDataUtil.getString(jsonObj, COLUMN_PRODUCT_NAME);
+		  this.jobLocationId = this.customerSurveySiteID = JSONDataUtil.getInt(jsonObj, JobRequestProduct.COLUMN_CUSTOMER_SURVEY_SITE_ID);
 	}
 
 	@Override
@@ -2015,6 +2016,8 @@ public class JobRequestProduct implements DbCursorHolder,
         dest.writeString(productName);// = source.readString();
         
         dest.writeInt(this.productRowID);
+        
+        dest.writeBooleanArray(new boolean[]{hasCheckList});
 
 	}
 	public String getJobNo() {

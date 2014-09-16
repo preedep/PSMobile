@@ -43,6 +43,7 @@ import com.epro.psmobile.data.TaskResend;
 import com.epro.psmobile.data.TaskStatus;
 import com.epro.psmobile.data.Team;
 import com.epro.psmobile.data.TransactionStmtHolder;
+import com.epro.psmobile.data.UniversalCheckListView;
 import com.epro.psmobile.remote.api.JSONDataHolder;
 import com.epro.psmobile.util.SharedPreferenceUtil;
 
@@ -291,6 +292,7 @@ public class JSONToDBLoader {
 		mapType.put("inspectdataobjectsaved", new InspectDataObjectSaved());
 		mapType.put("UniversalJobMapper".toLowerCase(),new InspectJobMapper());
 		mapType.put("UniversalListFormView".toLowerCase(), new InspectFormView());
+		mapType.put("UniversalCheckListView".toLowerCase(), new UniversalCheckListView());
 		return mapType;
 	}
 }

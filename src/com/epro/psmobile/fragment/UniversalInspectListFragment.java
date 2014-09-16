@@ -291,9 +291,15 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                                     {
                                        int lastRowProductId = 0;
                                        try {
+                                          int siteId = customerSurveySite.getCustomerSurveySiteID();
+                                          if ((jobRequest.getInspectType().getInspectTypeID() == 5)||
+                                                (jobRequest.getInspectType().getInspectTypeID() == 8)){
+                                              siteId = 0;
+                                           }
+                                          
                                           ArrayList<JobRequestProduct> jrpList = 
                                                 dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(),
-                                                customerSurveySite.getCustomerSurveySiteID());
+                                                siteId);
                                           if (jrpList != null){
                                              lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
                                           }
@@ -313,9 +319,14 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                               int lastRowProductId = 0;
                               
                               try {
+                                 int siteId = customerSurveySite.getCustomerSurveySiteID();
+                                 if ((jobRequest.getInspectType().getInspectTypeID() == 5)||
+                                       (jobRequest.getInspectType().getInspectTypeID() == 8)){
+                                     siteId = 0;
+                                  }
                                  ArrayList<JobRequestProduct> jrpList = 
                                        dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(),
-                                       customerSurveySite.getCustomerSurveySiteID());
+                                       siteId);
                                  if (jrpList != null){
                                     lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
                                  }
@@ -342,9 +353,15 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                /*
                 * 
                 */
+               int siteId = customerSurveySite.getCustomerSurveySiteID();
+               if ((jobRequest.getInspectType().getInspectTypeID() == 5)||
+                     (jobRequest.getInspectType().getInspectTypeID() == 8)){
+                   siteId = 0;
+                }
+               
                int rowCount = dataAdapter.getRowCountOfJobRequestProduct(
                      jobRequest.getJobRequestID(), 
-                     customerSurveySite.getCustomerSurveySiteID(),keyFilter);
+                     siteId,keyFilter);
                
                pages = rowCount % InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE;
                if (pages == 0){
@@ -481,9 +498,14 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                            {
                               int lastRowProductId = 0;
                               try {
+                                 int siteId = customerSurveySite.getCustomerSurveySiteID();
+                                 if ((jobRequest.getInspectType().getInspectTypeID() == 5)||
+                                       (jobRequest.getInspectType().getInspectTypeID() == 8)){
+                                     siteId = 0;
+                                  }
                                  ArrayList<JobRequestProduct> jrpList = 
                                        dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(),
-                                       customerSurveySite.getCustomerSurveySiteID());
+                                       siteId);
                                  if (jrpList != null){
                                     lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
                                  }
@@ -563,7 +585,9 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                /*
                 * save all column 
                 */
-               dataAdapter.insertUniversalJobRequestProduct(InspectReportListFragment.jobRequest.getJobRequestID(),
+               dataAdapter.insertUniversalJobRequestProduct(
+                     InspectReportListFragment.jobRequest.getInspectType().getInspectTypeID(),
+                     InspectReportListFragment.jobRequest.getJobRequestID(),
                      InspectReportListFragment.customerSurveySite.getCustomerSurveySiteID(),
                      jobRequestProductList);
                bRet = true;

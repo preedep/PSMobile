@@ -134,8 +134,12 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
             {
                formViewList = 
                      dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
+               
+               
+               /////////////
                jrpList = dataAdapter.findJobRequestProductsByJobRequestIDWithSiteID(
                      jobRequest.getJobRequestID(),
+                     jobRequest.getInspectType().getInspectTypeID(),
                      currentTask.getTaskCode(),
                      customerSurveySite.getCustomerSurveySiteID(),
                      InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE,
@@ -359,11 +363,21 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
       super.onActivityResult(requestCode, resultCode, data);
       if (lvItems != null)
       {
-         final ListView ls = lvItems;//(ListView)rootView.findViewById(R.id.universal_lv_report);      
-         super.doActivityResultForTakePhoto(requestCode, 
+         final ListView ls = lvItems;//(ListView)rootView.findViewById(R.id.universal_lv_report);    
+         
+         if (requestCode == InstanceStateKey.RESULT_INSPECT_UNIVERSAL_SAVED_COMMENT){
+            super.doActivityResultForCommentSaved(requestCode,
+                  resultCode,
+                  data, 
+                  currentJobRequestProduct, ls);
+            renderOnPageChanged(getSherlockActivity());
+         }else{
+         
+            super.doActivityResultForTakePhoto(requestCode, 
                resultCode, 
                data, 
                currentJobRequestProduct, ls,false);         
+         }
       }
    }
 

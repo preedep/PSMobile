@@ -137,17 +137,20 @@ public class DropdownItemAdapter extends ChoiceBaseAdapter {
 
 		TaskFormDataSaved dataSaved = new TaskFormDataSaved();
 		StringBuilder strBld = new StringBuilder();
+		if (rsp != null){
+		   ReasonSentence reasonSentenceSelected = (ReasonSentence)rsp.getSelectedItem();
 		
-		ReasonSentence reasonSentenceSelected = (ReasonSentence)rsp.getSelectedItem();
+		   String reasonText = reasonSentenceSelected.getReasonText();
+		   String dataText = editText.getText().toString();
+		   
+		   strBld.append(reasonText);
+		   strBld.append("@@");
+		   strBld.append(dataText);
 		
-		String reasonText = reasonSentenceSelected.getReasonText();
-		String dataText = editText.getText().toString();
-		
-		strBld.append(reasonText);
-		strBld.append("@@");
-		strBld.append(dataText);
-		
-		dataSaved.setTaskDataValues(strBld.toString());
+		   dataSaved.setTaskDataValues(strBld.toString());
+		}else{
+		   dataSaved.setTaskDataValues("");
+		}
 		return dataSaved;
 	}
 	@Override

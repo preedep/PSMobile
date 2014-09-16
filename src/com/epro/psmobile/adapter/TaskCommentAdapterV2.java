@@ -9,10 +9,12 @@ import java.util.Hashtable;
 
 import com.epro.psmobile.R;
 import com.epro.psmobile.da.PSBODataAdapter;
+import com.epro.psmobile.data.JobRequestProduct;
 import com.epro.psmobile.data.ReasonSentence;
 import com.epro.psmobile.data.TaskControlTemplate;
 import com.epro.psmobile.data.TaskControlTemplate.TaskControlType;
 import com.epro.psmobile.data.TaskFormTemplate;
+import com.epro.psmobile.data.UniversalCheckListView;
 import com.epro.psmobile.data.choice.ChoiceBaseAdapter;
 import com.epro.psmobile.form.template.choice.dropdown.DropdownItemAdapter;
 import com.epro.psmobile.form.template.choice.matrix.MatrixItemAdapter;
@@ -84,6 +86,7 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 	private LayoutInflater inflater;
 	private Context context;
 	private static View[] activedViewList;
+	private JobRequestProduct jobRequestProduct;
 	
 	@SuppressWarnings("unused")
    private View edt_inject;
@@ -150,10 +153,18 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 	/**
 	 * 
 	 */
-	public TaskCommentAdapterV2(Context ctxt,ArrayList<TaskFormTemplate> taskFormTemplateList) {
+	public TaskCommentAdapterV2(Context ctxt,
+	          ArrayList<TaskFormTemplate> taskFormTemplateList) {
+	       this(ctxt,taskFormTemplateList,null);
+	}
+	    
+	public TaskCommentAdapterV2(Context ctxt,
+	      ArrayList<TaskFormTemplate> taskFormTemplateList,
+	      JobRequestProduct jobRequestProduct) {
 		// TODO Auto-generated constructor stub
 		this.context = ctxt;
 		this.taskFormTemplateList = taskFormTemplateList;
+		this.jobRequestProduct = jobRequestProduct;
 		inflater = (LayoutInflater)ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		activedViewList = new View[this.taskFormTemplateList.size()];
@@ -189,7 +200,8 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 	/* (non-Javadoc)
 	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */
-	@Override
+	@SuppressWarnings("unused")
+   @Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 
@@ -279,12 +291,6 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 						@Override
 						public void afterTextChanged(Editable arg0) {
 							// TODO Auto-generated method stub
-							/*
-							TaskCommentHolder holder = new TaskCommentHolder();
-							holder.simpleTextAnswer = edtAnswer.getText().toString();
-							holder.taskFormTemplate = taskFormTemplate;
-							
-							v.setTag(holder);*/
 							
 							View currentView = activedViewList[position];
 							if (currentView != null)
@@ -311,11 +317,39 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 						}
 					});
 
+					PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(context);
+					UniversalCheckListView chkListViewProperty = null;
+					try {
+					   chkListViewProperty = 
+					         dataAdapter.findUniversalCheckListView(taskFormTemplate.getTaskFormTemplateId(), taskFormTemplate.getTaskFormAttributeID());
+					}
+                     catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                     }
+					
 					if (taskFormTemplate.getDataSaved() != null)
 					{
 						edtAnswer.setText(taskFormTemplate.getDataSaved().getTaskDataValues());
+					}else{
+					   if (jobRequestProduct != null){
+	                       String colInvokeFields = 
+	                             chkListViewProperty.getColInvokeField();
+	                       String[] invokeFieldsArray = 
+	                              colInvokeFields.split(",");
+	                       StringBuilder strBld = new StringBuilder();
+	                       for(String field : invokeFieldsArray){
+	                          Object obj = 
+	                                UniversalListEntryAdapter.invokeGetValue(jobRequestProduct, field);
+	                          strBld.append(obj.toString()+"\r\n");
+	                       }					     
+	                       edtAnswer.setText(strBld.toString());
+					   }
 					}
-					
+					if (chkListViewProperty != null){
+					   edtAnswer.setEnabled(false);
+					}
+					////////////
 					TaskCommentHolder holder = new TaskCommentHolder();
 					
 					edtAnswer.setFocusable(true);
@@ -337,32 +371,7 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 					});
 					edtAnswer.setBackgroundResource(R.drawable.edit_bg_drawable);
 					
-					/*
-					edtAnswer.setOnEditorActionListener(new OnEditorActionListener(){
 
-                  @Override
-                  public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                     // TODO Auto-generated method stub
-                     ListView lv = (ListView)v.getParent();
-                     if(actionId == EditorInfo.IME_ACTION_NEXT &&
-                        lv != null &&
-                        position >= lv.getLastVisiblePosition() &&
-                        position != audit.size() - 1) {  //audit object holds the data for the adapter
-                             lv.smoothScrollToPosition(position + 1);
-                             lv.postDelayed(new Runnable() {
-                                 public void run() {
-                                     TextView nextField = (TextView)holderf.qtyf.focusSearch(View.FOCUS_DOWN);
-                                     if(nextField != null) {
-                                         nextField.requestFocus();
-                                     }
-                                 }
-                             }, 200);
-                             return true;
-                     }
-                     return false;
-                  }
-					   
-					});*/
 					
 					holder.simpleTextAnswer = edtAnswer.getText().toString();
 					holder.taskFormTemplate = taskFormTemplate;
