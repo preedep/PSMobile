@@ -73,6 +73,7 @@ public class JobRequestProduct implements DbCursorHolder,
 	public final static String COLUMN_M_SERIAL_NO = "mSerialNo";
 	public final static String COLUMN_M_CHASSISSNO = "mChassissNo";
 	public final static String COLUMN_M_ENGINE_NO = "mEngineNo";
+	
 	public final static String COLUMN_CR_HIRE = "crHire";
 	public final static String COLUMN_CR_OWNER_NAME = "crOwnerName";
 	public final static String COLUMN_CR_LICENSE = "crLicense";
@@ -196,6 +197,7 @@ public class JobRequestProduct implements DbCursorHolder,
 	protected String mSerialNo;
 	protected String mChassissNo;
 	protected String mEngineNo;
+	
 	protected String crHire;
 	protected String crOwnerName;
 	protected String crLicense;
@@ -426,7 +428,9 @@ public class JobRequestProduct implements DbCursorHolder,
 		this.productName = source.readString();
 		this.productRowID = source.readInt();
 
-		source.readBooleanArray(new boolean[]{hasCheckList});
+		boolean[] b = new boolean[1];
+		source.readBooleanArray(b);
+		this.hasCheckList = b[0];
 	}
 	public JobRequestProduct() {
 		// TODO Auto-generated constructor stub

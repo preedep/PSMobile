@@ -60,7 +60,7 @@ public class UniversalCommentActivity extends PsBaseActivity {
             this.getSupportFragmentManager().findFragmentById(R.id.universal_check_list_view);
       if (f instanceof JobCommentFragment){
          try {
-            ((JobCommentFragment)f).saveAllData();
+            //((JobCommentFragment)f).saveAllData();
             SharedPreferenceUtil.setAlreadyCommentSaved(this,true);
             //super.onBackPressed();
             Intent data = new Intent();

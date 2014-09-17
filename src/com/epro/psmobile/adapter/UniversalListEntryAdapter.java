@@ -16,6 +16,7 @@ import com.epro.psmobile.R;
 import com.epro.psmobile.adapter.callback.OnOpenCommentActivity;
 import com.epro.psmobile.adapter.callback.OnTakeCameraListener;
 import com.epro.psmobile.da.PSBODataAdapter;
+import com.epro.psmobile.data.CarInspectStampLocation;
 import com.epro.psmobile.data.CustomerSurveySite;
 import com.epro.psmobile.data.InspectDataObjectSaved;
 import com.epro.psmobile.data.InspectFormView;
@@ -32,6 +33,7 @@ import com.epro.psmobile.data.TaskControlTemplate.TaskControlType;
 import com.epro.psmobile.util.DataUtil;
 import com.epro.psmobile.util.MathEval;
 import com.epro.psmobile.util.SharedPreferenceUtil;
+import com.epro.psmobile.view.HistoryInspectLocationSpinner;
 import com.epro.psmobile.view.LayoutSpinner;
 import com.epro.psmobile.view.ProductGroupSpinner;
 import com.epro.psmobile.view.ProductSpinner;
@@ -103,7 +105,9 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
        Label(12),
        DateInput(13),
        DateTimeInput(14),
-       ProductUnit(15);
+       ProductUnit(15),
+       GodownList(16);
+       
        
        
        private int code;
@@ -695,6 +699,34 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       }
       
    }
+   class LocationSelectImpl extends SpinnerHolder implements OnItemSelectedListener
+   {
+
+      @Override
+      public void onItemSelected(AdapterView<?> parent, 
+            View v,
+            int pos, 
+            long id) {
+         // TODO Auto-generated method stub
+         if (parent instanceof HistoryInspectLocationSpinner)
+         {
+            HistoryInspectLocationSpinner locationSpinner = (HistoryInspectLocationSpinner)parent;
+            Object obj = locationSpinner.getSelectedItem();
+            if (obj instanceof CarInspectStampLocation)
+            {
+               CarInspectStampLocation dataObjSaved = (CarInspectStampLocation)obj;
+               jobRequestProductList.get(position).setCustomerSurveySiteID(dataObjSaved.getCustomerSurveySiteID());
+            }
+         }
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView< ? > arg0) {
+         // TODO Auto-generated method stub
+         
+      }
+      
+   }
    class LayoutSelectImpl  extends SpinnerHolder implements OnItemSelectedListener
    {
 
@@ -963,6 +995,15 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   
                   holder.viewRows[i] = vDateTime;
                }break;
+               case GodownList:{
+                  View vSpinner = 
+                        inflater.inflate(R.layout.ps_activity_report_list_entry_column_history_location_spinner, vGroup, false);
+                  final HistoryInspectLocationSpinner locationHistory = (HistoryInspectLocationSpinner)vSpinner.findViewById(R.id.sp_history_inspect_location);
+                  //locationHistory.initial(jobRequest.getJobRequestID());
+                  locationHistory.getLayoutParams().width = (int)colWidth;
+                  locationHistory.getLayoutParams().height = (int)colHeight;
+                  holder.viewRows[i] = vSpinner;
+               }break;
                default:
                {
                   /*default is label*/
@@ -1220,6 +1261,33 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                
                new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,eachColViewHolder);
               
+               
+            }break;
+            case GodownList:{
+               final HistoryInspectLocationSpinner sp_location = (HistoryInspectLocationSpinner)vEachCol.findViewById(R.id.sp_history_inspect_location);
+               sp_location.initial(jobRequest.getJobRequestID());
+               SpinnerAdapter adapter = sp_location.getAdapter();
+               for(int i = 0; i < adapter.getCount();i++){
+                  Object obj = adapter.getItem(i);
+                  if (obj instanceof CarInspectStampLocation){
+                     CarInspectStampLocation location = (CarInspectStampLocation)obj;
+                     if (location.getCustomerSurveySiteID() == jrp.getCustomerSurveySiteID()){
+                        sp_location.setSelection(i, false);
+                        break;
+                     }
+                  }
+               }
+               
+               final LocationSelectImpl locationSelect = new LocationSelectImpl();
+               if (sp_location.getOnItemSelectedListener() instanceof LocationSelectImpl)
+               {
+                  ((LocationSelectImpl)sp_location.getOnItemSelectedListener()).setViewRow(rowView);
+                  ((LocationSelectImpl)sp_location.getOnItemSelectedListener()).setPosition(position);
+               }else{
+                  locationSelect.setViewRow(rowView);
+                  locationSelect.setPosition(position);
+                  sp_location.setOnItemSelectedListener(locationSelect);
+               }
                
             }break;
             case Layout:
@@ -1793,46 +1861,53 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
    public static synchronized Object invokeGetValue(JobRequestProduct jobRequestProduct,
          String colInvokeField){
       
+      String[] colInvokeFieldArray = colInvokeField.split(",");
+      
+      StringBuilder strBld = new StringBuilder();
+      
       Object objRet = null;
-      String invokeField = "get"+colInvokeField;//viewForm.getColInvokeField();
-      @SuppressWarnings("rawtypes")
-      Class jrpClass = jobRequestProduct.getClass();
-      try {
-         Method[] fSets = jrpClass.getDeclaredMethods();
-         Method fInvoke = null;
-         for(int i = 0 ; i <fSets.length;i++)
-         {
-            Method f = fSets[i];
-            if (f.getName().equalsIgnoreCase(invokeField)){
-               fInvoke = f;
-               break;
+      for(String colInvoke : colInvokeFieldArray)
+      {
+         String invokeField = "get"+colInvoke;//viewForm.getColInvokeField();
+         @SuppressWarnings("rawtypes")
+         Class jrpClass = jobRequestProduct.getClass();
+         try {
+            Method[] fSets = jrpClass.getDeclaredMethods();
+            Method fInvoke = null;
+            for(int i = 0 ; i <fSets.length;i++)
+            {
+               Method f = fSets[i];
+               if (f.getName().equalsIgnoreCase(invokeField)){
+                  fInvoke = f;
+                  break;
+               }
+            }
+            if (fInvoke != null)
+            {
+               objRet = fInvoke.invoke(jobRequestProduct);  
+               if (colInvokeFieldArray.length > 1){
+                  if (!objRet.toString().isEmpty()){
+                     if (!objRet.toString().equalsIgnoreCase("null")){
+                        strBld.append(objRet.toString()+" / ");                                             
+                     }
+                  }
+               }else{
+                  break;
+               }
+            }else{
+               //throw new NoSuchFieldException(invokeField);
+               Log.d("DEBUG_D", "No such field -> "+invokeField);
             }
          }
-         if (fInvoke != null)
-         {
-            objRet = fInvoke.invoke(jobRequestProduct);  
-         }else{
-            //throw new NoSuchFieldException(invokeField);
-            Log.d("DEBUG_D", "No such field -> "+invokeField);
+         catch(Exception ex){
+            ex.printStackTrace();
          }
       }
-      //catch (NoSuchFieldException e) {
-         // TODO Auto-generated catch block
-         //e.printStackTrace();
-      //}
-      catch (IllegalAccessException e) {
-         // TODO Auto-generated catch block
-         //e.printStackTrace();
+      if (colInvokeFieldArray.length > 1){
+         return strBld.toString();
+      }else{
+         return (objRet == null)?"":objRet;
       }
-      catch (IllegalArgumentException e) {
-         // TODO Auto-generated catch block
-         //e.printStackTrace();
-      }
-      catch (InvocationTargetException e) {
-         // TODO Auto-generated catch block
-         //e.printStackTrace();
-      }
-      return (objRet == null)?"":objRet;
    }
    @SuppressWarnings({ "unused", "rawtypes"})
    public static synchronized void invokeSetValue(final JobRequestProduct jobRequestProduct,
@@ -2015,6 +2090,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          JobRequestProduct jrp = this.jobRequestProductList.get(i);
          if (jrp.getProductRowID() == currentJobRequestProduct.getProductRowID()){
             rowAtNeedToReload = i;
+            jrp.setHasCheckList(currentJobRequestProduct.isHasCheckList());
             break;
          }
       }

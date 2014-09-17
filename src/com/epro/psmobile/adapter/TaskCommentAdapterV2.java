@@ -332,7 +332,8 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 					{
 						edtAnswer.setText(taskFormTemplate.getDataSaved().getTaskDataValues());
 					}else{
-					   if (jobRequestProduct != null){
+					   if ((chkListViewProperty != null)&&(jobRequestProduct != null))
+					   {
 	                       String colInvokeFields = 
 	                             chkListViewProperty.getColInvokeField();
 	                       String[] invokeFieldsArray = 

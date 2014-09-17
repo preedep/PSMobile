@@ -599,7 +599,7 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
                  if (resultCode == Activity.RESULT_OK)
                  {
                     currentJobRequestProduct = data.getParcelableExtra(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST);
-                    currentJobRequestProduct.setHasCheckList(true);
+                    //currentJobRequestProduct.setHasCheckList(true);
                     onPhotoSetIdUpdated(currentJobRequestProduct);/*reload row*/
                  }
              }break;

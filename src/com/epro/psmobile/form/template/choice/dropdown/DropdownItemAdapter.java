@@ -113,7 +113,9 @@ public class DropdownItemAdapter extends ChoiceBaseAdapter {
 			if ((values != null)&&(!values.isEmpty()))
 			{
 				String[] valueArray = values.split("@@");
-				holder.editText.setText(valueArray[1]);
+				if (valueArray.length > 1){
+				   holder.editText.setText(valueArray[1]);
+				}
 				
 				for(int i = 0 ; i < rsp.getCount();i++){
 					ReasonSentence reasonSentenceSelected = (ReasonSentence)rsp.getItemAtPosition(i);
@@ -137,20 +139,19 @@ public class DropdownItemAdapter extends ChoiceBaseAdapter {
 
 		TaskFormDataSaved dataSaved = new TaskFormDataSaved();
 		StringBuilder strBld = new StringBuilder();
-		if (rsp != null){
-		   ReasonSentence reasonSentenceSelected = (ReasonSentence)rsp.getSelectedItem();
+		//if (rsp != null)
 		
-		   String reasonText = reasonSentenceSelected.getReasonText();
-		   String dataText = editText.getText().toString();
-		   
-		   strBld.append(reasonText);
-		   strBld.append("@@");
-		   strBld.append(dataText);
+		   ReasonSentence reasonSentenceSelected = getReasonSentence();//(ReasonSentence)rsp.getSelectedItem();
 		
-		   dataSaved.setTaskDataValues(strBld.toString());
-		}else{
-		   dataSaved.setTaskDataValues("");
-		}
+		   if (reasonSentenceSelected != null){
+	           String reasonText = reasonSentenceSelected.getReasonText();
+	           String dataText = editText.getText().toString();
+	           strBld.append(reasonText);
+	           strBld.append("@@");
+	           strBld.append(dataText);
+	           dataSaved.setTaskDataValues(strBld.toString());		      
+		   }
+		
 		return dataSaved;
 	}
 	@Override

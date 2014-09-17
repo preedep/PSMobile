@@ -303,7 +303,7 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 					 
 				 }
 */				 
-				 TaskCommentAdapterV2 commentAdapter = new TaskCommentAdapterV2(this.getActivity(),comments_parent);
+				 TaskCommentAdapterV2 commentAdapter = new TaskCommentAdapterV2(this.getActivity(),comments_parent,jobRequestProduct);
 				 lv_comments.setAdapter(commentAdapter);
 				 lv_comments.setItemsCanFocus(true);
 				 
@@ -398,7 +398,7 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 				    if (getCurrentJobRequestProduct() != null)
 				    {
 				       SharedPreferenceUtil.setAlreadyCommentSaved(getActivity(), true);
-                       
+				       getCurrentJobRequestProduct().setHasCheckList(true);
 			           Intent data = new Intent();
 			           data.putExtra(InstanceStateKey.KEY_ARGUMENT_JOB_PRODUCT_REQUEST, getCurrentJobRequestProduct());
 			           getSherlockActivity().setResult(Activity.RESULT_OK, data);

@@ -42,6 +42,7 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
    private  View rootView;;
    //private  ArrayList<JobRequestProduct> jrpList;
    private  ListView lvItems;
+   private  boolean  forceReload = false;
    
    static class Holder{
      View vContainer;
@@ -84,6 +85,18 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
          this.renderOnPageChanged(activity);
       }
       
+   }
+   /* (non-Javadoc)
+    * @see com.epro.psmobile.fragment.InspectReportListFragment#onResume()
+    */
+   @Override
+   public void onResume() {
+      // TODO Auto-generated method stub
+      super.onResume();
+      if (forceReload){
+         forceReload = false;
+         //renderOnPageChanged(getSherlockActivity());
+      }
    }
    public class AsyncRenderOnPageChanged extends AsyncTask<Holder,Void,InspectJobMapper>
    {
@@ -194,6 +207,8 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
       Holder h = new Holder();
       h.vContainer = currentView;
       h.aActivity = activity;
+      
+      Log.d("DEBUG_D_D_D", "AsyncRenderOnPageChanged executed....");
       new AsyncRenderOnPageChanged(h.aActivity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,h);
    }
    @Override
@@ -370,7 +385,7 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
                   resultCode,
                   data, 
                   currentJobRequestProduct, ls);
-            renderOnPageChanged(getSherlockActivity());
+            this.forceReload = true;
          }else{
          
             super.doActivityResultForTakePhoto(requestCode, 
