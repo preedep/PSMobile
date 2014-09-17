@@ -716,6 +716,32 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             {
                CarInspectStampLocation dataObjSaved = (CarInspectStampLocation)obj;
                jobRequestProductList.get(position).setCustomerSurveySiteID(dataObjSaved.getCustomerSurveySiteID());
+               
+               
+               if ((jobRequest.getInspectType().getInspectTypeID() == 5)||
+                   (jobRequest.getInspectType().getInspectTypeID() == 8)){
+                  if (viewRow != null)
+                  {
+                     if (viewRow.getTag() != null){
+                        Holder holder = (Holder)viewRow.getTag();
+                        for(View vEachCol : holder.viewRows){
+                           InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
+                           UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
+                           
+                           EachColViewHolder eachColViewHolder = new EachColViewHolder();
+                           eachColViewHolder.formView = viewForm;
+                           eachColViewHolder.jrp =jobRequestProductList.get(position);
+                           eachColViewHolder.position = position;
+                           eachColViewHolder.viewCol = vEachCol;                        
+                           eachColViewHolder.viewRow = viewRow;
+                           
+                           if (ctrlType == UniversalControlType.Layout){
+                              new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, eachColViewHolder);
+                           }
+                        }
+                     }
+                  }
+               }
             }
          }
       }
@@ -1292,6 +1318,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             }break;
             case Layout:
             {
+               /*
                final LayoutSpinner sp_layout = (LayoutSpinner)vEachCol.findViewById(R.id.sp_layout_inspect);
                sp_layout.initial(task.getTaskCode(), jrp.getCustomerSurveySiteID(),true);
                SpinnerAdapter adapter  = sp_layout.getAdapter();
@@ -1314,7 +1341,17 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   layoutSelect.setViewRow(rowView);
                   layoutSelect.setPosition(position);
                   sp_layout.setOnItemSelectedListener(layoutSelect);
-               }
+               }*/
+               EachColViewHolder eachColViewHolder = new EachColViewHolder();
+               eachColViewHolder.position = position;
+               eachColViewHolder.viewCol = vEachCol;
+               eachColViewHolder.viewRow = rowView;
+               eachColViewHolder.jrp = jrp;
+               eachColViewHolder.formView = formView;
+               
+               new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,eachColViewHolder);
+
+               
                //////////////////////////////
             }break;
             case CheckListForm:
@@ -1561,8 +1598,11 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       
       private int objProductIdx = -1;
       private int objProductUnitIdx = -1;
+      private int objLayoutIdx = -1;
       private EachColViewHolder marketPriceeachColViewHolder;
       private EachColViewHolder productUniteachColViewHolder;
+      
+      private InspectDataObjectSaved dataSaved;
       @Override
       protected Void doInBackground(EachColViewHolder... params) {
          // TODO Auto-generated method stub
@@ -1645,7 +1685,26 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   }
                }
             }
-         }else if (ctrlType == UniversalControlType.ProductUnit)
+         }else if (ctrlType == UniversalControlType.Layout){
+            
+            final LayoutSpinner sp_layout = (LayoutSpinner)v.viewCol.findViewById(R.id.sp_layout_inspect);
+            
+            sp_layout.initial(task.getTaskCode(), jrp.getCustomerSurveySiteID(),true);
+            
+            SpinnerAdapter adapter  = sp_layout.getAdapter();
+            for(int i = 0; i < adapter.getCount();i++){
+               Object obj = adapter.getItem(i);
+               if (obj instanceof InspectDataObjectSaved){
+                  InspectDataObjectSaved objSaved = (InspectDataObjectSaved)obj;
+                  if (objSaved.getInspectDataObjectID() == jrp.getInspectDataObjectID()){
+                     dataSaved = objSaved;
+                     objLayoutIdx = i;
+                     break;
+                  }
+               }
+            }
+         }else
+         if (ctrlType == UniversalControlType.ProductUnit)
          {
             int productAmountUnitID = -1;
             if (v.viewRow != null)
@@ -1762,6 +1821,25 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                if (productUniteachColViewHolder != null){
                   new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, productUniteachColViewHolder);                  
                }
+            }
+         }else if (ctrlType == UniversalControlType.Layout){
+            final LayoutSpinner sp_layout = (LayoutSpinner)v.viewCol.findViewById(R.id.sp_layout_inspect);
+            
+            if (objLayoutIdx >= 0){
+               sp_layout.setSelection(objLayoutIdx, false);
+            }else{
+               sp_layout.setSelection(0, false);
+            }
+            
+            final LayoutSelectImpl layoutSelect = new LayoutSelectImpl();
+            if (sp_layout.getOnItemSelectedListener() instanceof LayoutSelectImpl)
+            {
+               ((LayoutSelectImpl)sp_layout.getOnItemSelectedListener()).setViewRow(v.viewRow);
+               ((LayoutSelectImpl)sp_layout.getOnItemSelectedListener()).setPosition(v.position);
+            }else{
+               layoutSelect.setViewRow(v.viewRow);
+               layoutSelect.setPosition(v.position);
+               sp_layout.setOnItemSelectedListener(layoutSelect);
             }
          }else if (ctrlType == UniversalControlType.ProductUnit)
          {

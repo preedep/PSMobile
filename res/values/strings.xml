@@ -497,11 +497,14 @@
 	<string name="text_sync_dialog_offline">Offline mode (ทำการบันทึกไฟล์ลงเครื่องเท่านั้น)</string>
 	
 	<string name="text_error_confirm_job_previous_date">คุณยืนยันงานที่ผ่านมาแล้วไม่ได้</string>
-	
+<!--  	
 	<string name="text_error_comments_not_complete_yet">คุณยังไม่ได้มีการกรอกคำถาม 13ข้อ</string>
+	-->
+		<string name="text_error_comments_not_complete_yet">คุณยังไม่ได้มีการกรอกความคิดเห็น</string>
+	
 	<string name="text_error_report_not_generated_yet">คุณยังไม่ได้ทำการสร้างรายงานการตรวจ\r\n(อาจเป็นเพราะคุณมีการแก้ไขข้อมูลการตรวจ คุณจำเป็นต้องสร้างรายงานการตรวจอีกครั้ง)</string>
 	<string name="text_error_layout_not_saved_yet">คุณมีการแก้ไข Layout กรุณาทำการบันทึกก่อนทำรายการอื่น</string>
-	<string name="text_error_comment_no13_not_saved_yet">คุณอาจมีการแก้ไขคำถาม 13 ข้อ กรุณาทำการกรอก และ บันทึกก่อนทำงานอื่น</string>
+	<string name="text_error_comment_no13_not_saved_yet">คุณอาจมีการแก้ไขความคิดเห็น กรุณาทำการกรอก และ บันทึกก่อนทำงานอื่น</string>
 	<string name="text_error_comment_qc_no13_not_saved_yet">คุณอาจมีการแก้ไขคำถาม กรุณาทำการกรอก และ บันทึกก่อนทำงานอื่น</string>
 	
 	<string name="text_error_car_inspect_not_saved_yet">คุณมีการแก้ไขข้อมูลการตรวจรถยนต์ กรุณาทำการบันทึกก่อนทำรายการอื่น</string>
