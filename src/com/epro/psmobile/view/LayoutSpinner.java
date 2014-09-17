@@ -80,6 +80,44 @@ public class LayoutSpinner extends Spinner {
       initial(taskCode,customerSurveySiteID,false);
    }
    
+   
+   
+   public ArrayList<InspectDataObjectSaved> getDatas(String taskCode,int customerSurveySiteID,boolean reload){
+     PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getContext());
+      
+      final ArrayList<InspectDataObjectSaved> layoutList = new ArrayList<InspectDataObjectSaved>();
+      layoutList.add(new InspectDataObjectSaved());
+           
+      if (this.oldCustomerSurveySiteID != customerSurveySiteID){
+         oldCustomerSurveySiteID = customerSurveySiteID;
+         reload = true;
+      }
+      try {
+         if (reload)
+         {
+            inspectDataObjectSavedList = 
+                  dataAdapter.getInspectDataObjectSavedUniverals(taskCode, customerSurveySiteID);
+            Log.d("DEBUG_D_D", "Layout Spinner Reload data");
+         }else{
+            if ((inspectDataObjectSavedList == null)||(inspectDataObjectSavedList.size() == 0))
+            {
+               inspectDataObjectSavedList = 
+                     dataAdapter.getInspectDataObjectSavedUniverals(taskCode, customerSurveySiteID);               
+            }
+         }
+         ////////////////////
+         
+         
+         if (inspectDataObjectSavedList != null)
+         {
+            layoutList.addAll(inspectDataObjectSavedList);
+         }
+      }catch(Exception ex){
+         ex.printStackTrace();
+         
+      }
+      return layoutList;
+   }
    public void initial(String taskCode,
          int customerSurveySiteID,
          boolean reload)

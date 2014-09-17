@@ -1689,8 +1689,10 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             
             final LayoutSpinner sp_layout = (LayoutSpinner)v.viewCol.findViewById(R.id.sp_layout_inspect);
             
-            sp_layout.initial(task.getTaskCode(), jrp.getCustomerSurveySiteID(),true);
+            ArrayList<InspectDataObjectSaved> datas = 
+                  sp_layout.getDatas(task.getTaskCode(), jrp.getCustomerSurveySiteID(),true);
             
+            /*
             SpinnerAdapter adapter  = sp_layout.getAdapter();
             for(int i = 0; i < adapter.getCount();i++){
                Object obj = adapter.getItem(i);
@@ -1702,7 +1704,18 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                      break;
                   }
                }
+            }*/
+            
+            if (datas != null){
+               for(int i = 0;i<datas.size();i++){
+                  if (datas.get(i).getInspectDataObjectID() == jrp.getInspectDataObjectID()){
+                     dataSaved = datas.get(i);
+                     objLayoutIdx = i;
+                     break;
+                  }
+               }
             }
+            
          }else
          if (ctrlType == UniversalControlType.ProductUnit)
          {
@@ -1824,6 +1837,8 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             }
          }else if (ctrlType == UniversalControlType.Layout){
             final LayoutSpinner sp_layout = (LayoutSpinner)v.viewCol.findViewById(R.id.sp_layout_inspect);
+            
+            sp_layout.initial(task.getTaskCode(), v.jrp.getCustomerSurveySiteID(),true);
             
             if (objLayoutIdx >= 0){
                sp_layout.setSelection(objLayoutIdx, false);
