@@ -1,7 +1,9 @@
 package com.epro.psmobile.fragment;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -11,6 +13,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -47,6 +51,7 @@ import com.epro.psmobile.util.SharedPreferenceUtil;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -277,7 +282,59 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
        strBld.append("</head>");
      
        strBld.append("<body>");
-       strBld.append("<p>"+this.getString(R.string.text_titles_of_job_detail_product)+"</p>");
+       
+       strBld.append("<p>"+this.getString(R.string.report_inspection_job_detail_title)+"</p>");
+       strBld.append("<p><u>"+this.getString(R.string.report_inspection_customer_detail_title)+"</u></p>");
+
+       ArrayList<InspectDataObjectSaved> inspectSavedList
+         = new ArrayList<InspectDataObjectSaved>();
+       
+       if (currentTask.getJobRequest().getCustomerSurveySiteList() != null){
+           CustomerSurveySite siteFirst = currentTask.getJobRequest().getCustomerSurveySiteList().get(0);
+           strBld.append("<p>"+siteFirst.getCustomerName()+"</p>");            
+           for(CustomerSurveySite site : currentTask.getJobRequest().getCustomerSurveySiteList())
+           {
+               ArrayList<InspectDataObjectSaved> dataSaved = dataAdapter.getInspectDataObjectSaved(
+                       currentTask.getTaskCode(),
+                       site.getCustomerSurveySiteID());
+               if (dataSaved != null)
+               {
+                   inspectSavedList.addAll(dataSaved);
+               }
+               
+               strBld.append(site.getSiteAddress()+"<br/>");
+               strBld.append(this.getString(R.string.text_tel_prefix)+" "+site.getSiteTels()+"<br/>");
+
+           }
+           strBld.append("<p>");
+           strBld.append(this.getString(R.string.txt_customer_survey_site_inspect_type,
+                   currentTask.getJobRequest().getInspectType().getInspectTypeName()));
+           strBld.append("</p>");
+           strBld.append("<p>");
+           strBld.append(this.getString(R.string.txt_task_code, currentTask.getTaskCode()));
+           strBld.append("</p>");
+           /*
+            *          
+            * tvCustomerCode.setText(this.getResources().getString(R.string.text_customer_code_prefix)+" "+jobRequest.getCustomerCode());
+              tvBusinessType.setText(this.getResources().getString(R.string.text_customer_business_type,jobRequest.getBusinessType()));
+            */
+            strBld.append("<p>"+this.getString(R.string.text_customer_code_prefix)+" "
+                               +currentTask.getJobRequest().getCustomerCode()+"</p>");
+            
+            strBld.append("<p>"+this.getString(R.string.text_customer_business_type,
+                               currentTask.getJobRequest().getBusinessType()));
+            
+           strBld.append("<p>"+this.getResources().getString(
+                               R.string.text_customer_schedule_preiod_inspect,
+                               DataUtil.getInspectPeriod(false, currentTask))+"</p>");
+
+
+//         strBld.append("<p>"+this.getString(R.string.text_customer_code_prefix)+" "+siteFirst.getCustomerCode()+"</p>");
+//         strBld.append(this.getString(R.string.text_customer_business_type,currentTask.getJobRequest().getBusinessType()));
+       }
+
+       
+       strBld.append("<p><u>"+this.getString(R.string.text_titles_of_job_detail_product)+"</u></p>");
        ArrayList<CarInspectStampLocation> godownCheckInList =
              dataAdapter.getAllCarInspectStampLocation(currentTask.getJobRequest().getJobRequestID());
        
@@ -290,11 +347,14 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
        for(InspectFormView formViewItem : inspectFormViewList){
           UniversalControlType ctrlType = UniversalControlType.getControlType(formViewItem.getColType());
           if ((ctrlType != UniversalControlType.Camera)&&
-               (ctrlType != UniversalControlType.CheckListForm)){
+               (ctrlType != UniversalControlType.CheckListForm)&&
+               (ctrlType != UniversalControlType.GodownList)){
              reportColumns.add(formViewItem);
           }
        }
-       float percentPerCol = 60.00f/reportColumns.size();
+       float maxWidth = 2048;
+       float locWidth = 0;
+       float percentPerCol = (maxWidth-locWidth)/reportColumns.size();
        if (godownCheckInList != null){
           for(CarInspectStampLocation godownLoc : godownCheckInList){
              String locationName = 
@@ -302,33 +362,391 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
              
              ArrayList<JobRequestProduct> jobRequestProductList = 
                    dataAdapter.findUniversalJobRequestProduct(currentTask.getJobRequest().getJobRequestID(),
-                         godownLoc.getCustomerSurveySiteID());             
-             strBld.append("<table width=\"100%\" border=\"0\">");
-             strBld.append("<tr>");
+                         godownLoc.getCustomerSurveySiteID());
              
-             strBld.append("<td width=\"40%\">&nbsp;</td>");
+             strBld.append("<p>"+locationName+"</p>");
+             strBld.append("<table width=\""+maxWidth+"px\" border=\"0\">");
+             strBld.append("<tr>");
+             //strBld.append("<td width=\""+locWidth+"px\">&nbsp;</td>");
              for(InspectFormView col : reportColumns){
-                strBld.append("<td width=\""+percentPerCol+"%\">"+col.getColTextDisplay()+"</td>");
+                strBld.append("<td width=\""+percentPerCol+"px\">"+col.getColTextDisplay()+"</td>");
              }
              strBld.append(" </tr>");
-             strBld.append("<tr>");
+             //strBld.append("<tr>");
              //1 is location column
-             strBld.append("<td colspan=\""+(reportColumns.size()+1)+"\">"+locationName+"</td>");
-             strBld.append(" </tr>");
+             //strBld.append("<td colspan=\""+(reportColumns.size()+1)+"\"><h1>"+locationName+"</h1></td>");
+             //strBld.append(" </tr>");
+
              if (jobRequestProductList != null)
              {
                 for(JobRequestProduct jrp : jobRequestProductList){
                    strBld.append("<tr>");
-                   strBld.append("<td></td>");
-                   for(InspectFormView col : reportColumns){
-                      strBld.append("<td>"+UniversalListEntryAdapter.invokeGetValue(jrp, col)+"</td>");
+                   //strBld.append("<td></td>");
+                   for(InspectFormView col : reportColumns)
+                   {
+                      UniversalControlType ctrlType = UniversalControlType.getControlType(col.getColType());
+                      if (ctrlType == UniversalControlType.ProductType){
+                        strBld.append("<td>"+jrp.getProductGroup()+"</td>");  
+                      }else if (ctrlType == UniversalControlType.Product){
+                         strBld.append("<td>"+jrp.getProductName()+"</td>");
+                      }else if (ctrlType == UniversalControlType.ProductUnit){
+                         strBld.append("<td>"+jrp.getProductUnit()+"</td>");
+                      }else if (ctrlType == UniversalControlType.DropdownList){
+                         /*reason sentence*/
+                         int rId = jrp.getcReasonID();
+                         String rCode = jrp.getcReasonCode();
+                         try{
+                            ArrayList<ReasonSentence> rsList = 
+                                  dataAdapter.getAllReasonSentenceByType(rCode);
+                            if (rsList != null){
+                               for(ReasonSentence rs : rsList){
+                                  if (rs.getReasonID() == rId){
+                                     strBld.append("<td>"+rs.getReasonText()+"</td>");
+                                     break;
+                                  }
+                               }
+                            }
+                         }catch(Exception ex){}
+                      }else if (ctrlType == UniversalControlType.Layout){
+                         int objId = jrp.getInspectDataObjectID();
+                         try{
+                            ArrayList<InspectDataObjectSaved> objSaveds = 
+                                  dataAdapter.getInspectDataObjectSavedUniverals(currentTask.getTaskCode(), jrp.getCustomerSurveySiteID());
+                            if (objSaveds != null){
+                               for(InspectDataObjectSaved objSave : objSaveds){
+                                  if (objSave.getInspectDataObjectID() == objId){
+                                     String name = "";
+                                     if ((objSave.getObjectName() != null)&&(objSave.getObjectName().equalsIgnoreCase("null"))){
+                                        name = objSave.getObjectName().trim();
+                                     }
+                                     strBld.append("<td>"+objSave.getInspectDataObjectID()+","+name+"</td>");
+                                     break;
+                                  }
+                               }
+                            }
+                         }catch(Exception ex){
+                            ex.printStackTrace();
+                         }
+                         
+                      }else
+                      {
+                         if (col.getColInvokeField() != null){
+                            String[] fields = col.getColInvokeField().split(",");
+                            StringBuilder textDisplays = new StringBuilder();
+                            for(String f : fields){
+                               Object objValue = UniversalListEntryAdapter.invokeGetValue(jrp,f);
+                               textDisplays.append(objValue+"<br/>");
+                            }                            
+                            strBld.append("<td>"+textDisplays.toString()+"</td>");
+                         }else{
+                            strBld.append("<td></td>");
+                         }
+                      }
                    }
                    strBld.append("</tr>");
                 }
              }
              strBld.append("</table>");
+             strBld.append("<p></p>");
+             strBld.append("<p></p>");
+             strBld.append("<p></p>");
+
           }
        }
+       ///////////////////
+       
+       //strBld.append("<hr/>");
+
+       //////////////////////////
+       strBld.append("<p><u>"+this.getString(R.string.report_inspection_comments)+"</u></p>");
+       ArrayList<TaskFormDataSaved> taskFormDataSavedList =
+               dataAdapter.findTaskFormDataSavedListByJobRequestId(currentTask.getJobRequest().getJobRequestID(),
+               currentTask.getTaskCode());
+
+        ArrayList<TaskFormTemplate> comments = dataAdapter.findTaskFormTemplateListByTemplateFormId(currentTask.getTaskFormTemplateID());
+
+        for(TaskFormTemplate formTemplate : comments)
+        {
+               if ((formTemplate.getControlType() == TaskControlType.CheckBoxList) ||
+                   (formTemplate.getControlType() == TaskControlType.RadioBoxList))
+               {
+                   
+                   String reasonSentenceType = formTemplate.getReasonSentenceType();
+                   if ((reasonSentenceType != null)&&(!reasonSentenceType.isEmpty())){
+                       ArrayList<ReasonSentence> reasons = 
+                               dataAdapter.getAllReasonSentenceByType(reasonSentenceType);
+                       String strTexts = "";
+                       for(ReasonSentence reason : reasons){
+                           strTexts += reason.getReasonText()+"";
+                           strTexts += "@@";
+                       }
+                       strTexts = strTexts.substring(0, strTexts.length()-1);
+                       formTemplate.setChoiceTexts(strTexts);
+                       formTemplate.setChildReasonSentenceList(reasons);
+                   }
+               }
+        }
+        ArrayList<TaskFormTemplate> comments_parent = new ArrayList<TaskFormTemplate>();
+        for(TaskFormTemplate comment : comments)
+        {
+            if ((comment.getChildReasonSentenceList() != null)&&
+                (comment.getChildReasonSentenceList().size() > 0)){
+
+                ArrayList<ReasonSentence> reasons = 
+                        comment.getChildReasonSentenceList();
+                
+                for(ReasonSentence reason : reasons)
+                {
+                    String path = reason.getReasonSentencePath();
+                    if ((path != null)&&(!path.isEmpty()))
+                    {
+                        for(TaskFormTemplate c_comment : comments)
+                        {
+                            if ((c_comment.getParentId() != null)&&(!c_comment.getParentId().isEmpty()))
+                            {
+                                //Log.d("DEBUG_D","Parent ID -> "+ c_comment.getParentId() + " , Path = "+path);
+                                if (path.equalsIgnoreCase(c_comment.getParentId()))
+                                {
+                                    /*
+                                     * 
+                                     */
+                                    Log.d("DEBUG_D", "have parent of path = "+path);
+                                    comment.addChildTaskFormTemplate(c_comment);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for(TaskFormTemplate comment : comments)
+        {
+            if ((comment.getTextQuestion() != null)&&(!comment.getTextQuestion().isEmpty())){
+                comments_parent.add(comment); 
+            }
+       }
+        
+       ///////////////
+       for(TaskFormTemplate each_comment : comments_parent)
+       {
+           strBld.append("<p>"+each_comment.getTextQuestion()+"</p>");
+           /*
+            * print data saved.
+            */
+           if (taskFormDataSavedList != null)
+           {
+               TaskFormDataSaved comment_saved = null;
+               for(TaskFormDataSaved taskFormDataSaved : taskFormDataSavedList)
+               {
+                   if (taskFormDataSaved.getTaskFormAttributeID() == each_comment.getTaskFormAttributeID())
+                   {
+                       comment_saved = taskFormDataSaved;
+                       break;
+                   }
+               }
+               
+               if (comment_saved != null)
+               {
+                   if (!comment_saved.getReasonSentence().getReasonText().equalsIgnoreCase("null"))
+                   {
+                       if (!comment_saved.getReasonSentence().getReasonText().trim().isEmpty())
+                       {
+                           strBld.append("<p> - "+comment_saved.getReasonSentence().getReasonText()+"</p>");
+                       }
+                   }else{
+                       if (
+                               (comment_saved.getTaskDataValues() != null)&&
+                               (!comment_saved.getTaskDataValues().equalsIgnoreCase("null"))
+                          )
+                               {
+                                  if (!comment_saved.getTaskDataValues().trim().isEmpty()){
+                                      strBld.append("<p> - "+comment_saved.getTaskDataValues()+"</p>");                                                            
+                                  }
+                               }
+                   }
+
+                   if (each_comment.getControlType() == TaskControlType.RadioBoxList)
+                   {
+                       if (each_comment.getChildTaskFormTemplate() != null){
+                            ArrayList<TaskFormTemplate> each_child_comments = 
+                                    each_comment.getChildTaskFormTemplate();
+                            
+                            comment_saved = null;
+                            loopA : for(TaskFormTemplate each_child_comment : each_child_comments)
+                            {
+                               for(TaskFormDataSaved taskFormDataSaved : taskFormDataSavedList)
+                               {
+//                                 if (each_child_comment.getTaskControlNo() == taskFormDataSaved.getTaskControlNo())
+                                    if (each_child_comment.getTaskFormAttributeID() == taskFormDataSaved.getTaskFormAttributeID())
+
+                                   {
+                                       comment_saved = taskFormDataSaved;
+                                       break loopA;
+                                   }
+                               }
+                            }
+                            if (comment_saved != null)
+                            {
+                                if (!comment_saved.getReasonSentence().getReasonText().equalsIgnoreCase("null"))
+                                   {
+                                       if (!comment_saved.getReasonSentence().getReasonText().trim().isEmpty()){
+                                           strBld.append("<p><p> - "+comment_saved.getReasonSentence().getReasonText()+"</p></p>");
+                                       }
+                                   }else{
+                                       if (
+                                               (comment_saved.getTaskDataValues() != null)&&
+                                               (!comment_saved.getTaskDataValues().equalsIgnoreCase("null"))
+                                          )
+                                               {
+                                                  if (!comment_saved.getTaskDataValues().trim().isEmpty()){
+                                                      strBld.append("<p><p> - "+comment_saved.getTaskDataValues()+"</p></p>");                                                         
+                                                  }
+                                               }
+                                   }
+                            }
+                       }
+                   }
+               }
+           }
+       }
+
+       //strBld.append("<hr/>");
+       /////////////////////
+       
+       
+       strBld.append("<p><u>"+this.getString(R.string.report_inspection_general_photos)+"</u></p>");
+       ArrayList<InspectDataObjectPhotoSaved> photoSavedList = 
+             dataAdapter.getInspectDataObjectPhotoSavedWithGeneralImage(currentTask.getTaskCode());
+       
+       int i = 1;
+       
+       if (photoSavedList != null)
+       {
+          for(InspectDataObjectPhotoSaved photoSaved : photoSavedList )
+          {
+             String cameraNo = this.getString(R.string.report_camera_no, (i++)+"");
+             strBld.append("<u><p>"+cameraNo+"</u></p>");                        
+             String encodeBase64 = 
+                     ImageUtil.convertImageToBase64(ImageUtil.getResizedBitmapFromFile(photoSaved.getFileName()));
+             if (encodeBase64 != null)
+             {
+                 strBld.append("<p><img src=\"data:image/jpg;base64,"+encodeBase64+"\" width=\"90%\"/></p>");
+                 strBld.append("<p>"+photoSaved.getAngleDetail()+"</p>");
+                 strBld.append("<p>"+photoSaved.getComment()+"</p>");
+             }
+          }
+       }
+       
+       strBld.append("<p></p>");
+       strBld.append("<p></p>");
+       strBld.append("<p></p>");
+       strBld.append("<p></p>");
+
+       strBld.append("<p><u>"+this.getString(R.string.report_inspection_products_photos)+"</u></p>");
+       
+       if (godownCheckInList != null){
+          for(CarInspectStampLocation godownLoc : godownCheckInList){
+             String locationName = 
+                   this.getString(R.string.txt_customer_survey_site_amount,godownLoc.getSiteAddress());
+             
+             strBld.append(locationName+"<br/>");
+             
+             ArrayList<JobRequestProduct> jobRequestProductList = 
+                   dataAdapter.findUniversalJobRequestProduct(currentTask.getJobRequest().getJobRequestID(),
+                         godownLoc.getCustomerSurveySiteID());
+             if (jobRequestProductList != null){
+                for(JobRequestProduct jrp : jobRequestProductList){
+                   int photoSetId = jrp.getPhotoSetID();
+                   
+                   photoSavedList =
+                         dataAdapter.getInspectDataObjectPhotoSaved(photoSetId);
+             
+                   i = 1;
+                   for(InspectDataObjectPhotoSaved photoSaved : photoSavedList )
+                   {
+                       String cameraNo = this.getString(R.string.report_camera_no, (i++)+"");
+                       strBld.append("<u><p>"+cameraNo+"</u></p>");                        
+                       String encodeBase64 = 
+                               ImageUtil.convertImageToBase64(ImageUtil.getResizedBitmapFromFile(photoSaved.getFileName()));
+                       if (encodeBase64 != null)
+                       {
+                           strBld.append("<p><img src=\"data:image/jpg;base64,"+encodeBase64+"\" width=\"90%\"/></p>");
+                       }
+                       try{
+                           String[] splits = 
+                                   photoSaved.getInspectDataTextSelected().split("\r\n");
+                           StringBuilder s = new StringBuilder();
+                           strBld.append("<p>");
+                           for(String ss : splits)
+                           {
+                               if (ss.isEmpty())continue;
+                               
+                               String result = DataUtil.removePID(ss);
+                               
+                               strBld.append(result+"<br/>");
+                           }
+                           strBld.append("</p>");
+                       }catch(Exception e){
+                           strBld.append("<p>"+photoSaved.getInspectDataTextSelected().replace("\r\n", "</br>")+"</p>");                           
+                       }
+                       strBld.append("<p>"+photoSaved.getAngleDetail()+"</p>");
+                       strBld.append("<p>"+photoSaved.getComment()+"</p>");
+                   }
+                   
+                }
+             }
+          }          
+       }
+
+       //strBld.append("<hr/>");
+       ///////////////////////
+       
+       strBld.append("<p><u>"+this.getString(R.string.report_inspection_layout_details)+"</u></p>");
+       /*
+        * layout
+        */
+       if (godownCheckInList != null){
+          for(CarInspectStampLocation godownLoc : godownCheckInList){
+             String fileName = DataUtil.regenerateTaskCodeForMakeFolder(currentTask.getTaskCode());
+             fileName += "-";
+             fileName += godownLoc.getCustomerSurveySiteID();
+             String htmlFileName = fileName + ".html";
+             
+             File directory = Environment.getExternalStorageDirectory();
+             String rootFolder = directory.getAbsolutePath();
+             rootFolder += CommonValues.PREVIEW_FOLDER;
+             rootFolder += "/"+htmlFileName;
+             
+             File f = new File(rootFolder);
+             if (f.exists())
+             {
+                String locationName = 
+                      this.getString(R.string.txt_customer_survey_site_amount,godownLoc.getSiteAddress());
+                
+                strBld.append(locationName+"<br/>");
+              
+                StringBuilder contentBuilder = new StringBuilder();
+                try {
+                    BufferedReader in = new BufferedReader(new FileReader(f));
+                    String str;
+                    while ((str = in.readLine()) != null) {
+                        contentBuilder.append(str);
+                    }
+                    in.close();
+                } catch (IOException e) {
+                   e.printStackTrace();
+                }
+                String content = contentBuilder.toString();
+                String data = StringUtils.substringBetween(content, "<table>", "</table>");
+                strBld.append("<table width=\""+maxWidth+"px\">"+data+"</table>");
+                
+             }else{
+                Log.d("DEBUG_D", htmlFileName+" not found!!!");
+             }
+          }
+       }
+       
+       
        strBld.append("</body>");
 	   strBld.append("</html>");
 	   return strBld.toString();
