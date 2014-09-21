@@ -1118,6 +1118,12 @@ public class PSBODataAdapter {
 
 	      return query(sql,JobRequestProduct.class);
 	    }
+	   public synchronized ArrayList<JobRequestProduct> findUniversalJobRequestProduct(int jobRequestID,int customerSurveySiteID)
+	   throws Exception
+	   {
+	      String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + " and customerSurveySiteID = "+customerSurveySiteID+" order by productRowId";
+	      return query(sql,JobRequestProduct.class);
+	   }
 
 	public synchronized ArrayList<JobRequestProduct> findCarJobRequestProductsByJobRequestID(int jobRequestID,
           int customerSurveySiteID) throws Exception

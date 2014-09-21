@@ -35,6 +35,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -241,6 +242,10 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 						edtAnswer.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
 					}else if (controlType == TaskControlTemplate.TaskControlType.SimpleTextDate)
 					{
+ 					    edtAnswer.setInputType(InputType.TYPE_NULL);
+ 					    edtAnswer.setHint(R.string.text_hint_date_input);
+ 					    edtAnswer.setHintTextColor(Color.RED);
+ 					    edtAnswer.setSelectAllOnFocus(true);
 						edtAnswer.setOnClickListener(new OnClickListener(){
 
 							@Override
@@ -269,6 +274,7 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 														int dayOfMonth) {
 													// TODO Auto-generated method stub
 													
+												   edtAnswer.setText(dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
 												}
 						            	
 						            }, year, 
@@ -331,7 +337,9 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 					if (taskFormTemplate.getDataSaved() != null)
 					{
 						edtAnswer.setText(taskFormTemplate.getDataSaved().getTaskDataValues());
-					}else{
+					}else
+					{
+					   boolean hasValue = false;
 					   if ((chkListViewProperty != null)&&(jobRequestProduct != null))
 					   {
 	                       String colInvokeFields = 
@@ -342,14 +350,23 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 	                       for(String field : invokeFieldsArray){
 	                          Object obj = 
 	                                UniversalListEntryAdapter.invokeGetValue(jobRequestProduct, field);
-	                          strBld.append(obj.toString()+"\r\n");
+	                          if ((obj != null)&&(!obj.toString().equalsIgnoreCase("null"))){
+	                              strBld.append(obj.toString()+"\r\n");	   
+	                              hasValue = true;
+	                          }
 	                       }					     
 	                       edtAnswer.setText(strBld.toString());
 					   }
+	                    
 					}
+					
 					if (chkListViewProperty != null){
-					   edtAnswer.setEnabled(false);
-					}
+                       //if (hasValue)
+                        edtAnswer.setEnabled(false);
+                        edtAnswer.setBackgroundResource(R.drawable.edit_bg_disable);
+                    }else{
+                       edtAnswer.setBackgroundResource(R.drawable.edit_bg_drawable);
+                    }
 					////////////
 					TaskCommentHolder holder = new TaskCommentHolder();
 					
@@ -370,7 +387,6 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
                            }
 					   
 					});
-					edtAnswer.setBackgroundResource(R.drawable.edit_bg_drawable);
 					
 
 					

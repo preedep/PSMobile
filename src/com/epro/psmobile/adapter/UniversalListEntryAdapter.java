@@ -63,6 +63,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -1150,6 +1152,35 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                      Log.d("DEBUG_D_D", " display text watcher position -> "+ ((UniversalTextWatcher)formView.textWatcher).getPosition());
                      edtText.addTextChangedListener(formView.textWatcher);                     
                   }
+            }break;
+            case CheckBox:{
+               final CheckBox chkBox = (CheckBox)vEachCol.findViewById(R.id.chkbox_report_list_entry_column_chkbox);
+               Object obj = invokeGetValue(jrp,formView);
+               boolean check = false;
+               if (obj != null){
+                  if (obj.toString().equalsIgnoreCase("true")){
+                     check = true;
+                  }
+               }
+               chkBox.setChecked(check);
+               chkBox.post(new Runnable(){
+
+                  @Override
+                  public void run() {
+                     // TODO Auto-generated method stub
+                     chkBox.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                           // TODO Auto-generated method stub
+                           String strChk = (isChecked)?"true":"false";
+                           invokeSetValue(jrp,formView,strChk);
+                        }
+                     });
+                  }
+                  
+               });
+               
             }break;
             case MarketPrice:
             {

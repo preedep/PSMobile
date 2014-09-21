@@ -16,6 +16,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.epro.psmobile.R;
+import com.epro.psmobile.adapter.UniversalListEntryAdapter;
+import com.epro.psmobile.adapter.UniversalListEntryAdapter.UniversalControlType;
 import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.CarInspectStampLocation;
 import com.epro.psmobile.data.CustomerSurveySite;
@@ -23,6 +25,8 @@ import com.epro.psmobile.data.InspectDataItem;
 import com.epro.psmobile.data.InspectDataObjectPhotoSaved;
 import com.epro.psmobile.data.InspectDataObjectSaved;
 import com.epro.psmobile.data.InspectDataSVGResult;
+import com.epro.psmobile.data.InspectFormView;
+import com.epro.psmobile.data.InspectJobMapper;
 import com.epro.psmobile.data.JobRequestProduct;
 import com.epro.psmobile.data.Product;
 import com.epro.psmobile.data.ReasonSentence;
@@ -220,7 +224,7 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
 			         }
 			    }else if ((inspectTypeID == 3)||(inspectTypeID >= 5)){
 			       /*inspect type is universal layout*/
-			       html = generateHtmlUniversalReport();
+			       html = generateHtmlUniversalReport(params[0]);
 			    }
 			    else{
 			          html = generateHtmlReport(params[0]);
@@ -258,9 +262,74 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
 		    asyncGenReport.execute(new Task[]{currentTask});
 		}
 	}
-	private String generateHtmlUniversalReport(){
+	private String generateHtmlUniversalReport(Task currentTask)
+	throws Exception
+	{
 	   StringBuilder strBld = new StringBuilder();
+	   PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getActivity());
+	      
 	   strBld.append("<html>");
+	    strBld.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+       strBld.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+       strBld.append(" <head>");
+       strBld.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
+       strBld.append("<title>Untitled Document</title>");
+       strBld.append("</head>");
+     
+       strBld.append("<body>");
+       strBld.append("<p>"+this.getString(R.string.text_titles_of_job_detail_product)+"</p>");
+       ArrayList<CarInspectStampLocation> godownCheckInList =
+             dataAdapter.getAllCarInspectStampLocation(currentTask.getJobRequest().getJobRequestID());
+       
+       InspectJobMapper jobMapper =  dataAdapter.getInspectJobMapper(currentTask.getJobRequest().getJobRequestID(), currentTask.getTaskCode());
+       
+       ArrayList<InspectFormView> inspectFormViewList = 
+             dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
+       
+       ArrayList<InspectFormView> reportColumns = new ArrayList<InspectFormView>();
+       for(InspectFormView formViewItem : inspectFormViewList){
+          UniversalControlType ctrlType = UniversalControlType.getControlType(formViewItem.getColType());
+          if ((ctrlType != UniversalControlType.Camera)&&
+               (ctrlType != UniversalControlType.CheckListForm)){
+             reportColumns.add(formViewItem);
+          }
+       }
+       float percentPerCol = 60.00f/reportColumns.size();
+       if (godownCheckInList != null){
+          for(CarInspectStampLocation godownLoc : godownCheckInList){
+             String locationName = 
+                   this.getString(R.string.txt_customer_survey_site_amount,godownLoc.getSiteAddress());
+             
+             ArrayList<JobRequestProduct> jobRequestProductList = 
+                   dataAdapter.findUniversalJobRequestProduct(currentTask.getJobRequest().getJobRequestID(),
+                         godownLoc.getCustomerSurveySiteID());             
+             strBld.append("<table width=\"100%\" border=\"0\">");
+             strBld.append("<tr>");
+             
+             strBld.append("<td width=\"40%\">&nbsp;</td>");
+             for(InspectFormView col : reportColumns){
+                strBld.append("<td width=\""+percentPerCol+"%\">"+col.getColTextDisplay()+"</td>");
+             }
+             strBld.append(" </tr>");
+             strBld.append("<tr>");
+             //1 is location column
+             strBld.append("<td colspan=\""+(reportColumns.size()+1)+"\">"+locationName+"</td>");
+             strBld.append(" </tr>");
+             if (jobRequestProductList != null)
+             {
+                for(JobRequestProduct jrp : jobRequestProductList){
+                   strBld.append("<tr>");
+                   strBld.append("<td></td>");
+                   for(InspectFormView col : reportColumns){
+                      strBld.append("<td>"+UniversalListEntryAdapter.invokeGetValue(jrp, col)+"</td>");
+                   }
+                   strBld.append("</tr>");
+                }
+             }
+             strBld.append("</table>");
+          }
+       }
+       strBld.append("</body>");
 	   strBld.append("</html>");
 	   return strBld.toString();
 	}

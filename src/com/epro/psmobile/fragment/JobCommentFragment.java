@@ -477,7 +477,9 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 						if (holder.taskFormTemplate != null)
 						{
 							TaskFormDataSaved dataSaved = null;
-							if (holder.taskFormTemplate.getControlType() == TaskControlType.SimpleText)
+							if ((holder.taskFormTemplate.getControlType() == TaskControlType.SimpleText)||
+							    (holder.taskFormTemplate.getControlType() == TaskControlType.SimpleTextDecimal)||
+							    (holder.taskFormTemplate.getControlType() == TaskControlType.SimpleTextDate))
 							{
 								dataSaved = new TaskFormDataSaved();
 								dataSaved.setTaskFormAttributeID(holder.taskFormTemplate.getTaskFormAttributeID());
