@@ -416,7 +416,7 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
                                for(InspectDataObjectSaved objSave : objSaveds){
                                   if (objSave.getInspectDataObjectID() == objId){
                                      String name = "";
-                                     if ((objSave.getObjectName() != null)&&(objSave.getObjectName().equalsIgnoreCase("null"))){
+                                     if ((objSave.getObjectName() != null)&&(!objSave.getObjectName().equalsIgnoreCase("null"))){
                                         name = objSave.getObjectName().trim();
                                      }
                                      strBld.append("<td>"+objSave.getInspectDataObjectID()+","+name+"</td>");
@@ -661,38 +661,40 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
                    photoSavedList =
                          dataAdapter.getInspectDataObjectPhotoSaved(photoSetId);
              
-                   i = 1;
-                   for(InspectDataObjectPhotoSaved photoSaved : photoSavedList )
+                   if (photoSavedList != null)
                    {
-                       String cameraNo = this.getString(R.string.report_camera_no, (i++)+"");
-                       strBld.append("<u><p>"+cameraNo+"</u></p>");                        
-                       String encodeBase64 = 
-                               ImageUtil.convertImageToBase64(ImageUtil.getResizedBitmapFromFile(photoSaved.getFileName()));
-                       if (encodeBase64 != null)
-                       {
-                           strBld.append("<p><img src=\"data:image/jpg;base64,"+encodeBase64+"\" width=\"90%\"/></p>");
-                       }
-                       try{
-                           String[] splits = 
-                                   photoSaved.getInspectDataTextSelected().split("\r\n");
-                           StringBuilder s = new StringBuilder();
-                           strBld.append("<p>");
-                           for(String ss : splits)
-                           {
-                               if (ss.isEmpty())continue;
-                               
-                               String result = DataUtil.removePID(ss);
-                               
-                               strBld.append(result+"<br/>");
-                           }
-                           strBld.append("</p>");
-                       }catch(Exception e){
-                           strBld.append("<p>"+photoSaved.getInspectDataTextSelected().replace("\r\n", "</br>")+"</p>");                           
-                       }
-                       strBld.append("<p>"+photoSaved.getAngleDetail()+"</p>");
-                       strBld.append("<p>"+photoSaved.getComment()+"</p>");
+                      i = 1;
+                      for(InspectDataObjectPhotoSaved photoSaved : photoSavedList )
+                      {
+                          String cameraNo = this.getString(R.string.report_camera_no, (i++)+"");
+                          strBld.append("<u><p>"+cameraNo+"</u></p>");                        
+                          String encodeBase64 = 
+                                  ImageUtil.convertImageToBase64(ImageUtil.getResizedBitmapFromFile(photoSaved.getFileName()));
+                          if (encodeBase64 != null)
+                          {
+                              strBld.append("<p><img src=\"data:image/jpg;base64,"+encodeBase64+"\" width=\"90%\"/></p>");
+                          }
+                          try{
+                              String[] splits = 
+                                      photoSaved.getInspectDataTextSelected().split("\r\n");
+                              StringBuilder s = new StringBuilder();
+                              strBld.append("<p>");
+                              for(String ss : splits)
+                              {
+                                  if (ss.isEmpty())continue;
+                                  
+                                  String result = DataUtil.removePID(ss);
+                                  
+                                  strBld.append(result+"<br/>");
+                              }
+                              strBld.append("</p>");
+                          }catch(Exception e){
+                              strBld.append("<p>"+photoSaved.getInspectDataTextSelected().replace("\r\n", "</br>")+"</p>");                           
+                          }
+                          strBld.append("<p>"+photoSaved.getAngleDetail()+"</p>");
+                          strBld.append("<p>"+photoSaved.getComment()+"</p>");
+                      }                  
                    }
-                   
                 }
              }
           }          

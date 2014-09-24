@@ -563,4 +563,7 @@
     <string name="text_current_page">อยู่ที่หน้า %1$s จากจำนวน %2$s หน้า</string>
     
     <string name="text_hint_date_input">คลิกที่ช่องเพื่อกรอกข้อมูลวัน</string>
+    
+    <string name="key_word_search_poi">ปั๊ม</string>
+    <string name="open_route_guide">คุณต้องการเส้นทางไปหรือไม่?</string>
 </resources>

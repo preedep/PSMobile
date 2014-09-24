@@ -93,7 +93,7 @@ CREATE TABLE JobRequestProduct
 	tNo TEXT,
 	tCode TEXT,
 	tSize TEXT,
-	tWeight TEXT,
+	tWeight INTEGER,
 	mContractNo TEXT,
 	mFixedAssetNumber TEXT,
 	mAssetName TEXT,

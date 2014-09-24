@@ -851,7 +851,7 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 	       /*
 	        *   show list for car
 	        */
-	       if (jobRequest.getInspectType().getInspectProductType() == InspectServiceSupportUtil.SERVICE_CAR_INSPECT){
+	       if (jobRequest.getInspectType().getInspectTypeID() == InspectServiceSupportUtil.SERVICE_CAR_INSPECT){
 	             inspectDataSavedSpinner.initial(
 	                   jobRequestProduct,
 	                   taskCode,

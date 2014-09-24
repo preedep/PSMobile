@@ -64,5 +64,10 @@ public class CustomerInfoDetailFragmentPageAdapter extends
 		// TODO Auto-generated method stub
 		return CUSTOMER_INFO_PAGE_COUNT;
 	}
+	/*
+	@Override
+	public int getItemPosition(Object object) {
+	    return POSITION_NONE;
+	}*/
 
 }

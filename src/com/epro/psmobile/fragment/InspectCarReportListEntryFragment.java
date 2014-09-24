@@ -590,23 +590,25 @@ public class InspectCarReportListEntryFragment extends InspectReportListFragment
                ArrayList<JobRequestProduct> tmps =  
                      dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID());
 
-               for(JobRequestProduct item_tmp : tmps){
-                  boolean hasData = false;
-                  for(JobRequestProduct rp : requestProducts)
-                  {
-                       if (item_tmp.getcVin().equalsIgnoreCase(rp.getcVin())){
-                          hasData = true;
-                          break;
-                       }
+               if (tmps != null)
+               {
+                  for(JobRequestProduct item_tmp : tmps){
+                     boolean hasData = false;
+                     for(JobRequestProduct rp : requestProducts)
+                     {
+                          if (item_tmp.getcVin().equalsIgnoreCase(rp.getcVin())){
+                             hasData = true;
+                             break;
+                          }
+                     }
+                     if (!hasData){
+                        requestProducts.add(item_tmp);
+                     }
                   }
-                  if (!hasData){
-                     requestProducts.add(item_tmp);
-                  }
+                  dataAdapter.insertCarJobRequestProduct(InspectReportListFragment.jobRequest.getJobRequestID(), 
+                        requestProducts);  
                }
-               dataAdapter.insertCarJobRequestProduct(InspectReportListFragment.jobRequest.getJobRequestID(), 
-                     requestProducts);
                SharedPreferenceUtil.saveCarInspectDataModified(getActivity(), false);//reset flag , save every thing
-               
                ret = true;
             }
             catch (Exception e) {
