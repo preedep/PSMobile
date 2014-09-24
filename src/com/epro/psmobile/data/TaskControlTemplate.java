@@ -15,9 +15,11 @@ public class TaskControlTemplate implements DbCursorHolder {
 		Slider(6),
 		Dropdownlist(7),
 		RadioBoxListAndDropdown(9),
-		Label(10);
+		Label(10),
+		SimpleTextSingleLine(11),
+		SimpleTextDecimalSingleLine(12);
 		
-		private int code;
+	     private int code;
 		TaskControlType(int code)
 		{
 			this.code = code;

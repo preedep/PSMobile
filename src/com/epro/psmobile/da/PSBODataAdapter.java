@@ -1452,6 +1452,16 @@ String sql = " select * , ( " +
 		return query(sql,InspectDataObjectPhotoSaved.class);
 	}
 	public synchronized ArrayList<InspectDataObjectPhotoSaved> getInspectDataObjectPhotoSaved(String taskCode,
+          int customerSurveySiteID,int photoID)
+	      throws Exception
+	      {
+	          String sql = "select * from InspectDataObjectPhotoSaved ";
+	          sql += "where taskCode='"+taskCode+"' and ";
+	                sql += " customerSurveySiteID="+customerSurveySiteID;
+	          sql += " and photoID="+photoID;
+	          return query(sql,InspectDataObjectPhotoSaved.class);
+	      }
+	public synchronized ArrayList<InspectDataObjectPhotoSaved> getInspectDataObjectPhotoSaved(String taskCode,
 			int customerSurveySiteID)
 			throws Exception
 	{

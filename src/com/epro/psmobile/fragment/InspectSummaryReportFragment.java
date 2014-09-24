@@ -645,11 +645,85 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
        strBld.append("<p><u>"+this.getString(R.string.report_inspection_products_photos)+"</u></p>");
        
        if (godownCheckInList != null){
-          for(CarInspectStampLocation godownLoc : godownCheckInList){
+          for(CarInspectStampLocation godownLoc : godownCheckInList)
+          {
              String locationName = 
                    this.getString(R.string.txt_customer_survey_site_amount,godownLoc.getSiteAddress());
              
              strBld.append(locationName+"<br/>");
+             
+             
+             ArrayList<InspectDataObjectSaved> objSaveds = 
+                   dataAdapter.getInspectDataObjectSaved(currentTask.getTaskCode(), godownLoc.getCustomerSurveySiteID());
+             
+             if (objSaveds != null){
+                
+                   boolean hasFirstCamera = false;
+                   ArrayList<InspectDataItem> dataItems = 
+                         dataAdapter.getAllInspectDataItem();
+                   
+                   for(InspectDataObjectSaved objSaved : objSaveds)
+                   {
+                       for(InspectDataItem item : dataItems)
+                       {
+                          if (objSaved.getInspectDataItemID() == item.getInspectDataItemID())
+                          {
+                             if (item.isCameraObject())
+                             {
+                                   int photoSetId = objSaved.getPhotoID();
+                                   if (!hasFirstCamera){
+                                      strBld.append("<p><u>"+this.getString(R.string.report_inspection_general_photos)+"</u></p>");
+                                      hasFirstCamera = true;
+                                   }
+                                   /*
+                                    */
+                                   photoSavedList =
+                                         dataAdapter.getInspectDataObjectPhotoSaved(currentTask.getTaskCode(),
+                                               godownLoc.getCustomerSurveySiteID(),
+                                               photoSetId);
+                             
+                                   if (photoSavedList != null)
+                                   {
+                                      i = 1;
+                                      for(InspectDataObjectPhotoSaved photoSaved : photoSavedList )
+                                      {
+                                          String cameraNo = this.getString(R.string.report_camera_no, (i++)+"");
+                                          strBld.append("<u><p>"+cameraNo+"</u></p>");                        
+                                          String encodeBase64 = 
+                                                  ImageUtil.convertImageToBase64(ImageUtil.getResizedBitmapFromFile(photoSaved.getFileName()));
+                                          if (encodeBase64 != null)
+                                          {
+                                              strBld.append("<p><img src=\"data:image/jpg;base64,"+encodeBase64+"\" width=\"90%\"/></p>");
+                                          }
+                                          try{
+                                              String[] splits = 
+                                                      photoSaved.getInspectDataTextSelected().split("\r\n");
+                                              StringBuilder s = new StringBuilder();
+                                              strBld.append("<p>");
+                                              for(String ss : splits)
+                                              {
+                                                  if (ss.isEmpty())continue;
+                                                  
+                                                  String result = DataUtil.removePID(ss);
+                                                  
+                                                  strBld.append(result+"<br/>");
+                                              }
+                                              strBld.append("</p>");
+                                          }catch(Exception e){
+                                              strBld.append("<p>"+photoSaved.getInspectDataTextSelected().replace("\r\n", "</br>")+"</p>");                           
+                                          }
+                                          strBld.append("<p>"+photoSaved.getAngleDetail()+"</p>");
+                                          strBld.append("<p>"+photoSaved.getComment()+"</p>");
+                                      }                  
+                                   }
+                                   
+                                   ////////////
+                             }
+                             break;
+                          }
+                       }
+                   }
+             }
              
              ArrayList<JobRequestProduct> jobRequestProductList = 
                    dataAdapter.findUniversalJobRequestProduct(currentTask.getJobRequest().getJobRequestID(),

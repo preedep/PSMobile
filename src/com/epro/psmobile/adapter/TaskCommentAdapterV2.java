@@ -223,7 +223,10 @@ public class TaskCommentAdapterV2 extends BaseAdapter {
 			{
 				case SimpleTextDecimal:
 				case SimpleTextDate:		
-				case SimpleText:{
+				case SimpleText:
+				case SimpleTextSingleLine:
+				case SimpleTextDecimalSingleLine:
+				{
 			
 					int resId = 0;
 					

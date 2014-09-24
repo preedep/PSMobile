@@ -57,6 +57,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -809,9 +810,12 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             float colWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                   100, 
                   context.getResources().getDisplayMetrics());
+            
             float colHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                   60, 
                   context.getResources().getDisplayMetrics());
+            
+            // float colHeight = LayoutParams.WRAP_CONTENT;
             
             if (formView.getColWidth() >= 0){
                colWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
@@ -1065,6 +1069,14 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                if (viewForm.isColHidden()){
                   v.setVisibility(View.GONE);
                }
+               /*
+               LayoutParams layoutParam = ((ViewGroup)vContainer).getLayoutParams();
+               
+               LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                     layoutParam.width, LayoutParams.WRAP_CONTENT);
+                 params.gravity = Gravity.CENTER_VERTICAL;
+                 ((ViewGroup)vContainer).setLayoutParams(params);
+                 */
                ((ViewGroup)vContainer).addView(v);
             }
          }

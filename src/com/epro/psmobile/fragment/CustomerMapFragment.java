@@ -405,7 +405,7 @@ public class CustomerMapFragment extends GMapBaseFragment implements
          protected GooglePlacesResult doInBackground(GeoPoint... params) {
             // TODO Auto-generated method stub
             
-            String types = "cafe|restaurant";//getString(R.string.key_word_search_poi);
+            String types = "gas_station";//getString(R.string.key_word_search_poi);
 
             // Radius in meters - increase this value if you don't find any
             // places
