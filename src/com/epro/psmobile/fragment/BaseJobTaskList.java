@@ -8,6 +8,7 @@ import java.util.Date;
 
 import android.widget.ListView;
 
+import com.epro.psmobile.PsMainActivity;
 import com.epro.psmobile.R;
 import com.epro.psmobile.adapter.JobPlanItem;
 import com.epro.psmobile.adapter.JobPlanItemsAdapter;
@@ -22,6 +23,7 @@ import com.epro.psmobile.data.TaskResend;
 import com.epro.psmobile.data.TaskResponseList;
 import com.epro.psmobile.data.TaskStatus;
 import com.epro.psmobile.fragment.CommonListMenuFragment.MenuGroupTypeCmd;
+import com.epro.psmobile.location.PSMobileLocationManager;
 import com.epro.psmobile.util.DataUtil;
 
 public abstract class BaseJobTaskList extends ContentViewBaseFragment {
@@ -483,6 +485,17 @@ public abstract class BaseJobTaskList extends ContentViewBaseFragment {
 				/*taskResendResponseList,*/
 				taskCompleteResponseList
 				);
+		
+		 PSMobileLocationManager locManager = null;
+		 if (locManager == null)
+         {
+            PsMainActivity a = null;
+            if (getSherlockActivity() instanceof PsMainActivity){
+               a = (PsMainActivity)getSherlockActivity();
+               locManager = a.getLocationManager();
+               itemAdapter.setCurrentLocation(locManager.getLastknowLocation());
+            }
+         }
 		lv.setAdapter(itemAdapter);
 		
 	}

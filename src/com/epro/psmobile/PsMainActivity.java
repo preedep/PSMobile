@@ -82,6 +82,9 @@ public class PsMainActivity extends /*PsLayoutBaseActivity*/PsBaseActivity imple
 	private SyncDialog syncDialog;
 	private InfoDialog infoDialog;
 	
+	public PSMobileLocationManager getLocationManager(){
+	   return locManager;
+	}
 	private static boolean showAlertNotLogout = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -689,6 +692,7 @@ public class PsMainActivity extends /*PsLayoutBaseActivity*/PsBaseActivity imple
 	public void onLocationUpdated(Location location) {
 		// TODO Auto-generated method stub
 		//this.sendBroadcast(intent)
+	    Log.d("DEBUG_D", "Send bdx location updated!!");
 		Intent intent = new Intent();
 		intent.setAction(InstanceStateKey.BDX_LOC_UPDATED_ACTION);
 		intent.putExtra(InstanceStateKey.KEY_BDX_LOC_UPDATED, location);

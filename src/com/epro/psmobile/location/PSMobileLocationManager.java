@@ -51,7 +51,8 @@ public class PSMobileLocationManager implements LocationListener {
 	{
 		if (locationManager != null)
 		{
-			//String bestProvider = locationManager.getBestProvider(LocationProviderCriteria.createFineCriteria(), false);
+			String bestProvider = locationManager.getBestProvider(LocationProviderCriteria.createFineCriteria(), false);
+			/*
 			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
 					LocationUtil.MIN_TIME_GPS, 
 					LocationUtil.MIN_DISTANCE, this);
@@ -62,8 +63,13 @@ public class PSMobileLocationManager implements LocationListener {
 			locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 
 					LocationUtil.MIN_TIME_PASSIVE, LocationUtil.MIN_DISTANCE, this);
 
-
-		}else{
+*/
+			if (locationManager != null){
+			   locationManager.removeUpdates(this);
+			}
+			locationManager.requestLocationUpdates(bestProvider, 
+                  LocationUtil.MIN_TIME_GPS, LocationUtil.MIN_DISTANCE, this);
+          		}else{
 			throw new Exception("Must call startAGALocationListener before.");
 		}
 	}
@@ -95,5 +101,8 @@ public class PSMobileLocationManager implements LocationListener {
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
 		
+	}
+	public Location getLastknowLocation(){
+	   return LocationUtil.getLastBestLocation(locationManager, 5, 10);
 	}
 }

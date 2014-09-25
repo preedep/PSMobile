@@ -811,8 +811,13 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   100, 
                   context.getResources().getDisplayMetrics());
             
+            int heightDp = 60;
+            if ((jobRequest.getInspectType().getInspectTypeID() == 5)||(jobRequest.getInspectType().getInspectTypeID() == 8))
+            {
+               heightDp = 60;
+            }
             float colHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                  60, 
+                  heightDp, 
                   context.getResources().getDisplayMetrics());
             
             // float colHeight = LayoutParams.WRAP_CONTENT;

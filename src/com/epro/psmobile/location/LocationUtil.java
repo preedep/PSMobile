@@ -7,7 +7,7 @@ import android.location.LocationManager;
 
 public class LocationUtil {
 
-	public final static int MIN_TIME_GPS = 300;
+	public final static int MIN_TIME_GPS = 100;
 	public final static int MIN_TIME_NETWORK = 500;
 	public final static int MIN_TIME_PASSIVE = 600;
 	

@@ -49,12 +49,30 @@
      android:layout_marginTop="10dp"        
      class="com.google.android.gms.maps.SupportMapFragment"/>
  -->
-     
-    <Button android:id="@+id/btn_my_location"
+    <LinearLayout 
+           android:layout_width="400dp"
+           android:layout_height="60dp"
+           android:orientation="horizontal"
+           android:layout_alignRight="@id/mapview"            
+           android:gravity="center"
+           android:padding="10dp"
+        >
+    <Spinner 
+          android:id="@+id/sp_locations"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"          
+        />
+    <Button android:id="@+id/btn_go_to_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-			android:layout_alignRight="@id/mapview"            
             android:padding="3dp"
-            android:visibility="gone"
-            android:text="Me"/>
+            android:text="Go"/>
+    <Button  android:id="@+id/btn_reset_to_my_location"
+        android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:text="Reset"/>
+    		
+    </LinearLayout>
 </RelativeLayout>

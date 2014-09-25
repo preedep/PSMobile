@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 
+import com.epro.psmobile.PsMainActivity;
 import com.epro.psmobile.R;
 import com.epro.psmobile.TeamTimeAttendanceActivity;
 import com.epro.psmobile.adapter.JobPlanItem;
@@ -24,6 +25,7 @@ import com.epro.psmobile.dialog.InfoDialog;
 import com.epro.psmobile.dialog.TaskDuplicateDialog;
 import com.epro.psmobile.fragment.CommonListMenuFragment.MenuGroupTypeCmd;
 import com.epro.psmobile.key.params.InstanceStateKey;
+import com.epro.psmobile.location.PSMobileLocationManager;
 //import com.epro.psmobile.report.InspectReportObject;
 //import com.epro.psmobile.report.PDFFileWriter;
 import com.epro.psmobile.util.ActivityUtil;
@@ -68,6 +70,7 @@ com.epro.psmobile.fragment.ContentViewBaseFragment.BoardcastLocationListener
 	private ArrayList<InspectType> allInspectType = null;
 	private TaskStatus status = TaskStatus.NOT;
 	private WhereInStatus whereInStatus = WhereInStatus.TO_DO_TASK;
+	private PSMobileLocationManager locManager = null;
 
 	public TaskListFragment() {
 		// TODO Auto-generated constructor stub
@@ -109,12 +112,41 @@ com.epro.psmobile.fragment.ContentViewBaseFragment.BoardcastLocationListener
 		initialViews(currentContentView);
 		return currentContentView;
 	}
-	private void initialViews(View currentContentView)
+	/* (non-Javadoc)
+    * @see android.support.v4.app.Fragment#onDestroyView()
+    */
+   @Override
+   public void onDestroyView() {
+      // TODO Auto-generated method stub
+      super.onDestroyView();
+      if (locManager != null)
+      {
+         locManager.stopRequestLocationUpdated();
+      }
+   }
+   private void initialViews(View currentContentView)
 	{
 		 lvJobPlan = (ListView)currentContentView.findViewById(R.id.lv_fragment_task_list);
 		 registerForContextMenu(lvJobPlan);
 
-		 setBoardcastLocationListener(this);
+		 if (locManager == null)
+		 {
+		    PsMainActivity a = null;
+		    if (getSherlockActivity() instanceof PsMainActivity){
+		       a = (PsMainActivity)getSherlockActivity();
+		       locManager = a.getLocationManager();
+		    }
+		 }
+		 
+		 try 
+		 {
+	        setBoardcastLocationListener(this);
+		    locManager.requestLocationUpdated();
+		 }
+		 catch (Exception e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		 }
 		/*
 		 Query task
 		 and add tasks to JobPlanItems
@@ -901,6 +933,13 @@ com.epro.psmobile.fragment.ContentViewBaseFragment.BoardcastLocationListener
 					selectedInspectType,
 					allInspectType,
 					groupCmd,TaskListType.DO_TASK,whereInStatus);
+			
+			/*
+			if (this.locManager != null){
+	            JobPlanItemsAdapter adapter = (JobPlanItemsAdapter)lvJobPlan.getAdapter();
+	            adapter.setCurrentLocation(locManager.getLastknowLocation());
+	            adapter.notifyDataSetChanged();			   
+			}*/
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -909,6 +948,7 @@ com.epro.psmobile.fragment.ContentViewBaseFragment.BoardcastLocationListener
 	@Override
 	public void onBoardcastLocationUpdated(Location currentLocation) {
 		// TODO Auto-generated method stub
+	    Log.d("DEBUG_D", "Location updated!!!");
 		if (lvJobPlan != null)
 		{
 			JobPlanItemsAdapter adapter = (JobPlanItemsAdapter)lvJobPlan.getAdapter();

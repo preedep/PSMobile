@@ -479,7 +479,9 @@ public class JobCommentFragment extends ContentViewBaseFragment {
 							TaskFormDataSaved dataSaved = null;
 							if ((holder.taskFormTemplate.getControlType() == TaskControlType.SimpleText)||
 							    (holder.taskFormTemplate.getControlType() == TaskControlType.SimpleTextDecimal)||
-							    (holder.taskFormTemplate.getControlType() == TaskControlType.SimpleTextDate))
+							    (holder.taskFormTemplate.getControlType() == TaskControlType.SimpleTextDate)||
+							    (holder.taskFormTemplate.getControlType() == TaskControlType.SimpleTextSingleLine)||
+							    (holder.taskFormTemplate.getControlType() == TaskControlType.SimpleTextDecimalSingleLine))
 							{
 								dataSaved = new TaskFormDataSaved();
 								dataSaved.setTaskFormAttributeID(holder.taskFormTemplate.getTaskFormAttributeID());

@@ -58,7 +58,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import com.epro.psmobile.fragment.ContentViewBaseFragment.BoardcastLocationListener;
 import com.epro.psmobile.fragment.MyMapFragment.MapCallback;
 /**
@@ -87,7 +93,8 @@ class MyMapFragment extends SupportMapFragment
 }
 
 public class CustomerMapFragment extends GMapBaseFragment implements 
- OnMyLocationChangeListener, OnInfoWindowClickListener, OnMapLongClickListener
+ OnMyLocationChangeListener, 
+ OnInfoWindowClickListener, OnMapLongClickListener, OnItemSelectedListener, OnClickListener
 {
 
 	
@@ -99,6 +106,7 @@ public class CustomerMapFragment extends GMapBaseFragment implements
 	
 	private SupportMapFragment mapFragment;
 	private ArrayList<CustomerSurveySite> surveySites;
+	private CustomerSurveySite currentSurveySite;
 	private JobRequest jobRequest;
 	
 	private boolean hasShowCustomerSite = false;
@@ -111,6 +119,7 @@ public class CustomerMapFragment extends GMapBaseFragment implements
 	private ArrayList<Marker> customerSiteMarkList;
 	private ArrayList<Marker> poiMarkList;
 	private boolean zoomInFirstTime = false;
+	private boolean zoomToSite = false;
 	public static CustomerMapFragment newInstance(Task task,JobRequest jobRequest)
 	{
 		CustomerMapFragment customerMap = new CustomerMapFragment();
@@ -135,6 +144,75 @@ public class CustomerMapFragment extends GMapBaseFragment implements
 		try
 		{
 			customerMapView = inflater.inflate(R.layout.customer_map, container, false);
+			
+			Button btnGoToLocation = (Button)customerMapView.findViewById(R.id.btn_go_to_location);
+			btnGoToLocation.setOnClickListener(this);
+			Button btnReset = (Button)customerMapView.findViewById(R.id.btn_reset_to_my_location);
+			btnReset.setOnClickListener(this);
+			
+			Spinner customerSites = 
+			      (Spinner)customerMapView.findViewById(R.id.sp_locations);
+			if (customerSites != null)
+			{
+			    Bundle bArgument = this.getArguments();
+	            if (bArgument != null)
+	            {
+	                jobRequest =  (JobRequest)bArgument.getParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL);
+	                task = (Task)bArgument.getParcelable(InstanceStateKey.KEY_ARGUMENT_TASK);
+	                PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(this.getActivity());
+	                surveySites = dataAdapter.findCustomerSurveySite(
+	                        task.getTaskID()
+	                        );
+	            }
+			   if (surveySites != null)
+			   {
+			      CustomerSurveySite[] arraySites = new CustomerSurveySite[surveySites.size()];
+			      surveySites.toArray(arraySites);
+			      
+			      ArrayAdapter<CustomerSurveySite> spinnerArrayAdapter = new ArrayAdapter<CustomerSurveySite>(
+			            getSherlockActivity(),
+			            android.R.layout.simple_spinner_item,
+			            arraySites) //selected item will look like a spinner set from XML
+			      {
+
+                  /* (non-Javadoc)
+                   * @see android.widget.ArrayAdapter#getDropDownView(int, android.view.View, android.view.ViewGroup)
+                   */
+                  @Override
+                  public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                     // TODO Auto-generated method stub
+                     View v = View.inflate(getContext(), android.R.layout.simple_spinner_item, null);//super.getDropDownView(position, convertView, parent);
+                     if (v != null){
+                        TextView tv = (TextView)v.findViewById(android.R.id.text1);
+                        if (surveySites.size()-1 >= position){
+                           CustomerSurveySite site = surveySites.get(position);
+                           tv.setText(site.getSiteAddress());                           
+                        }
+                     }
+                     return v;
+                  }
+
+                  /* (non-Javadoc)
+                   * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+                   */
+                  @Override
+                  public View getView(int position, View convertView, ViewGroup parent) {
+                     // TODO Auto-generated method stub
+                     View v = super.getView(position, convertView, parent);
+                     TextView tv = (TextView)v.findViewById(android.R.id.text1);
+                     CustomerSurveySite site = surveySites.get(position);
+                     tv.setText(site.getSiteAddress());
+                     return v;
+                  }
+			         
+			      };
+			      //spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+
+			      customerSites.setAdapter(spinnerArrayAdapter);
+			      customerSites.setOnItemSelectedListener(this);
+			      customerSites.setSelection(0);
+			   }
+			}
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
@@ -315,6 +393,9 @@ public class CustomerMapFragment extends GMapBaseFragment implements
 						task.getTaskID()
 						);
 				
+				
+				
+				
 			}
 		}catch(Exception ex)
 		{
@@ -482,6 +563,8 @@ public class CustomerMapFragment extends GMapBaseFragment implements
       // TODO Auto-generated method stub
          Log.d("DEBUG_D", "my location change");
          
+         if (zoomToSite)return;
+         
          
          int lat = (int) (location.getLatitude() * 1E6);
          int lng = (int) (location.getLongitude() * 1E6);
@@ -492,10 +575,12 @@ public class CustomerMapFragment extends GMapBaseFragment implements
          
          if (previousLocation == null){
             previousLocation = location;
+            nextPage = null;
             new LoadGooglePlaces().execute(point);
          }else{
             if (previousLocation.distanceTo(location) >= 500){
                previousLocation = location;
+               nextPage = null;
                new LoadGooglePlaces().execute(point);
             }
          }
@@ -552,5 +637,55 @@ public class CustomerMapFragment extends GMapBaseFragment implements
              break;
          }
      }
+   }
+   @Override
+   public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+      // TODO Auto-generated method stub
+      Object obj = parent.getSelectedItem();
+      if (obj instanceof CustomerSurveySite){
+         currentSurveySite = (CustomerSurveySite)obj;
+      }
+   }
+   @Override
+   public void onNothingSelected(AdapterView< ? > arg0) {
+      // TODO Auto-generated method stub
+      
+   }
+   @Override
+   public void onClick(View v) {
+      // TODO Auto-generated method stub
+      int id = v.getId();
+      if (id == R.id.btn_go_to_location)
+      {
+         if ((customerSiteMarkList != null)&&(currentSurveySite != null))
+         {
+            for(Marker m : customerSiteMarkList){
+               if (m.getSnippet().equalsIgnoreCase(currentSurveySite.getSiteAddress())){
+                  /*
+                   * zoom to
+                   */
+                  map.moveCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(), 15));
+                  map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null); 
+
+                  
+                  int lat = (int) (m.getPosition().latitude * 1E6);
+                  int lng = (int) (m.getPosition().longitude * 1E6);
+                  
+                  
+                  GeoPoint point = new GeoPoint(lat, lng);
+                 
+                  zoomToSite = true;
+                  nextPage = null;
+                  new LoadGooglePlaces().execute(point);
+                  
+                  break;
+               }
+            }
+         }
+      }else if (id == R.id.btn_reset_to_my_location){
+         zoomToSite = false;
+         zoomInFirstTime = false;
+         previousLocation = null;
+      }
    }
 }

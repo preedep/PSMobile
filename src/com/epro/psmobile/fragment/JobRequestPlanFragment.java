@@ -6,6 +6,7 @@ package com.epro.psmobile.fragment;
 import java.util.ArrayList;
 
 import com.epro.psmobile.PsDrawLayoutActivity;
+import com.epro.psmobile.PsMainActivity;
 import com.epro.psmobile.R;
 import com.epro.psmobile.adapter.JobPlanItem;
 import com.epro.psmobile.adapter.JobPlanItemsAdapter;
@@ -23,6 +24,7 @@ import com.epro.psmobile.dialog.TaskManagementDialog.TaskManagementType;
 import com.epro.psmobile.dialog.TaskManagementDialog.TaskManagementValue;
 import com.epro.psmobile.fragment.CommonListMenuFragment.MenuGroupTypeCmd;
 import com.epro.psmobile.key.params.InstanceStateKey;
+import com.epro.psmobile.location.PSMobileLocationManager;
 
 import android.content.Intent;
 import android.location.Location;
@@ -63,6 +65,8 @@ implements com.epro.psmobile.fragment.ContentViewBaseFragment.BoardcastLocationL
 	private ArrayList<InspectType> allInspectType = null;
 	private TaskStatus status = TaskStatus.NOT;
 	private WhereInStatus whereInStatus = WhereInStatus.DO_PLAN_TASK;
+	
+	private PSMobileLocationManager locManager;
 	
 	/**
 	 * 
@@ -107,7 +111,18 @@ implements com.epro.psmobile.fragment.ContentViewBaseFragment.BoardcastLocationL
 		initialViews(currentContentView);
 		return currentContentView;		
 	}
-	
+	   /* (non-Javadoc)
+	    * @see android.support.v4.app.Fragment#onDestroyView()
+	    */
+	   @Override
+	   public void onDestroyView() {
+	      // TODO Auto-generated method stub
+	      super.onDestroyView();
+	      if (locManager != null)
+	      {
+	         locManager.stopRequestLocationUpdated();
+	      }
+	   }
 	private void initialViews(View currentContentView){
 		/**
 		 Query task
@@ -121,8 +136,26 @@ implements com.epro.psmobile.fragment.ContentViewBaseFragment.BoardcastLocationL
 		lvJobPlan = (ListView)currentContentView.findViewById(R.id.lv_fragment_task_plan_list);
 		registerForContextMenu(lvJobPlan);	
 
-		setBoardcastLocationListener(this);
+		//setBoardcastLocationListener(this);
 		
+		 if (locManager == null)
+         {
+            PsMainActivity a = null;
+            if (getSherlockActivity() instanceof PsMainActivity){
+               a = (PsMainActivity)getSherlockActivity();
+               locManager = a.getLocationManager();
+            }
+         }
+         
+         try 
+         {
+            setBoardcastLocationListener(this);
+            locManager.requestLocationUpdated();
+         }
+         catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
 		ArrayList<Task> tasks = null;
 		/*
 		try {
