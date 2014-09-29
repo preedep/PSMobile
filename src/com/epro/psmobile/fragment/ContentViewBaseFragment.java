@@ -197,7 +197,6 @@ public abstract class ContentViewBaseFragment extends SherlockFragment  {
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		this.getActivity().unregisterReceiver(mLocationReceiver);
 	}
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onResume()
@@ -206,10 +205,18 @@ public abstract class ContentViewBaseFragment extends SherlockFragment  {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		IntentFilter filter = new IntentFilter(InstanceStateKey.BDX_LOC_UPDATED_ACTION);
-		this.getActivity().registerReceiver(mLocationReceiver, filter);
+		
+			
 	}
+	protected void registerLocationListener(){
+	   IntentFilter filter = new IntentFilter(InstanceStateKey.BDX_LOC_UPDATED_ACTION);
+       this.getActivity().registerReceiver(mLocationReceiver, filter);
+	}
+	protected void unregisterLocationListener(){
+	   if (mLocationReceiver != null)
+	      this.getActivity().unregisterReceiver(mLocationReceiver);
 
+	}
 	public Location getCurrentLocation(){
 		return this.currentLocation;
 	}

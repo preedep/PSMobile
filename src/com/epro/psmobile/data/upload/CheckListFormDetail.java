@@ -40,6 +40,7 @@ public class CheckListFormDetail implements UploadDataAdapter,JSONDataHolder {
 	private int chooseReasonSentenceID;
 	private String chooseReasonSentenceText;
 	
+	private int resultProductRowId;
 	public String parentId;
 	public String path;
 	
@@ -219,6 +220,7 @@ public class CheckListFormDetail implements UploadDataAdapter,JSONDataHolder {
 		JSONDataUtil.put(jsonObj,COLUMN_CHOOSE_REASON_SENTENCE_ID ,chooseReasonSentenceID);
 		JSONDataUtil.put(jsonObj,COLUMN_CHOOSE_REASON_SENTENCE_TEXT ,chooseReasonSentenceText);
 		
+		JSONDataUtil.put(jsonObj, "resultProductRowId", this.dataSaved.getProductRowId());
 		
 		JSONDataUtil.put(jsonObj, COLUMN_PARENT_ID, this.parentId);
 		JSONDataUtil.put(jsonObj, COLUMN_PATH, this.path);
@@ -243,5 +245,11 @@ public class CheckListFormDetail implements UploadDataAdapter,JSONDataHolder {
 	public void setQCTeam(boolean isQCTeam) {
 		this.isQCTeam = isQCTeam;
 	}
+   public int getResultProductRowId() {
+      return resultProductRowId;
+   }
+   public void setResultProductRowId(int resultProductRowId) {
+      this.resultProductRowId = resultProductRowId;
+   }
 
 }

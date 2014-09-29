@@ -1225,7 +1225,8 @@ public class DataUploadGenerator {
 			      }*/
 			      genGeneralPhoto(dataAdapter,task, rootUploadDataFolder,resultCheckJobImageList);
 			      
-			   }else
+			   }
+			   //else
 			   {
 			      /*
 			       * inspect type id = 1,2
@@ -1282,7 +1283,12 @@ public class DataUploadGenerator {
 	                                        }
 	                                    }                                   
 	                                }
-	                            }else if (taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleText){
+	                            }else if ((taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleText)||
+	                                      (taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleTextDate)||
+	                                      (taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleTextDecimal)||
+	                                      (taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleTextSingleLine)||
+	                                      (taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleTextDecimalSingleLine))
+	                            {
 	                                if ((taskFormDataSaved.getTaskDataValues() == null)||
 	                                    (taskFormDataSaved.getTaskDataValues().isEmpty())){
 	                                    continue;

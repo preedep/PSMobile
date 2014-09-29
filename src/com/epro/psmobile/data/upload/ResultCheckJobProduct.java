@@ -103,6 +103,9 @@ public class ResultCheckJobProduct extends JobRequestProduct
 			JSONDataUtil.put(jsonObj, COLUMN_MARKET_PRICE_ID, this.marketPriceID);
 		}
 		
+		JSONDataUtil.put(jsonObj, "godownId", this.customerSurveySiteID);
+		
+		
 		//JSONDataUtil.put(jsonObj, COLUMN_MARKET_PRICE,this.marketPrice);
 		/*
 		 * skip "productType", "itemNo", "productValueText", "jobRequestID", "productGroup", "productRowId"

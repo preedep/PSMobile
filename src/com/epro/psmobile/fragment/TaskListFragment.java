@@ -109,7 +109,11 @@ com.epro.psmobile.fragment.ContentViewBaseFragment.BoardcastLocationListener
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View currentContentView = inflater.inflate(R.layout.ps_fragment_task_list_view, container, false);
+		
+		super.registerLocationListener();
+        
 		initialViews(currentContentView);
+		
 		return currentContentView;
 	}
 	/* (non-Javadoc)
@@ -118,6 +122,8 @@ com.epro.psmobile.fragment.ContentViewBaseFragment.BoardcastLocationListener
    @Override
    public void onDestroyView() {
       // TODO Auto-generated method stub
+      super.unregisterLocationListener();
+      
       super.onDestroyView();
       if (locManager != null)
       {

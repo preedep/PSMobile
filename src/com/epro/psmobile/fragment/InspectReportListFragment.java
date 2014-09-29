@@ -731,6 +731,7 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	                  }
 	                  if (iCountInsertNewTmp > 0){
 	                     initial(currentView);
+	                     onListViewUpdated();
 	                  }
 	               }
 	            }
@@ -740,6 +741,8 @@ public abstract class InspectReportListFragment extends ContentViewBaseFragment 
 	            setupHeader(vGroupHeader);
 	            setupListView(lsView);
 	            initialControls(currentView);*/
+	            initial(currentView);
+                
 	            onListViewUpdated();
 	         }
 	      }

@@ -466,7 +466,7 @@ public class CustomerMapFragment extends GMapBaseFragment implements
 					         .position(siteLoc)
 					         .title(site.getCustomerName())
 					         .snippet(site.getSiteAddress())
-					         .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+					         .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin_holed_violet_normal)));
 					      
 					      customerSiteMarkList.add(m);
 					}
@@ -546,7 +546,7 @@ public class CustomerMapFragment extends GMapBaseFragment implements
                      .position(poiLoc)
                      .title(p.name)
                      .snippet(p.formatted_address)
-                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin_holed_violet_normal)));
+                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.poi)));
     
                      poiMarkList.add(m);
                      ////////////////
@@ -601,42 +601,58 @@ public class CustomerMapFragment extends GMapBaseFragment implements
       // TODO Auto-generated method stub
       mListener = null;
    }*/
+   @SuppressWarnings("unused")
    @Override
    public void onMapLongClick(LatLng latLng) {
       // TODO Auto-generated method stub
       if (poiMarkList == null)return;
       if (myMarker == null)return;
       
+      Marker tmp_destination = null;
       for(final Marker marker : poiMarkList) {
          if(Math.abs(marker.getPosition().latitude - latLng.latitude) < 0.05 && Math.abs(marker.getPosition().longitude - latLng.longitude) < 0.05) {
             // Toast.makeText(MapActivity.this, "got clicked", Toast.LENGTH_SHORT).show(); //do some stuff
-             MessageBox.showMessageWithConfirm(getSherlockActivity(), "", getString(R.string.open_route_guide), new MessageBox.MessageConfirmListener() {
-               
-               @Override
-               public void onConfirmed(MessageConfirmType confirmType) {
-                  // TODO Auto-generated method stub
-                  if (confirmType == MessageConfirmType.OK){
-                     String uri = String.format(Locale.getDefault(), 
-                           "http://maps.google.com/maps?saddr=%f,%f(%s)&daddr=%f,%f (%s)", myMarker.getPosition().latitude, 
-                           myMarker.getPosition().longitude, myMarker.getTitle(), marker.getPosition().latitude, marker.getPosition().longitude, marker.getTitle());
-                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                     intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                     
-                     
-                     StrictMode.ThreadPolicy old = StrictMode.getThreadPolicy();
-                     StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder(old)
-                         .permitDiskWrites()
-                         .build());
-
-                     startActivity(intent);
-                     
-                     StrictMode.setThreadPolicy(old);
-                  }
-               }
-            });
+            tmp_destination = marker;
              break;
          }
-     }
+      }
+      if (tmp_destination == null){
+         /*press on customer site*/
+         for(final Marker marker : customerSiteMarkList) {
+            if(Math.abs(marker.getPosition().latitude - latLng.latitude) < 0.05 && Math.abs(marker.getPosition().longitude - latLng.longitude) < 0.05) {
+               // Toast.makeText(MapActivity.this, "got clicked", Toast.LENGTH_SHORT).show(); //do some stuff
+               tmp_destination = marker;
+                break;
+            }
+         }         
+      }
+      final Marker destination = tmp_destination;
+      if (destination == null)return;
+      
+      MessageBox.showMessageWithConfirm(getSherlockActivity(), "", getString(R.string.open_route_guide), new MessageBox.MessageConfirmListener() {
+         
+         @Override
+         public void onConfirmed(MessageConfirmType confirmType) {
+            // TODO Auto-generated method stub
+            if (confirmType == MessageConfirmType.OK){
+               String uri = String.format(Locale.getDefault(), 
+                     "http://maps.google.com/maps?saddr=%f,%f(%s)&daddr=%f,%f (%s)", myMarker.getPosition().latitude, 
+                     myMarker.getPosition().longitude, myMarker.getTitle(), destination.getPosition().latitude, destination.getPosition().longitude, destination.getTitle());
+               Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+               intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+               
+               
+               StrictMode.ThreadPolicy old = StrictMode.getThreadPolicy();
+               StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder(old)
+                   .permitDiskWrites()
+                   .build());
+
+               startActivity(intent);
+               
+               StrictMode.setThreadPolicy(old);
+            }
+         }
+      });
    }
    @Override
    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
