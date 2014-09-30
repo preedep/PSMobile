@@ -109,7 +109,8 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
        DateInput(13),
        DateTimeInput(14),
        ProductUnit(15),
-       GodownList(16);
+       GodownList(16),
+       AddGodown(17);
        
        
        
@@ -170,9 +171,13 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       void onReload(int position);
       void onModified(View viewRow,int position);
    }
+   public interface OnRowContextOpenListener{
+      void onClickContextOpen(View view,JobRequestProduct jrp);
+   }
    
    private OnColumnInputChangeListener columnInputChangeListener;
    private OnOpenCommentActivity openCommentActivityListener;
+   private OnRowContextOpenListener rowContextOpenListener;
    
    private long mLastClickTime;
    
@@ -795,6 +800,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       if (convertView == null)
       {
          final View viewRow = inflater.inflate(R.layout.ps_activity_report_list_entry_row, parent, false);
+         viewRow.setLongClickable(true);
          view = viewRow;
          ViewGroup vGroup = (ViewGroup)viewRow;
          View vContainer = viewRow.findViewById(R.id.ll_report_list_entry_row_containers);
@@ -915,27 +921,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   btn.setGravity(Gravity.CENTER);
                   btn.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_device_access_camera,0,0,0);
-                  btn.setOnClickListener(new OnClickListener(){
-
-                     @Override
-                     public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        /*
-                         * 
-                         */
-                        JobRequestProduct jrp =  jobRequestProductList.get(position);
-//                        int photoSetID = jrp.getPhotoSetID();
-                     // TODO Auto-generated method stub
-                        if (getOnTakeCameraListener() != null)
-                        {
-                           getOnTakeCameraListener().onTakeCamera(jrp);
-                           /*
-                            * set modified
-                            */
-                        }
-                     }
-                     
-                  });
+                  
                   holder.viewRows[i] = vCamera;
                }break;
                case Layout:{
@@ -973,6 +959,20 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   btn.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_list,0,0,0);
                   holder.viewRows[i] = vCheckListForm;
+               }break;
+               case AddGodown:{
+                  View vCheckListForm = 
+                        inflater.inflate(R.layout.ps_activity_report_list_entry_column_camera, vGroup, false);
+                  //vCamera.getLayoutParams().width = (int)colWidth;
+                  if (vCheckListForm instanceof LinearLayout){
+                     ((LinearLayout)vCheckListForm).setGravity(Gravity.CENTER);
+                  }
+                  Button btn = (Button)vCheckListForm.findViewById(R.id.btn_report_list_entry_column_camera);
+                  btn.getLayoutParams().width = (int)colWidth;
+                  btn.setText("+/-");
+                  btn.setGravity(Gravity.CENTER);
+                  holder.viewRows[i] = vCheckListForm;
+
                }break;
                case ProductType:{
                   View vSpinner = 
@@ -1106,7 +1106,6 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             displayEachRow(view,position);
             holder.shown = true;                     
             holder.position = position;
-            
             //rowAtNeedToReload = -1;
       }
       return view;
@@ -1402,6 +1401,20 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                
                //////////////////////////////
             }break;
+            case AddGodown:{
+               final Button btn = (Button)vEachCol.findViewById(R.id.btn_report_list_entry_column_camera);
+               btn.setOnClickListener(new OnClickListener(){
+
+                  @Override
+                  public void onClick(View v) {
+                     // TODO Auto-generated method stub
+                     if (getRowContextOpenListener() != null){
+                        getRowContextOpenListener().onClickContextOpen(rowView,jrp);
+                     }
+                  }
+                  
+               });
+            }break;
             case CheckListForm:
             {
                final Button btn = (Button)vEachCol.findViewById(R.id.btn_report_list_entry_column_camera);
@@ -1442,6 +1455,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                });
             }
             break;
+            
             case DateInput:
             case DateTimeInput:{
                /*reuse btn camera*/
@@ -1527,12 +1541,14 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
            }
                 */
                final Button btn = (Button)vEachCol.findViewById(R.id.btn_report_list_entry_column_camera);
+               /*
                btn.post(new Runnable(){
 
                   @Override
                   public void run() {
                      // TODO Auto-generated method stub
-                     if (jrp.getPhotoSetID() > 0){
+                     if (jrp.getPhotoSetID() > 0)
+                     {
                         btn.setCompoundDrawablesWithIntrinsicBounds(
                               R.drawable.ic_device_access_camera_active,0,0,0);
                      }else{
@@ -1540,6 +1556,30 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                               R.drawable.ic_device_access_camera,0,0,0);
                      }
                      btn.invalidate();
+                  }
+                  
+               });*/
+               if (jrp.getPhotoSetID() > 0)
+               {
+                  btn.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_device_access_camera_active,0,0,0);
+               }else{
+                  btn.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_device_access_camera,0,0,0);
+               }
+               btn.setOnClickListener(new OnClickListener(){
+
+                  @Override
+                  public void onClick(View v) {
+                     // TODO Auto-generated method stub
+                     // TODO Auto-generated method stub
+                     if (getOnTakeCameraListener() != null)
+                     {
+                        getOnTakeCameraListener().onTakeCamera(jrp);
+                        /*
+                         * set modified
+                         */
+                     }
                   }
                   
                });
@@ -1631,7 +1671,8 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       if (getColumnInputChangeListener() != null){
          //save to data base
          getColumnInputChangeListener().onRowSaved(jrp);
-         lastPosition = jobRequestProductList.size()-1;
+         rowAtNeedToReload = 
+               lastPosition = jobRequestProductList.size()-1;
          notifyDataSetChanged();
          getColumnInputChangeListener().onReload(jobRequestProductList.size()-1);
       }
@@ -2243,6 +2284,14 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
 
    public void setOpenCommentActivityListener(OnOpenCommentActivity openCommentActivityListener) {
       this.openCommentActivityListener = openCommentActivityListener;
+   }
+
+   public OnRowContextOpenListener getRowContextOpenListener() {
+      return rowContextOpenListener;
+   }
+
+   public void setRowContextOpenListener(OnRowContextOpenListener rowContextOpenListener) {
+      this.rowContextOpenListener = rowContextOpenListener;
    }
   
 }

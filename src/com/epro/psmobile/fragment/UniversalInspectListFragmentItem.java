@@ -4,16 +4,23 @@ import java.util.ArrayList;
 
 import com.epro.psmobile.InspectPhotoEntryActivity;
 import com.epro.psmobile.R;
+import com.epro.psmobile.adapter.CarReportListEntryAdapter;
 import com.epro.psmobile.adapter.UniversalListEntryAdapter;
 import com.epro.psmobile.adapter.UniversalListEntryAdapter.OnColumnInputChangeListener;
+import com.epro.psmobile.adapter.UniversalListEntryAdapter.OnRowContextOpenListener;
 import com.epro.psmobile.adapter.callback.OnOpenCommentActivity;
 import com.epro.psmobile.adapter.callback.OnTakeCameraListener;
 import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.InspectFormView;
 import com.epro.psmobile.data.InspectJobMapper;
 import com.epro.psmobile.data.JobRequestProduct;
+import com.epro.psmobile.dialog.CarInspectDialog;
+import com.epro.psmobile.dialog.CarInspectEditLocationDialog;
+import com.epro.psmobile.dialog.CarInspectDialog.OnCarInspectUpdated;
 import com.epro.psmobile.key.params.InstanceStateKey;
 import com.epro.psmobile.util.ActivityUtil;
+import com.epro.psmobile.util.MessageBox;
+import com.epro.psmobile.util.MessageBox.MessageConfirmType;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -25,15 +32,19 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class UniversalInspectListFragmentItem extends InspectReportListFragment 
-implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
+implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRowContextOpenListener {
 
    @SuppressWarnings("unused")
    private JobRequestProduct currentJobRequestProduct;
@@ -43,7 +54,7 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
    //private  ArrayList<JobRequestProduct> jrpList;
    private  ListView lvItems;
    private  boolean  forceReload = false;
-   
+   private  InspectJobMapper currentjobMapper;
    static class Holder{
      View vContainer;
      Activity aActivity;
@@ -78,6 +89,7 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
       rootView = currentView;
       if (currentView != null){
          lvItems = (ListView)currentView.findViewById(R.id.universal_lv_report);
+         
       }
       super.onActivityCreated(savedInstanceState);
       if (this.rowOffset == 0){
@@ -97,7 +109,51 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
          forceReload = false;
          //renderOnPageChanged(getSherlockActivity());
       }
+      try{
+      PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
+      currentjobMapper  = 
+            dataAdapter.getInspectJobMapper(jobRequest.getJobRequestID(), currentTask.getTaskCode());
+      
+      registerForContextMenu(this.lvItems);
+
+      }catch(Exception ex){}
+      
+
    }
+   
+   /* (non-Javadoc)
+    * @see com.epro.psmobile.fragment.InspectReportListFragment#onPause()
+    */
+   @Override
+   public void onPause() {
+      // TODO Auto-generated method stub
+      super.onPause();
+      try{
+         unregisterForContextMenu(this.lvItems);
+      }catch(Exception ex){}
+   }
+
+   /* (non-Javadoc)
+    * @see android.support.v4.app.Fragment#onCreateContextMenu(android.view.ContextMenu, android.view.View, android.view.ContextMenu.ContextMenuInfo)
+    */
+   @Override
+   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+      // TODO Auto-generated method stub
+      super.onCreateContextMenu(menu, v, menuInfo);
+      
+      menu.clear();
+      this.getActivity().getMenuInflater().inflate(R.menu.context_menu_car_inspect, menu);
+      
+      if (currentjobMapper != null){
+         menu.findItem(R.id.menu_car_inspect_del_row).setVisible(!currentjobMapper.isAudit());
+      }else{
+         menu.findItem(R.id.menu_car_inspect_del_row).setVisible(false);
+      }
+      
+      menu.findItem(R.id.menu_car_inspect_reset_error_flag).setVisible(false);
+      
+   }
+
    public class AsyncRenderOnPageChanged extends AsyncTask<Holder,Void,InspectJobMapper>
    {
       private ArrayList<JobRequestProduct> jrpList;
@@ -140,7 +196,7 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
             
             PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(holder.aActivity);
             
-            jobMapper = 
+           jobMapper  = 
                   dataAdapter.getInspectJobMapper(jobRequest.getJobRequestID(), currentTask.getTaskCode());
             
             if (jobMapper != null)
@@ -286,6 +342,7 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
                   isAudit);
       adapter.setOnTakeCameraListener(this);
       adapter.setOpenCommentActivityListener(this);
+      adapter.setRowContextOpenListener(this);
       adapter.setColumnInputChangeListener(new OnColumnInputChangeListener(){
 
          @Override
@@ -475,5 +532,82 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity {
    public void onOpenCommentActivity(ArrayList<InspectFormView> colProperties, JobRequestProduct type) {
       // TODO Auto-generated method stub
       super.doOpenUniversalComment(type, colProperties);
+   }
+
+   @Override
+   public void onClickContextOpen(View view, JobRequestProduct jrp) {
+      // TODO Auto-generated method stub
+      this.currentJobRequestProduct = jrp;/*for delete*/
+      //this.getActivity().openContextMenu(this.lsView);
+      try{
+         this.getSherlockActivity().openContextMenu(this.lvItems);
+      }catch(Exception ex){}
+   }
+
+   /* (non-Javadoc)
+    * @see android.support.v4.app.Fragment#onContextItemSelected(android.view.MenuItem)
+    */
+   @Override
+   public boolean onContextItemSelected(MenuItem item) {
+      // TODO Auto-generated method stub
+      if (item.getItemId() == R.id.menu_car_inspect_add_new_location)
+      {
+         CarInspectDialog dlg = CarInspectDialog.newInstance(currentTask, customerSurveySite,true);
+         dlg.setCarInspectUpdate(new OnCarInspectUpdated(){
+
+            @Override
+            public void onUpdated() {
+               // TODO Auto-generated method stub
+               /*
+               if (lvItems != null)
+               {
+                  if (lvItems.getAdapter() instanceof UniversalListEntryAdapter){
+                     UniversalListEntryAdapter adapter = (UniversalListEntryAdapter)lvItems.getAdapter();
+                     adapter.notifyDataSetChanged();
+                     adapter.notifyDataSetInvalidated();
+                  }
+               }*/
+               if (lvItems != null){
+                  lvItems.setAdapter(null);/*clear all adapter for reload new content*/
+                  UniversalInspectListFragmentItem.this.renderOnPageChanged(activity);
+               }
+            }
+         });
+         dlg.show(getChildFragmentManager(), CarInspectDialog.class.getName());
+      }else if (item.getItemId() == R.id.menu_car_inspect_edit_location){
+         
+         CarInspectEditLocationDialog editDlg = CarInspectEditLocationDialog.newInstance(currentTask);
+         editDlg.show(getChildFragmentManager(), CarInspectEditLocationDialog.class.getName());
+         
+      }
+      else if (item.getItemId() == R.id.menu_car_inspect_del_row){
+         MessageBox.showMessageWithConfirm(getActivity(),
+               this.getString(R.string.text_warning_title), this.getString(R.string.text_alert_error_delete_unversal_no_audit),
+               new MessageBox.MessageConfirmListener()
+         {
+
+            @Override
+            public void onConfirmed(MessageConfirmType confirmType) {
+               // TODO Auto-generated method stub
+               if (confirmType == MessageConfirmType.OK){
+                  if (currentJobRequestProduct != null){
+                     try{
+                        PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
+                        int rowEffected = dataAdapter.deleteUniversalRowJobRequestProduct(currentJobRequestProduct);
+                        if (rowEffected > 0){
+                              if (lvItems != null){
+                                 lvItems.setAdapter(null);/*clear all adapter for reload new content*/
+                              }
+                              UniversalInspectListFragmentItem.this.renderOnPageChanged(activity);
+                        }                        
+                     }catch(Exception ex){
+                        
+                     }
+                  }
+               }
+            }
+         });
+      }
+      return super.onContextItemSelected(item);
    }
 }

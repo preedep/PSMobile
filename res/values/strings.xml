@@ -536,6 +536,7 @@
     <string name="text_error_required_field_new_time_stamp">กรุณากรอกเวลา</string>
     
     <string name="text_alert_error_delete_car_duplicated">คุณต้องการจะลบรายการตรวจรถยนต์นี้จริงหรือไม่ เนื่องจากเหลือเพียงหนึ่งรายการ</string>
+    <string name="text_alert_error_delete_unversal_no_audit">คุณต้องการจะลบรายการตรวจนี้จริงหรือไม่?</string>
     
     
     <string name="text_btn_camera">ถ่ายภาพ</string>

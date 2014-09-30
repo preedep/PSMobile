@@ -725,6 +725,35 @@ public class PSBODataAdapter {
        return rowEffected;
 
 	}
+	
+	public synchronized int deleteUniversalRowJobRequestProduct(JobRequestProduct jobRequestProduct)
+    {
+       int rowEffected = 0;
+       SQLiteDatabase sqliteDb = null;
+
+       
+           try{
+              /*
+               String sql = "delete from InspectDataObjectPhotoSaved " +
+                   "where taskCode='"+taskCode.trim()+"' and customerSurveySiteID="+customerSurveySiteID+ " " +
+                           "and photoID =  "+photoID;
+           */
+           String sql = "delete from JobRequestProduct where ";
+              sql += " jobRequestId =  "+jobRequestProduct.getJobRequestID();
+              sql += " and customerSurveySiteID="+jobRequestProduct.getCustomerSurveySiteID();
+              sql += " and productRowId="+jobRequestProduct.getProductRowID();
+              
+           sqliteDb = databaseBuilder.open();
+           rowEffected = DbUtils.executeSqlStatements(sqliteDb, new String[]{sql});
+           }finally{
+               if (sqliteDb != null)
+                   sqliteDb.close();
+           }
+       
+       return rowEffected;
+
+    }
+	
 	public synchronized int deletePhotoObjectSaveds(int photoID,String taskCode,int customerSurveySiteID)
 	{
 		int rowEffected = 0;
@@ -1936,8 +1965,11 @@ isTaskCompleted BOOLEAN
 			TaskFormDataSaved dataSaved = dataListSaved.get(0);
 			String del = "delete from TaskFormDataSaved where taskID = "+dataSaved.getTaskID()+" and " +
 					"taskCode='"+dataSaved.getTaskCode()+"' and jobRequestID="+dataSaved.getJobRequestID();
-			if (jobRequestProduct != null){
+			if (jobRequestProduct != null)
+			{
 			   del += " and productRowId="+jobRequestProduct.getProductRowID()+"";
+			}else{
+			   del += " and productRowId <= 0";
 			}
 
 			String[] strSqls = new String[dataListSaved.size()+1];
