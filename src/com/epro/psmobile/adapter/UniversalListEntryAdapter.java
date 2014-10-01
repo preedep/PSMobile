@@ -110,7 +110,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
        DateTimeInput(14),
        ProductUnit(15),
        GodownList(16),
-       AddGodown(17);
+       DeleteRow(17);
        
        
        
@@ -960,7 +960,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                         R.drawable.ic_list,0,0,0);
                   holder.viewRows[i] = vCheckListForm;
                }break;
-               case AddGodown:{
+               case DeleteRow:{
                   View vCheckListForm = 
                         inflater.inflate(R.layout.ps_activity_report_list_entry_column_camera, vGroup, false);
                   //vCamera.getLayoutParams().width = (int)colWidth;
@@ -969,7 +969,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   }
                   Button btn = (Button)vCheckListForm.findViewById(R.id.btn_report_list_entry_column_camera);
                   btn.getLayoutParams().width = (int)colWidth;
-                  btn.setText("+/-");
+                  btn.setText("-");
                   btn.setGravity(Gravity.CENTER);
                   holder.viewRows[i] = vCheckListForm;
 
@@ -1401,7 +1401,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                
                //////////////////////////////
             }break;
-            case AddGodown:{
+            case DeleteRow:{
                final Button btn = (Button)vEachCol.findViewById(R.id.btn_report_list_entry_column_camera);
                btn.setOnClickListener(new OnClickListener(){
 

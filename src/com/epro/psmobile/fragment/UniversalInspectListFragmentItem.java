@@ -23,12 +23,15 @@ import com.epro.psmobile.util.MessageBox;
 import com.epro.psmobile.util.MessageBox.MessageConfirmType;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.util.Log;
 import android.util.TypedValue;
@@ -55,6 +58,8 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
    private  ListView lvItems;
    private  boolean  forceReload = false;
    private  InspectJobMapper currentjobMapper;
+   private  boolean isDeleteRow = false;
+   private AlertDialog deleteConfirmDlg;
    static class Holder{
      View vContainer;
      Activity aActivity;
@@ -63,6 +68,13 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
       void onReloadComplete(boolean isNewRow);
    }
    private OnDataReloadCompleted dataReloadCompleted;
+   
+   public interface OnDeleteRowCompleted{
+      void onDeleteRowComplete();
+   }
+   private OnDeleteRowCompleted deleteCompletedListener;
+
+   private long mLastClickTime;
    
    public UniversalInspectListFragmentItem() {
       // TODO Auto-generated constructor stub
@@ -149,7 +161,8 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
       }else{
          menu.findItem(R.id.menu_car_inspect_del_row).setVisible(false);
       }
-      
+      menu.findItem(R.id.menu_car_inspect_edit_location).setVisible(false);
+      menu.findItem(R.id.menu_car_inspect_add_new_location).setVisible(false);
       menu.findItem(R.id.menu_car_inspect_reset_error_flag).setVisible(false);
       
    }
@@ -236,13 +249,11 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
             if (formViewList != null){
                maxWidth = setupHeader(vContainer,formViewList);  
             }
-            //if (jrpList != null)
-            //{
-               setupList(lvItems,formViewList,
+            
+            setupList(lvItems,formViewList,
                   jrpList,
                   jobMapper.isAudit(),maxWidth
-               );
-            //}
+            );
             try{
             if (dialog != null){
                   dialog.dismiss();
@@ -251,8 +262,14 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
          }
          
          if (jrpList == null){
-            if (dataReloadCompleted != null){
-               dataReloadCompleted.onReloadComplete(true);
+            if (dataReloadCompleted != null)
+            {
+               boolean isAddNew = true;
+               if (isDeleteRow){
+                  isAddNew = false;
+               }
+               dataReloadCompleted.onReloadComplete(isAddNew);
+               isDeleteRow = false;/*reset*/
             }
          }
       }
@@ -537,11 +554,86 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
    @Override
    public void onClickContextOpen(View view, JobRequestProduct jrp) {
       // TODO Auto-generated method stub
-      this.currentJobRequestProduct = jrp;/*for delete*/
+      currentJobRequestProduct = jrp;/*for delete*/
       //this.getActivity().openContextMenu(this.lsView);
-      try{
-         this.getSherlockActivity().openContextMenu(this.lvItems);
-      }catch(Exception ex){}
+      /*try{
+         if (jrp != null){
+            this.getSherlockActivity().openContextMenu(this.lvItems);
+         }
+      }catch(Exception ex){}*/
+      MessageBox.showMessageWithConfirm(getActivity(),
+            this.getString(R.string.text_warning_title), this.getString(R.string.text_alert_error_delete_unversal_no_audit),
+            new MessageBox.MessageConfirmListener()
+      {
+
+         @Override
+         public void onConfirmed(MessageConfirmType confirmType) {
+            // TODO Auto-generated method stub
+            if (confirmType == MessageConfirmType.OK)
+            {
+               if (currentJobRequestProduct != null){
+                  try{
+                     PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
+                     int rowEffected = dataAdapter.deleteUniversalRowJobRequestProduct(currentJobRequestProduct);
+                     if (rowEffected > 0)
+                     {
+                           
+                        new AsyncTask<Void,Void,Void>(){
+
+                           @Override
+                           protected Void doInBackground(Void... params) {
+                              // TODO Auto-generated method stub
+                              UniversalListEntryAdapter adapter =  (UniversalListEntryAdapter)lvItems.getAdapter();
+                              ArrayList<JobRequestProduct> jobRequests = adapter.getAllJobRequestProducts();
+                              if (jobRequests != null){
+                                 ArrayList<JobRequestProduct> itemListToInsert = new ArrayList<JobRequestProduct>();
+                                 for(JobRequestProduct jrp : jobRequests){
+                                    if (jrp.getProductRowID() != currentJobRequestProduct.getProductRowID()){
+                                       itemListToInsert.add(jrp);
+                                    }
+                                 }
+                                 
+                                 PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
+                                 try {
+                                    dataAdapter.insertUniversalJobRequestProduct(
+                                          InspectReportListFragment.jobRequest.getInspectType().getInspectTypeID(),
+                                          InspectReportListFragment.jobRequest.getJobRequestID(),
+                                          InspectReportListFragment.customerSurveySite.getCustomerSurveySiteID(),
+                                          itemListToInsert);
+                                 }
+                                 catch (Exception e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                 }
+                                 
+                              }
+                              return null;
+                           }
+
+                           // (non-Javadoc)
+                           // @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+                            
+                           @Override
+                           protected void onPostExecute(Void result) {
+                              // TODO Auto-generated method stub
+                              super.onPostExecute(result);
+                              currentJobRequestProduct = null;
+                              if (lvItems != null){
+                                 lvItems.setAdapter(null);//clear all adapter for reload new content
+                              }
+                              isDeleteRow = true;
+                              UniversalInspectListFragmentItem.this.renderOnPageChanged(activity);
+                           }
+                        }.execute();
+                     }                        
+                  }catch(Exception ex){
+                     
+                  }
+               }
+            }
+         }
+      });
+
    }
 
    /* (non-Javadoc)
@@ -550,64 +642,55 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
    @Override
    public boolean onContextItemSelected(MenuItem item) {
       // TODO Auto-generated method stub
-      if (item.getItemId() == R.id.menu_car_inspect_add_new_location)
+      if (item.getItemId() == R.id.menu_car_inspect_del_row)
       {
-         CarInspectDialog dlg = CarInspectDialog.newInstance(currentTask, customerSurveySite,true);
-         dlg.setCarInspectUpdate(new OnCarInspectUpdated(){
-
-            @Override
-            public void onUpdated() {
-               // TODO Auto-generated method stub
-               /*
-               if (lvItems != null)
-               {
-                  if (lvItems.getAdapter() instanceof UniversalListEntryAdapter){
-                     UniversalListEntryAdapter adapter = (UniversalListEntryAdapter)lvItems.getAdapter();
-                     adapter.notifyDataSetChanged();
-                     adapter.notifyDataSetInvalidated();
-                  }
-               }*/
-               if (lvItems != null){
-                  lvItems.setAdapter(null);/*clear all adapter for reload new content*/
-                  UniversalInspectListFragmentItem.this.renderOnPageChanged(activity);
-               }
-            }
+         if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+            Log.d("DEBUG_D_CRF", "On double clicked.....");
+            return true;
+         }
+         mLastClickTime = SystemClock.elapsedRealtime();
+    
+         /*
+         AlertDialog.Builder builder1 = new AlertDialog.Builder(getSherlockActivity());
+         builder1.setTitle(this.getString(R.string.text_warning_title));
+         builder1.setMessage(this.getString(R.string.text_alert_error_delete_unversal_no_audit));
+         builder1.setCancelable(true);
+         builder1.setPositiveButton(R.string.label_inspect_data_entry_btn_save,
+                 new DialogInterface.OnClickListener() {
+             public void onClick(DialogInterface dialog, int id) {
+                 dialog.cancel();
+             }
          });
-         dlg.show(getChildFragmentManager(), CarInspectDialog.class.getName());
-      }else if (item.getItemId() == R.id.menu_car_inspect_edit_location){
-         
-         CarInspectEditLocationDialog editDlg = CarInspectEditLocationDialog.newInstance(currentTask);
-         editDlg.show(getChildFragmentManager(), CarInspectEditLocationDialog.class.getName());
-         
-      }
-      else if (item.getItemId() == R.id.menu_car_inspect_del_row){
-         MessageBox.showMessageWithConfirm(getActivity(),
-               this.getString(R.string.text_warning_title), this.getString(R.string.text_alert_error_delete_unversal_no_audit),
-               new MessageBox.MessageConfirmListener()
-         {
-
-            @Override
-            public void onConfirmed(MessageConfirmType confirmType) {
-               // TODO Auto-generated method stub
-               if (confirmType == MessageConfirmType.OK){
-                  if (currentJobRequestProduct != null){
-                     try{
-                        PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getSherlockActivity());
-                        int rowEffected = dataAdapter.deleteUniversalRowJobRequestProduct(currentJobRequestProduct);
-                        if (rowEffected > 0){
-                              if (lvItems != null){
-                                 lvItems.setAdapter(null);/*clear all adapter for reload new content*/
-                              }
-                              UniversalInspectListFragmentItem.this.renderOnPageChanged(activity);
-                        }                        
-                     }catch(Exception ex){
-                        
-                     }
-                  }
-               }
-            }
+         builder1.setNegativeButton(R.string.label_inspect_data_entry_btn_cancel,
+                 new DialogInterface.OnClickListener() {
+             public void onClick(DialogInterface dialog, int id) {
+                 dialog.cancel();
+             }
          });
+
+         if (deleteConfirmDlg == null)
+            deleteConfirmDlg = builder1.create();
+         
+         if (!deleteConfirmDlg.isShowing())
+            deleteConfirmDlg.show();
+         
+         
+
+         return true;*/
+         
+                 
+         //return true;
+         
+        // isDeleteMsgConfirmPopup = true;
       }
       return super.onContextItemSelected(item);
+   }
+
+   public OnDeleteRowCompleted getDeleteCompletedListener() {
+      return deleteCompletedListener;
+   }
+
+   public void setDeleteCompletedListener(OnDeleteRowCompleted deleteCompletedListener) {
+      this.deleteCompletedListener = deleteCompletedListener;
    }
 }

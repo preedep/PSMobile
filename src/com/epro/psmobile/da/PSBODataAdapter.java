@@ -1022,7 +1022,7 @@ public class PSBODataAdapter {
 	   String sql = "SELECT JobRequestProduct.* " +
 	   		" FROM JobRequestProduct INNER JOIN Task ON JobRequestProduct.jobRequestID = Task.jobRequestID " +
 	   		" INNER JOIN JobRequest ON Task.jobRequestID = JobRequest.jobRequestID " +
-	   		" and jobRequest.inspectTypeID = 4 and task.taskStatus = 4";
+	   		" and jobRequest.inspectTypeID > 2 and task.taskStatus = 4";
 	   
        return query(sql,JobRequestProduct.class);
 	   

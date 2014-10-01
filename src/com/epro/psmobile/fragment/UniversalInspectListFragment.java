@@ -24,6 +24,7 @@ import com.epro.psmobile.data.ProductGroup;
 import com.epro.psmobile.data.Task;
 import com.epro.psmobile.fragment.ContentViewBaseFragment.InspectOptMenuType;
 import com.epro.psmobile.fragment.UniversalInspectListFragmentItem.OnDataReloadCompleted;
+import com.epro.psmobile.fragment.UniversalInspectListFragmentItem.OnDeleteRowCompleted;
 import com.epro.psmobile.key.params.InstanceStateKey;
 import com.epro.psmobile.util.ActivityUtil;
 import com.epro.psmobile.util.MessageBox;
@@ -61,7 +62,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 @SuppressLint("CutPasteId")
-public class UniversalInspectListFragment extends InspectReportListFragment implements OnTakeCameraListener<JobRequestProduct>, OnClickListener {
+public class UniversalInspectListFragment extends InspectReportListFragment implements 
+OnTakeCameraListener<JobRequestProduct>, OnClickListener , OnDeleteRowCompleted {
 
    //private View currentView;
    //private JobRequest jobRequest;
@@ -210,6 +212,7 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                                  Fragment f = adapter.getItem(currentViewIdx);                              
                                  if ( f instanceof UniversalInspectListFragmentItem){
                                     UniversalInspectListFragmentItem universal_f = (UniversalInspectListFragmentItem)f;
+                                    universal_f.setDeleteCompletedListener(UniversalInspectListFragment.this);
                                     btnAddNoAudit.setEnabled(false);
                                     
                                     View vgNavigator = v.findViewById(R.id.ll_page_navigator);
@@ -223,10 +226,23 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                                     }
                                     
                                     int lastRowProductId = 0;
+                                    /*
                                     if (universal_f.getAllJobRequestProduct() != null){
                                        lastRowProductId = 
                                              universal_f.getAllJobRequestProduct().get(universal_f.getAllJobRequestProduct().size()-1).getProductRowID();
+                                    }*/
+                                    try {
+                                       ArrayList<JobRequestProduct> jrpList = 
+                                             dataAdapter.findUniversalJobRequestProduct(jobRequest.getJobRequestID(), customerSurveySite.getCustomerSurveySiteID());
+                                       if (jrpList != null){
+                                          lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
+                                       }
                                     }
+                                    catch (Exception e) {
+                                       // TODO Auto-generated catch block
+                                       e.printStackTrace();
+                                    }
+                                    
                                     universal_f.addNewRowNoAudit(lastRowProductId);
                                  }
 
@@ -253,6 +269,8 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                                           currentTask, 
                                           customerSurveySite,
                                           (pages - 1) * (InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE), true,keyFilter);
+                              
+                              f.setDeleteCompletedListener(UniversalInspectListFragment.this);
                               
                               f.setDataReloadCompleted(new OnDataReloadCompleted(){
 
@@ -297,12 +315,31 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                                               siteId = 0;
                                            }
                                           
+                                          /*
                                           ArrayList<JobRequestProduct> jrpList = 
                                                 dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(),
                                                 siteId);
                                           if (jrpList != null){
                                              lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
+                                          }*/
+                                          //int lastRowProductId = 0;
+                                          /*
+                                          if (universal_f.getAllJobRequestProduct() != null){
+                                             lastRowProductId = 
+                                                   universal_f.getAllJobRequestProduct().get(universal_f.getAllJobRequestProduct().size()-1).getProductRowID();
+                                          }*/
+                                          try {
+                                             ArrayList<JobRequestProduct> jrpList = 
+                                                   dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(), siteId);
+                                             if (jrpList != null){
+                                                lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
+                                             }
                                           }
+                                          catch (Exception e) {
+                                             // TODO Auto-generated catch block
+                                             e.printStackTrace();
+                                          }
+                                          
                                        }
                                        catch (Exception e) {
                                           // TODO Auto-generated catch block
@@ -324,11 +361,23 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                                        (jobRequest.getInspectType().getInspectTypeID() == 8)){
                                      siteId = 0;
                                   }
+                                 /*
                                  ArrayList<JobRequestProduct> jrpList = 
                                        dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(),
                                        siteId);
                                  if (jrpList != null){
                                     lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
+                                 }*/
+                                 try {
+                                    ArrayList<JobRequestProduct> jrpList = 
+                                          dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(), siteId);
+                                    if (jrpList != null){
+                                       lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
+                                    }
+                                 }
+                                 catch (Exception e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
                                  }
                               }
                               catch (Exception e) {
@@ -465,6 +514,7 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
                               i * (InstanceStateKey.UNIVERSAL_MAX_ROW_PER_PAGE), true,keyFilter);
                   if (f instanceof UniversalInspectListFragmentItem){
                      UniversalInspectListFragmentItem universal_f = (UniversalInspectListFragmentItem)f;
+                     universal_f.setDeleteCompletedListener(UniversalInspectListFragment.this);
                      universal_f.setDataReloadCompleted(new OnDataReloadCompleted(){
 
                         @Override
@@ -888,5 +938,11 @@ public class UniversalInspectListFragment extends InspectReportListFragment impl
    protected void onPhotoSetIdUpdated(JobRequestProduct currentJobRequestProduct) {
       // TODO Auto-generated method stub
       
+   }
+
+   @Override
+   public void onDeleteRowComplete() {
+      // TODO Auto-generated method stub
+      saveAllData();
    }
 }
