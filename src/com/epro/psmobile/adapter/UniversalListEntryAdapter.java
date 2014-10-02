@@ -59,6 +59,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
@@ -164,6 +165,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
    
    private int rowAtNeedToReload = -1;
    
+   private boolean needToAllRedraw = false;
    private boolean isAudit;
    public interface OnColumnInputChangeListener{
       void onColumnInputChanged(View target,int rowPosition);
@@ -239,73 +241,63 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       
       private void calculateOnTextChanged(final String s){
          {
-            /*
-            View vParent = (View)editText.getParent();
-            if (vParent.getTag() != null)
-            {
-               EachColViewHolder holder = new EachColViewHolder();
-               holder.formView = (InspectFormView)vParent.getTag();
-               holder.position = position;
-               holder.viewCol = viewCol;
-               holder.viewRow = viewRow;
-               holder.value = s;
-               //if (syncCaluclate == null)
-                  syncCaluclate = new AsyncCalculate();
-               //if (syncCaluclate.getStatus() != AsyncTask.Status.FINISHED)
-               //   syncCaluclate.cancel(true);
-               syncCaluclate.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, holder);
-            }                           */
-            
-            View vParent = (View)editText.getParent();
-            if (vParent.getTag() != null)
-            {
-               
-               InspectFormView formView = (InspectFormView)vParent.getTag();
-               final JobRequestProduct jrp = jobRequestProductList.get(this.getPosition());
-               
-               invokeSetValue(jrp,
-                     formView,
-                     s);
-               
-               //Log.d("DEBUG_D_D",getPosition()+" Active -> Comment -> "+jrp.getRemark());
-
-               if (viewCol.getTag() != null)
+           
+            try{
+               View vParent = (View)editText.getParent();
+               if (vParent.getTag() != null)
                {
-                   // if current col isn't decimal value i'll ignore calculate by formula
-                   
                   
-                  if (isArgumentOfGetterMethodIsDecimal(jrp,formView.getColInvokeField()))
+                  InspectFormView formView = (InspectFormView)vParent.getTag();
+                  final JobRequestProduct jrp = jobRequestProductList.get(this.getPosition());
+                  
+                  invokeSetValue(jrp,
+                        formView,
+                        s);
+                  
+                  //Log.d("DEBUG_D_D",getPosition()+" Active -> Comment -> "+jrp.getRemark());
+
+                  if (viewCol.getTag() != null)
                   {
-                     calculateByFormula(jrp,formView,
-                           (Holder)viewCol.getTag());
+                      // if current col isn't decimal value i'll ignore calculate by formula
+                      
                      
-                     /*
-                      * re set value to control
-                      */
-                    // displayEachRow(viewCol,position);
-                     Holder holder = (Holder)viewCol.getTag();
-                     for(View vItem_col  : holder.viewRows){
-                        InspectFormView inspectViewForm = (InspectFormView)vItem_col.getTag();
-                        UniversalControlType ctrlType = UniversalControlType.getControlType(
-                              inspectViewForm.getColType());
-                        if (ctrlType == UniversalControlType.SimpleTextDecimal){
-                           if (!inspectViewForm.isColEditable())
-                           {
-                              if ((inspectViewForm.getColFormula() != null)&&(!inspectViewForm.getColFormula().isEmpty())){
-                                 EditText edt = 
-                                       (EditText)vItem_col.findViewById(R.id.et_report_list_entry_column_text);
-                                 
-                                 Object value = 
-                                       invokeGetValue(jrp,inspectViewForm);
-                                 edt.setText(setFormat(value,inspectViewForm));
-                                 break;
+                     if (isArgumentOfGetterMethodIsDecimal(jrp,formView.getColInvokeField()))
+                     {
+                        calculateByFormula(jrp,formView,
+                              (Holder)viewCol.getTag());
+                        
+                        /*
+                         * re set value to control
+                         */
+                       // displayEachRow(viewCol,position);
+                        Holder holder = (Holder)viewCol.getTag();
+                        for(View vItem_col  : holder.viewRows){
+                           InspectFormView inspectViewForm = (InspectFormView)vItem_col.getTag();
+                           UniversalControlType ctrlType = UniversalControlType.getControlType(
+                                 inspectViewForm.getColType());
+                           if (ctrlType == UniversalControlType.SimpleTextDecimal){
+                              if (!inspectViewForm.isColEditable())
+                              {
+                                 if ((inspectViewForm.getColFormula() != null)&&(!inspectViewForm.getColFormula().isEmpty())){
+                                    EditText edt = 
+                                          (EditText)vItem_col.findViewById(R.id.et_report_list_entry_column_text);
+                                    
+                                    Object value = 
+                                          invokeGetValue(jrp,inspectViewForm);
+                                    edt.setText(setFormat(value,inspectViewForm));
+                                    break;
+                                 }
                               }
                            }
                         }
                      }
                   }
                }
+            }catch(Exception ex){
+               ex.printStackTrace();
             }
+            
+
          }
       }
    
@@ -502,46 +494,53 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             int pos, 
             long id) {
          // TODO Auto-generated method stub
-         if (parent instanceof ProductGroupSpinner)
-         {
-            ProductGroupSpinner pgs = (ProductGroupSpinner)parent;
-            ProductGroup productGroup = 
-                  pgs.getProductGroups().get(pos);
-            
-            jobRequestProductList.get(position).setProductGroupID(productGroup.getProductGroupID());
-            jobRequestProductList.get(position).setProductGroup(productGroup.getProductGroupName());
-            
-            Log.d("DEBUG_D_D_D", "JobRequestProduct position -> "+position+" , "+productGroup.getProductGroupID()+" , "+productGroup.getProductGroupName());
-            
-            
-            if (viewRow != null)
+         
+         try{
+            if (parent instanceof ProductGroupSpinner)
             {
-               if (viewRow.getTag() != null){
-                  Holder holder = (Holder)viewRow.getTag();
-                  for(View vEachCol : holder.viewRows)
-                  {
-                     if (vEachCol != null)
+               ProductGroupSpinner pgs = (ProductGroupSpinner)parent;
+               ProductGroup productGroup = 
+                     pgs.getProductGroups().get(pos);
+               
+               jobRequestProductList.get(position).setProductGroupID(productGroup.getProductGroupID());
+               jobRequestProductList.get(position).setProductGroup(productGroup.getProductGroupName());
+               
+               Log.d("DEBUG_D_D_D", "JobRequestProduct position -> "+position+" , "+productGroup.getProductGroupID()+" , "+productGroup.getProductGroupName());
+               
+               
+               pgs.requestFocusFromTouch();
+               pgs.clearFocus();
+               
+               
+               if (viewRow != null)
+               {
+                  if (viewRow.getTag() != null){
+                     Holder holder = (Holder)viewRow.getTag();
+                     for(View vEachCol : holder.viewRows)
                      {
-                        InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
-                        UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
-                        if (ctrlType == UniversalControlType.Product)
+                        if (vEachCol != null)
                         {
-                           final ProductSpinner proSpinner = (ProductSpinner)vEachCol.findViewById(R.id.sp_product);
-                           proSpinner.initial(productGroup.getProductGroupID());
-                           break;
+                           InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
+                           UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
+                           if (ctrlType == UniversalControlType.Product)
+                           {
+                              final ProductSpinner proSpinner = (ProductSpinner)vEachCol.findViewById(R.id.sp_product);
+                              proSpinner.initial(productGroup.getProductGroupID());
+                              break;
+                           }
                         }
                      }
                   }
                }
+               if (columnInputChangeListener != null){
+                  columnInputChangeListener.onModified(viewRow,position);
+               }
             }
-            if (columnInputChangeListener != null){
-               columnInputChangeListener.onModified(viewRow,position);
-            }
-            /*
-             * 
-             */
-            //////////////
+         }catch(Exception ex){
+            ex.printStackTrace();
          }
+         
+
       }
 
       @Override
@@ -562,57 +561,24 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             int pos, 
             long id) {
          // TODO Auto-generated method stub
-         if (parent instanceof ProductSpinner)
-         {
-            ProductSpinner productSpinner = (ProductSpinner)parent;
-            final Product currentProduct =
-                  productSpinner.getProducts().get(pos);
-            
-            
-            Log.d("DEBUG_D_D_D", "Product select -> "+currentProduct.getProductID()+" , "+currentProduct.getProductName());
-            jobRequestProductList.get(position).setProductId(currentProduct.getProductID());
-            jobRequestProductList.get(position).setProductName(currentProduct.getProductName());
-            Log.d("DEBUG_D_D_D", "Set Product id -> object["+position+"] "+jobRequestProductList.get(position).getProductId());
-            
-            
-            
-            if (viewRow != null)
+         
+         try{
+            if (parent instanceof ProductSpinner)
             {
-               if (viewRow.getTag() != null){
-                  Holder holder = (Holder)viewRow.getTag();
-                  for(View vEachCol : holder.viewRows){
-                     InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
-                     UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
-                     
-                     EachColViewHolder eachColViewHolder = new EachColViewHolder();
-                     eachColViewHolder.formView = viewForm;
-                     eachColViewHolder.jrp =jobRequestProductList.get(position);
-                     eachColViewHolder.position = position;
-                     eachColViewHolder.viewCol = vEachCol;                        
-                     eachColViewHolder.viewRow = viewRow;
-                     
-                     if (ctrlType == UniversalControlType.MarketPrice){
-                        new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, eachColViewHolder);
-                     }else if (ctrlType == UniversalControlType.ProductUnit){
-                        new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, eachColViewHolder);                        
-                     }
-                  }
-               }
-            }
-            if (columnInputChangeListener != null){
-               columnInputChangeListener.onModified(viewRow,position);
-            }
-            /*
-            MarketPrice defaultMarket = null;
-            if (marketPriceForProvince != null){
-               defaultMarket = marketPriceForProvince.find(currentProduct.getProductGroupID(),
-                     currentProduct.getProductID());
-            }
-            if (defaultMarket == null){
-               defaultMarket = marketPriceGlobalFinder.find(currentProduct.getProductGroupID(), 
-                     currentProduct.getProductID());
-            }
-               // find market price ctrl to set value
+               ProductSpinner productSpinner = (ProductSpinner)parent;
+               final Product currentProduct =
+                     productSpinner.getProducts().get(pos);
+               
+               
+               Log.d("DEBUG_D_D_D", "Product select -> "+currentProduct.getProductID()+" , "+currentProduct.getProductName());
+               jobRequestProductList.get(position).setProductId(currentProduct.getProductID());
+               jobRequestProductList.get(position).setProductName(currentProduct.getProductName());
+               Log.d("DEBUG_D_D_D", "Set Product id -> object["+position+"] "+jobRequestProductList.get(position).getProductId());
+               
+               productSpinner.requestFocusFromTouch();
+               productSpinner.clearFocus();
+               
+               
                
                if (viewRow != null)
                {
@@ -621,58 +587,30 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                      for(View vEachCol : holder.viewRows){
                         InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
                         UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
+                        
+                        EachColViewHolder eachColViewHolder = new EachColViewHolder();
+                        eachColViewHolder.formView = viewForm;
+                        eachColViewHolder.jrp =jobRequestProductList.get(position);
+                        eachColViewHolder.position = position;
+                        eachColViewHolder.viewCol = vEachCol;                        
+                        eachColViewHolder.viewRow = viewRow;
+                        
                         if (ctrlType == UniversalControlType.MarketPrice){
-                           //position is index of view
-                              if (defaultMarket != null){
-                                 jobRequestProductList.get(position).setMarketPriceID(defaultMarket.getMarketPriceID());
-                                 jobRequestProductList.get(position).setMarketPrice(defaultMarket.getMarketPrice());
-                              }else{
-                                 jobRequestProductList.get(position).setMarketPriceID(-1);
-                                 jobRequestProductList.get(position).setMarketPrice(0);
-                              }
-                              
-                              EditText edt = (EditText)vEachCol.findViewById(
-                                    R.id.et_report_list_entry_column_text);
-                              
-                              if (jobRequestProductList.get(position).getMarketPriceID() >= 0)
-                              {
-                                 edt.setText(
-                                    setFormat(defaultMarket.getMarketPrice(),viewForm));
-                              }else{
-                                 edt.setText(viewForm.getColDefaultValue());
-                              }
-                              
-                           break;
+                           new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, eachColViewHolder);
+                        }else if (ctrlType == UniversalControlType.ProductUnit){
+                           new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, eachColViewHolder);                        
                         }
                      }
                   }
-               }*/
-            
-               /////////////////
-               
-               /*initial product unit*/
-               /*
-               if (viewRow != null)
-               {
-                  if (viewRow.getTag() != null){
-                     Holder holder = (Holder)viewRow.getTag();
-                     for(View vEachCol : holder.viewRows){
-                        if (vEachCol != null)
-                        {
-                           InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
-                           UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
-                           if (ctrlType == UniversalControlType.ProductUnit){
-                              ProductUnitSpinner proUnitSpinner = (ProductUnitSpinner)vEachCol.findViewById(R.id.sp_product_unit);
-                              proUnitSpinner.initial(currentProduct);
-                              break;
-                           }
-                        }
-                     }
-                  }                                
-               }*/
-               ////////////////////////
-            //}
+               }
+               if (columnInputChangeListener != null){
+                  columnInputChangeListener.onModified(viewRow,position);
+               }
+            }           
+         }catch(Exception ex){
+            ex.printStackTrace();
          }
+
       }
 
       @Override
@@ -690,14 +628,22 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             int pos, 
             long id) {
          // TODO Auto-generated method stub
-         if (parent instanceof ProductUnitSpinner)
-         {
-            ProductUnitSpinner productUnitSpinner = (ProductUnitSpinner)parent;
-            ProductAmountUnit currentProductUnit =
-                  productUnitSpinner.getProductAmountUnits().get(pos);
-            jobRequestProductList.get(position).setProductUnit(currentProductUnit.getUnitName());
+         
+         try{
+            if (parent instanceof ProductUnitSpinner)
+            {
+               ProductUnitSpinner productUnitSpinner = (ProductUnitSpinner)parent;
+               ProductAmountUnit currentProductUnit =
+                     productUnitSpinner.getProductAmountUnits().get(pos);
+               jobRequestProductList.get(position).setProductUnit(currentProductUnit.getUnitName());
+               
+               productUnitSpinner.requestFocusFromTouch();
+               productUnitSpinner.clearFocus();
+               
+            }
+         }catch(Exception ex){
+            ex.printStackTrace();
          }
-       
       }
 
       @Override
@@ -716,42 +662,51 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             int pos, 
             long id) {
          // TODO Auto-generated method stub
-         if (parent instanceof HistoryInspectLocationSpinner)
-         {
-            HistoryInspectLocationSpinner locationSpinner = (HistoryInspectLocationSpinner)parent;
-            Object obj = locationSpinner.getSelectedItem();
-            if (obj instanceof CarInspectStampLocation)
+         
+         try{
+            if (parent instanceof HistoryInspectLocationSpinner)
             {
-               CarInspectStampLocation dataObjSaved = (CarInspectStampLocation)obj;
-               jobRequestProductList.get(position).setCustomerSurveySiteID(dataObjSaved.getCustomerSurveySiteID());
-               
-               
-               if ((jobRequest.getInspectType().getInspectTypeID() == 5)||
-                   (jobRequest.getInspectType().getInspectTypeID() == 8)){
-                  if (viewRow != null)
-                  {
-                     if (viewRow.getTag() != null){
-                        Holder holder = (Holder)viewRow.getTag();
-                        for(View vEachCol : holder.viewRows){
-                           InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
-                           UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
-                           
-                           EachColViewHolder eachColViewHolder = new EachColViewHolder();
-                           eachColViewHolder.formView = viewForm;
-                           eachColViewHolder.jrp =jobRequestProductList.get(position);
-                           eachColViewHolder.position = position;
-                           eachColViewHolder.viewCol = vEachCol;                        
-                           eachColViewHolder.viewRow = viewRow;
-                           
-                           if (ctrlType == UniversalControlType.Layout){
-                              new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, eachColViewHolder);
+               HistoryInspectLocationSpinner locationSpinner = (HistoryInspectLocationSpinner)parent;
+               Object obj = locationSpinner.getSelectedItem();
+               if (obj instanceof CarInspectStampLocation)
+               {
+                  CarInspectStampLocation dataObjSaved = (CarInspectStampLocation)obj;
+                  jobRequestProductList.get(position).setCustomerSurveySiteID(dataObjSaved.getCustomerSurveySiteID());
+                  
+                  locationSpinner.requestFocusFromTouch();
+                  locationSpinner.clearFocus();
+                  
+                  
+                  if ((jobRequest.getInspectType().getInspectTypeID() == 5)||
+                      (jobRequest.getInspectType().getInspectTypeID() == 8)){
+                     if (viewRow != null)
+                     {
+                        if (viewRow.getTag() != null){
+                           Holder holder = (Holder)viewRow.getTag();
+                           for(View vEachCol : holder.viewRows){
+                              InspectFormView viewForm = (InspectFormView)vEachCol.getTag();
+                              UniversalControlType ctrlType = UniversalControlType.getControlType(viewForm.getColType());
+                              
+                              EachColViewHolder eachColViewHolder = new EachColViewHolder();
+                              eachColViewHolder.formView = viewForm;
+                              eachColViewHolder.jrp =jobRequestProductList.get(position);
+                              eachColViewHolder.position = position;
+                              eachColViewHolder.viewCol = vEachCol;                        
+                              eachColViewHolder.viewRow = viewRow;
+                              
+                              if (ctrlType == UniversalControlType.Layout){
+                                 new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, eachColViewHolder);
+                              }
                            }
                         }
                      }
                   }
                }
-            }
+            } 
+         }catch(Exception ex){
+            ex.printStackTrace();
          }
+
       }
 
       @Override
@@ -770,22 +725,38 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             int pos, 
             long id) {
          // TODO Auto-generated method stub
-         
-         if (parent instanceof LayoutSpinner)
+         try
          {
-            LayoutSpinner layoutSpinner = (LayoutSpinner)parent;
-            Object obj = layoutSpinner.getSelectedItem();
-            if (obj instanceof InspectDataObjectSaved)
+            if (parent instanceof LayoutSpinner)
             {
-               InspectDataObjectSaved dataObjSaved = (InspectDataObjectSaved)obj;
-               jobRequestProductList.get(position).setInspectDataObjectID(dataObjSaved.getInspectDataObjectID());
-            }
+               final LayoutSpinner layoutSpinner = (LayoutSpinner)parent;
+               Object obj = layoutSpinner.getSelectedItem();
+               if (obj instanceof InspectDataObjectSaved)
+               {
+                  InspectDataObjectSaved dataObjSaved = (InspectDataObjectSaved)obj;
+                  jobRequestProductList.get(position).setInspectDataObjectID(dataObjSaved.getInspectDataObjectID());
+                  
+                  
+               // hide virtual keyboard
+                  //InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                  //imm.hideSoftInputFromWindow(mYourEditText.getWindowToken(), 0);
+                  //imm.hideSoftInputFromInputMethod(((Activity)context).
+                  
+                  layoutSpinner.requestFocusFromTouch();
+
+                  layoutSpinner.clearFocus();
+               }
+            }    
+         }catch(Exception ex){
+            ex.printStackTrace();
          }
+
       }
 
       @Override
       public void onNothingSelected(AdapterView< ? > arg0) {
          // TODO Auto-generated method stub
+
          
       }
       
@@ -1089,25 +1060,41 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       }
       
       //final JobRequestProduct jrp = jobRequestProductList.get(position);
+      
+      
       Log.d("DEBUG_D_D", "position -> "+position);
       
-      Holder holder = (Holder)view.getTag();
-      if ((lastPosition >= 0) && (position == lastPosition))
+      //if (!needToAllRedraw)
       {
-         holder.shown = false;
-         lastPosition = -1;
+         Holder holder = (Holder)view.getTag();
+         if ((lastPosition >= 0) && (position == lastPosition))
+         {
+            holder.shown = false;
+            lastPosition = -1;
+         }
+         if (rowAtNeedToReload == position){
+            holder.shown = false;
+         }
+         //////////////
+         if (!holder.shown)
+         {
+               displayEachRow(view,position);
+               holder.shown = true;                     
+               holder.position = position;
+               //rowAtNeedToReload = -1;
+         }         
       }
-      if (rowAtNeedToReload == position){
-         holder.shown = false;
-      }
-      //////////////
-      if (!holder.shown)
+      /*
+      else
       {
-            displayEachRow(view,position);
-            holder.shown = true;                     
-            holder.position = position;
-            //rowAtNeedToReload = -1;
-      }
+         displayEachRow(view,position);
+         if (position == jobRequestProductList.size()-1)
+         {
+            needToAllRedraw = false;
+         }
+      }*/
+ //     displayEachRow(view,position);
+
       return view;
    }
    @SuppressWarnings("unused")
@@ -1365,9 +1352,22 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             }break;
             case Layout:
             {
-               /*
+               
                final LayoutSpinner sp_layout = (LayoutSpinner)vEachCol.findViewById(R.id.sp_layout_inspect);
                sp_layout.initial(task.getTaskCode(), jrp.getCustomerSurveySiteID(),true);
+               
+               
+               final LayoutSelectImpl layoutSelect = new LayoutSelectImpl();
+               if (sp_layout.getOnItemSelectedListener() instanceof LayoutSelectImpl)
+               {
+                  ((LayoutSelectImpl)sp_layout.getOnItemSelectedListener()).setViewRow(rowView);
+                  ((LayoutSelectImpl)sp_layout.getOnItemSelectedListener()).setPosition(position);
+               }else{
+                  layoutSelect.setViewRow(rowView);
+                  layoutSelect.setPosition(position);
+                  sp_layout.setOnItemSelectedListener(layoutSelect);
+               }
+               
                SpinnerAdapter adapter  = sp_layout.getAdapter();
                for(int i = 0; i < adapter.getCount();i++){
                   Object obj = adapter.getItem(i);
@@ -1379,16 +1379,9 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                      }
                   }
                }
-               final LayoutSelectImpl layoutSelect = new LayoutSelectImpl();
-               if (sp_layout.getOnItemSelectedListener() instanceof LayoutSelectImpl)
-               {
-                  ((LayoutSelectImpl)sp_layout.getOnItemSelectedListener()).setViewRow(rowView);
-                  ((LayoutSelectImpl)sp_layout.getOnItemSelectedListener()).setPosition(position);
-               }else{
-                  layoutSelect.setViewRow(rowView);
-                  layoutSelect.setPosition(position);
-                  sp_layout.setOnItemSelectedListener(layoutSelect);
-               }*/
+           
+               
+               /*
                EachColViewHolder eachColViewHolder = new EachColViewHolder();
                eachColViewHolder.position = position;
                eachColViewHolder.viewCol = vEachCol;
@@ -1397,7 +1390,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                eachColViewHolder.formView = formView;
                
                new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,eachColViewHolder);
-
+*/
                
                //////////////////////////////
             }break;
@@ -1651,6 +1644,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       jrp.setCustomerSurveySiteID(site.getCustomerSurveySiteID());
       jrp.setAudit(isAudit);
       jrp.setJobNo(task.getTaskCode());
+      jrp.setInspectDataObjectID(-1);
       
       int teamId = SharedPreferenceUtil.getTeamID(context);      
       jrp.setcTeamId(teamId);
@@ -1690,6 +1684,8 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       private int objLayoutIdx = -1;
       private EachColViewHolder marketPriceeachColViewHolder;
       private EachColViewHolder productUniteachColViewHolder;
+      
+      //private int inspectDataObjectId = -1;
       
       private InspectDataObjectSaved dataSaved;
       @Override
@@ -1800,6 +1796,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   if (datas.get(i).getInspectDataObjectID() == jrp.getInspectDataObjectID()){
                      dataSaved = datas.get(i);
                      objLayoutIdx = i;
+                     //inspectDataObjectId = datas.get(i).getInspectDataObjectID();
                      break;
                   }
                }
@@ -1934,7 +1931,9 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             }else{
                sp_layout.setSelection(0, false);
             }
-            
+
+            //v.jrp.setInspectDataObjectID(inspectDataObjectId);
+            /////
             final LayoutSelectImpl layoutSelect = new LayoutSelectImpl();
             if (sp_layout.getOnItemSelectedListener() instanceof LayoutSelectImpl)
             {
@@ -2278,6 +2277,13 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
       }
    }
 
+   public void removeItem(JobRequestProduct currentJobRequestProduct){
+      jobRequestProductList.remove(currentJobRequestProduct);
+      jobRequestProductList.trimToSize();
+      
+      needToAllRedraw = true;
+      this.notifyDataSetChanged();
+   }
    public OnOpenCommentActivity getOpenCommentActivityListener() {
       return openCommentActivityListener;
    }

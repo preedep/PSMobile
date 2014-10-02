@@ -583,12 +583,15 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
                            @Override
                            protected Void doInBackground(Void... params) {
                               // TODO Auto-generated method stub
+                             
                               UniversalListEntryAdapter adapter =  (UniversalListEntryAdapter)lvItems.getAdapter();
                               ArrayList<JobRequestProduct> jobRequests = adapter.getAllJobRequestProducts();
                               if (jobRequests != null){
                                  ArrayList<JobRequestProduct> itemListToInsert = new ArrayList<JobRequestProduct>();
                                  for(JobRequestProduct jrp : jobRequests){
-                                    if (jrp.getProductRowID() != currentJobRequestProduct.getProductRowID()){
+                                    if (jrp.getProductRowID() != currentJobRequestProduct.getProductRowID())
+                                    {
+                                       Log.d("DEBUG_X", "inspect data "+jrp.getProductRowID()+" object id = "+jrp.getInspectDataObjectID());
                                        itemListToInsert.add(jrp);
                                     }
                                  }
@@ -604,8 +607,9 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
                                  catch (Exception e) {
                                     // TODO Auto-generated catch block
                                     e.printStackTrace();
+                                 }finally{
+                                    currentJobRequestProduct = null;
                                  }
-                                 
                               }
                               return null;
                            }
@@ -617,14 +621,13 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
                            protected void onPostExecute(Void result) {
                               // TODO Auto-generated method stub
                               super.onPostExecute(result);
-                              currentJobRequestProduct = null;
                               if (lvItems != null){
                                  lvItems.setAdapter(null);//clear all adapter for reload new content
                               }
                               isDeleteRow = true;
                               UniversalInspectListFragmentItem.this.renderOnPageChanged(activity);
                            }
-                        }.execute();
+                        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                      }                        
                   }catch(Exception ex){
                      

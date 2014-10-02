@@ -945,4 +945,14 @@ OnTakeCameraListener<JobRequestProduct>, OnClickListener , OnDeleteRowCompleted 
       // TODO Auto-generated method stub
       saveAllData();
    }
+
+   /* (non-Javadoc)
+    * @see com.epro.psmobile.fragment.InspectReportListFragment#onDestroyView()
+    */
+   @Override
+   public void onDestroyView() {
+      // TODO Auto-generated method stub
+      saveAllData();
+      super.onDestroyView();
+   }
 }
