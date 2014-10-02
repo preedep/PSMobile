@@ -1153,6 +1153,12 @@ public class PSBODataAdapter {
 	      String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + " and customerSurveySiteID = "+customerSurveySiteID+" order by productRowId";
 	      return query(sql,JobRequestProduct.class);
 	   }
+       public synchronized ArrayList<JobRequestProduct> findUniversalJobRequestProductAllSite(int jobRequestID)
+       throws Exception
+       {
+          String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + " order by productRowId";
+          return query(sql,JobRequestProduct.class);
+       }
 
 	public synchronized ArrayList<JobRequestProduct> findCarJobRequestProductsByJobRequestID(int jobRequestID,
           int customerSurveySiteID) throws Exception
@@ -2009,7 +2015,9 @@ isTaskCompleted BOOLEAN
 			String taskCode) throws Exception
 	{
 		String sql = "select * from TaskFormDataSaved where taskCode='"+taskCode+"' " +
-				"and jobRequestID="+jobRequestID+" order by taskcontrolno";
+				"and jobRequestID="+jobRequestID+" " +
+		        "and productRowId <= 0 "+
+				"order by taskcontrolno";
 		return query(sql,TaskFormDataSaved.class);
 	}
 	public synchronized ArrayList<TaskFormDataSaved> findUniversalTaskFormDataSavedList(

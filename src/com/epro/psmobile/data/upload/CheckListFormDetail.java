@@ -62,6 +62,25 @@ public class CheckListFormDetail implements UploadDataAdapter,JSONDataHolder {
 		 2 : 'datetime', 
 		 3 : 'checkbox', 4 : 'radio', 5 : ไม่มี, 6 : ไม่มี, 7 : 'dropdown', 8 : 'text')
 
+
+Label(10),
+        SimpleTextSingleLine(11),
+        SimpleTextDecimalSingleLine(12);
+        
+        
+        
+        SimpleText(0),
+        SimpleTextDecimal(1),
+        SimpleTextDate(2),
+        CheckBoxList(3),
+        RadioBoxList(4),
+        RadioBoxMatrix(5),
+        Slider(6),
+        Dropdownlist(7),
+        RadioBoxListAndDropdown(9),
+        Label(10),
+        SimpleTextSingleLine(11),
+        SimpleTextDecimalSingleLine(12);
 	 */
 	private String[] typeArray = new String[]{
 			"textarea",
@@ -72,7 +91,10 @@ public class CheckListFormDetail implements UploadDataAdapter,JSONDataHolder {
 			"-",
 			"-",
 			"dropdown",
-			"text"
+			"radiolistanddropdown",
+			"text",
+			"textareasingleline",
+			"decimalsingleline"
 			};
 	private Task task;
 //	private CustomerSurveySite site;
