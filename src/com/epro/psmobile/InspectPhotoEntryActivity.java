@@ -79,7 +79,8 @@ import com.epro.psmobile.view.InspectDataSavedSpinner;
  * @author nickmsft
  *
  */
-public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implements OnPSMLoctaionListener {
+public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implements OnPSMLoctaionListener 
+{
 
     
 	private class ImgTag
@@ -110,6 +111,7 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 	private final static String KEY_DATA_SAVED_LIST = "com.epro.psmobile.InspectPhotoEntryActivity.KEY_DATA_SAVED_LIST";
 
 	private final static String SAVE_IMAGE_KEY_NAME = "com.epro.psmobile.InspectPhotoEntryActivity.SAVE_IMAGE_KEY_NAME";
+	
 	private Location currentLocation;
 	private PSMobileLocationManager locManager = null;
 
@@ -165,6 +167,7 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 		super.onResume();
 		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
+		
 		if (locManager == null)
 		locManager = new PSMobileLocationManager(this);
 
@@ -538,6 +541,7 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 		                 bitmap = android.provider.MediaStore.Images.Media
 		                 .getBitmap(cr, selectedImage);
 
+
 		           
 		                 
 		                 double latVal = 0;
@@ -553,11 +557,23 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 		                 lonVal = latLons[1];
 		                 */
 		                 String takeTime = exfInfo.getAttribute(ExifInterface.TAG_DATETIME);
+		                 
 		                 if (currentLocation != null)
 		                 {
 		                	 latVal = currentLocation.getLatitude();
 		                	 lonVal = currentLocation.getLongitude();
+		                 }else{
+		                      currentLocation = LocationUtil.getLastBestLocation(this);
+		                      if (currentLocation != null){
+	                             latVal = currentLocation.getLatitude();
+	                             lonVal = currentLocation.getLongitude();		                         
+		                      }
 		                 }
+		                 /*
+		                 latVal = exfInfo.getAttributeDouble(ExifInterface.TAG_GPS_LATITUDE,0);
+		                 lonVal = exfInfo.getAttributeDouble(ExifInterface.TAG_GPS_LONGITUDE, 0);
+		                 */
+		                 
 		                 if (takeTime == null)
 		                 {
 		                    SimpleDateFormat fmt_Exif = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");

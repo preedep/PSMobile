@@ -1198,6 +1198,8 @@ public class DataUploadGenerator {
 			         * 
 			         * ignored saved in checklist
 			         **/
+			      
+			        
 	                ArrayList<TaskFormDataSaved> taskFormDataSavedList =
 	                                dataAdapter.findTaskFormDataSavedListByJobRequestId(task.getJobRequest().getJobRequestID(),
 	                                                                                    task.getTaskCode());
@@ -1213,43 +1215,54 @@ public class DataUploadGenerator {
 	                
 	                //////////////
 	                /*
-	                 * for universal
+	                 * for universal (check list)
 	                 */
-	                ArrayList<JobRequestProduct> jrpList = 
-	                      dataAdapter.findUniversalJobRequestProductAllSite(task.getJobRequest().getJobRequestID());
-
-	                InspectJobMapper jobMapper = dataAdapter.getInspectJobMapper(task.getJobRequest().getJobRequestID(), task.getTaskCode());
 	                
-	                ArrayList<InspectFormView> inspectFormViews = dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
-	                
-	                for(InspectFormView formView : inspectFormViews){
-	                   UniversalControlType type = 
-	                         UniversalListEntryAdapter.UniversalControlType.getControlType(formView.getColType());   
-	                   if (type == UniversalControlType.CheckListForm){
-	                      taskFormTemplateList = 
-	                            dataAdapter.findTaskFormTemplateListByTemplateFormId(formView.getTaskFormTemplateID());
-	                      break;
-	                   }
-	                }
-	                
-	                if (taskFormTemplateList != null)
+	                if (task.getJobRequest().getInspectType().getInspectTypeID() > 2)
 	                {
-	                    for(JobRequestProduct jrp : jrpList){
-                           
-	                       taskFormDataSavedList =  dataAdapter.findUniversalTaskFormDataSavedList(task.getJobRequest().getJobRequestID(),
-	                                   task.getJobRequest().getInspectType().getInspectTypeID(), 
-	                                   task.getTaskCode(), 
-	                                   jrp.getCustomerSurveySiteID(),
-	                                   jrp.getProductRowID());
+	                   ArrayList<JobRequestProduct> jrpList = 
+	                          dataAdapter.findUniversalJobRequestProductAllSite(task.getJobRequest().getJobRequestID());
 
-	                       if (taskFormDataSavedList != null){
-	                          chkListDetails = generateCheckListFormDetail(task,taskFormDataSavedList,taskFormTemplateList);
-	                          if (chkListDetails.size() > 0){
-	                             checkListFormDetailList.addAll(chkListDetails);
-	                          }
-	                       }
-	                    }	                   
+	                    InspectJobMapper jobMapper = dataAdapter.getInspectJobMapper(task.getJobRequest().getJobRequestID(), task.getTaskCode());
+	                    
+	                    if (jobMapper != null)
+	                    {
+	                       ArrayList<InspectFormView> inspectFormViews = dataAdapter.getInspectFormViewList(jobMapper.getInspectFormViewID());
+	                        
+	                        for(InspectFormView formView : inspectFormViews){
+	                           UniversalControlType type = 
+	                                 UniversalListEntryAdapter.UniversalControlType.getControlType(formView.getColType());   
+	                           if (type == UniversalControlType.CheckListForm){
+	                              taskFormTemplateList = 
+	                                    dataAdapter.findTaskFormTemplateListByTemplateFormId(formView.getTaskFormTemplateID());
+	                              break;
+	                           }
+	                        }
+	                        
+	                        if (taskFormTemplateList != null)
+	                        {
+	                            for(JobRequestProduct jrp : jrpList){
+	                               
+	                               taskFormDataSavedList =  dataAdapter.findUniversalTaskFormDataSavedList(task.getJobRequest().getJobRequestID(),
+	                                           task.getJobRequest().getInspectType().getInspectTypeID(), 
+	                                           task.getTaskCode(), 
+	                                           jrp.getCustomerSurveySiteID(),
+	                                           jrp.getProductRowID());
+
+	                               if (taskFormDataSavedList != null){
+	                                  chkListDetails = generateCheckListFormDetail(task,taskFormDataSavedList,taskFormTemplateList);
+	                                  if (chkListDetails.size() > 0){
+	                                     checkListFormDetailList.addAll(chkListDetails);
+	                                  }
+	                               }
+	                            }                      
+	                        }                       
+	                    }
 	                }
+
+	                
+	                
+	                
 	                
 	                /*
 	                if ((taskFormDataSavedList != null)&&(taskFormTemplateList != null))

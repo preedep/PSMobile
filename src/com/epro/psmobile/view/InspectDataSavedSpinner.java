@@ -13,6 +13,7 @@ import com.epro.psmobile.data.JobRequestProduct;
 import com.epro.psmobile.data.Product;
 import com.epro.psmobile.data.ProductGroup;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
@@ -233,13 +234,13 @@ public class InspectDataSavedSpinner extends Spinner {
              android.R.layout.simple_spinner_item,displayList);
      this.setAdapter(adapter);
     }
-	public void initial(ArrayList<InspectDataObjectSaved> dataListSaved,
-			InspectDataSavedSpinnerDisplay lastInspectDataSavedDisplay,
-			String taskCode,
-			int customerSurveySiteId
+	public void initial(final ArrayList<InspectDataObjectSaved> dataListSaved,
+			final InspectDataSavedSpinnerDisplay lastInspectDataSavedDisplay,
+			final String taskCode,
+			final int customerSurveySiteId
 		)
 	{
-		ArrayList<InspectDataSavedSpinnerDisplay> displayList =
+		final ArrayList<InspectDataSavedSpinnerDisplay> displayList =
 				new ArrayList<InspectDataSavedSpinnerDisplay>();
 
 		InspectDataSavedSpinnerDisplay displayFirst = new
@@ -256,86 +257,111 @@ public class InspectDataSavedSpinner extends Spinner {
 		displayList.add(displayFirst);
 		
 		
-		if (dataListSaved != null)
+		Thread thread = new Thread()
 		{
-		   PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getContext());
-	        for(InspectDataObjectSaved obj : dataListSaved)
-	        {
-	            InspectDataSavedSpinnerDisplay display = new InspectDataSavedSpinnerDisplay(this.getContext());
-	            display.dataSaved = obj;
-	            display.width = obj.getWidth();
-	            display.deep = obj.getdLong();
-	            display.height = obj.getHeight();
-	            /*
-	             * setup other fields
-	             */
-	            if (obj.getProductGroupID() >= 0)
-	            {
-	                try{
-	                    ArrayList<ProductGroup> productGrps = dataAdapter.getAllProductGroups();
-	                    for(ProductGroup pg : productGrps){
-	                        if (pg.getProductGroupID() == obj.getProductGroupID()){
-	                            display.productGroup = pg;
-	                            break;
-	                        }
-	                    }
-	                    
-	                    if (display.productGroup != null)
-	                    {
-	                        ArrayList<Product> products = 
-	                                dataAdapter.findProductByProductGroupId(display.productGroup.getProductGroupID());
-	                        for(Product p : products)
-	                        {
-	                            if (p.getProductID() == obj.getProductID()){
-	                                display.product = p;
-	                                break;
-	                            }
-	                        }
-	                    }
-	                    
-	                    ArrayList<InspectDataItem> dataItems = dataAdapter.getAllInspectDataItem();
-	                    for(InspectDataItem dataItem : dataItems)
-	                    {
-	                        if (dataItem.getInspectDataItemID() == obj.getInspectDataItemID()){
-	                            display.inspectDataItem = dataItem;
-	                            break;
-	                        }
-	                    }
 
-	                    if (display.inspectDataItem != null)
-	                    {
-	                        if (!display.inspectDataItem.isComponentBuiding())
-	                        {
-	                            /*
-	                             * godown not show in list
-	                             */
-	                            if (!display.inspectDataItem.isGodownComponent())
-	                            {
-	                                if (!display.inspectDataItem.isCameraObject()&&
-	                                        (!display.inspectDataItem.isLine()))
-	                                {
-	                                            displayList.add(display);
-	                                }                               
-	                            }
-	                        }
-	                    }
-	                }catch(Exception ex){
-	                    ex.printStackTrace();
-	                }
-	            }
-	            
-	            /*
-	             * 
-	             */
-	        }
-		}
-		
-		originalDisplayList = displayList;
-		
-		ArrayAdapter<InspectDataSavedSpinnerDisplay> adapter = 
-				new ArrayAdapter<InspectDataSavedSpinnerDisplay>(this.getContext(),
-				android.R.layout.simple_spinner_item,displayList);
-		this.setAdapter(adapter);
-		
+         @Override
+         public void run() 
+         {
+            // TODO Auto-generated method stub
+            if (dataListSaved != null)
+            {
+               PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getContext());
+               ArrayList<ProductGroup> productGrps = null;
+               ArrayList<InspectDataItem> dataItems = null;
+                for(InspectDataObjectSaved obj : dataListSaved)
+                {
+                    InspectDataSavedSpinnerDisplay display = new InspectDataSavedSpinnerDisplay(getContext());
+                    display.dataSaved = obj;
+                    display.width = obj.getWidth();
+                    display.deep = obj.getdLong();
+                    display.height = obj.getHeight();
+                    /*
+                     * setup other fields
+                     */
+                    if (obj.getProductGroupID() >= 0)
+                    {
+                        try{
+                           if (productGrps == null)
+                              productGrps = dataAdapter.getAllProductGroups();
+                            for(ProductGroup pg : productGrps){
+                                if (pg.getProductGroupID() == obj.getProductGroupID()){
+                                    display.productGroup = pg;
+                                    break;
+                                }
+                            }
+                            
+                            if (display.productGroup != null)
+                            {
+                                ArrayList<Product> products = 
+                                        dataAdapter.findProductByProductGroupId(display.productGroup.getProductGroupID());
+                                for(Product p : products)
+                                {
+                                    if (p.getProductID() == obj.getProductID()){
+                                        display.product = p;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            if (dataItems == null)
+                               dataItems = dataAdapter.getAllInspectDataItem();
+                            
+                            for(InspectDataItem dataItem : dataItems)
+                            {
+                                if (dataItem.getInspectDataItemID() == obj.getInspectDataItemID()){
+                                    display.inspectDataItem = dataItem;
+                                    break;
+                                }
+                            }
+
+                            if (display.inspectDataItem != null)
+                            {
+                                if (!display.inspectDataItem.isComponentBuiding())
+                                {
+                                    /*
+                                     * godown not show in list
+                                     */
+                                    if (!display.inspectDataItem.isGodownComponent())
+                                    {
+                                        if (!display.inspectDataItem.isCameraObject()&&
+                                                (!display.inspectDataItem.isLine()))
+                                        {
+                                                    displayList.add(display);
+                                        }                               
+                                    }
+                                }
+                            }
+                        }catch(Exception ex){
+                            ex.printStackTrace();
+                        }
+                    }
+                    
+                    /*
+                     * 
+                     */
+                }
+            }
+            
+            if (getContext() instanceof Activity){
+               ((Activity)getContext()).runOnUiThread(new Runnable(){
+
+                  @Override
+                  public void run() {
+                     // TODO Auto-generated method stub
+                     originalDisplayList = displayList;
+                     
+                     ArrayAdapter<InspectDataSavedSpinnerDisplay> adapter = 
+                             new ArrayAdapter<InspectDataSavedSpinnerDisplay>(getContext(),
+                             android.R.layout.simple_spinner_item,displayList);
+                     setAdapter(adapter);
+                  }
+                  
+               });
+            }
+            
+         }
+		};
+		thread.start();
 	}
 }
