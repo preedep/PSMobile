@@ -595,6 +595,19 @@ implements  OnItemClickListener,
 		
 		if (layoutContainer != null)
 		{
+		    int objIdMax = 0;
+		    ViewGroup vg = (ViewGroup)layoutContainer;
+		    for(int i = 0; i < vg.getChildCount();i++){
+		       View vEach = vg.getChildAt(i);
+		       if (vEach.getTag() instanceof InspectItemViewState){
+		          InspectItemViewState state = (InspectItemViewState)vEach.getTag();
+		          if (state.getObjectId() > objIdMax){
+		             objIdMax = state.getObjectId();
+		          }
+		       }
+		    }
+		    ((InspectItemViewState)vItem.getTag()).setObjectId(objIdMax+1);
+		    
 			if (layoutContainer instanceof ViewGroup)
 			{
 				((InspectItemViewState)vItem.getTag()).getInspectDataObjectSaved()

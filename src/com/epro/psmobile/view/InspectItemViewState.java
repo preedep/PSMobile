@@ -29,6 +29,7 @@ public class InspectItemViewState implements java.io.Serializable
 	public InspectItemViewState(InspectDataObjectSaved dataSaved)
 	{
 		this.inspectDataObjectSaved = dataSaved;
+		this.objectId = dataSaved.getInspectDataObjectID();
 		
 		inspectDataObjectPhotoSavedList = new ArrayList<InspectDataObjectPhotoSaved>();
 
