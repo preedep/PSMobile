@@ -2042,6 +2042,10 @@ isTaskCompleted BOOLEAN
 		String sql = "select * from product";
 		return query(sql,Product.class);
 	}
+	public synchronized ArrayList<InspectDataItem> getAllDataInspectItemsForFarmLand(int inspectTypeID) throws Exception{
+	   String sql = "select * from inspectdataItem where inspecttypeid = "+inspectTypeID;
+	   return query(sql,InspectDataItem.class);
+	}
 	public synchronized ArrayList<InspectDataItem> 
 	            findInspectDataItemsByGroupId(int inspectDataGroupTypeId,int inspectTypeID) throws Exception
 	{

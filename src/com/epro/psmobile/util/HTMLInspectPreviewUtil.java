@@ -220,22 +220,37 @@ public class HTMLInspectPreviewUtil {
 	        	            }
 	        	         }
 	        	      }
-	        	      if (total > 0){
-	        	         Enumeration<String> keys = jrpTable.keys();
+	        	      if (total > 0)
+	        	      {
 	        	         
-	        	         while(keys.hasMoreElements())
-	        	         {
-	        	           String key = keys.nextElement();
-	        	           String item = 
-	        	                 context.getString(R.string.univeral_car_item, key,jrpTable.get(key));
-	        	           strBld.append("<font color='green'><b>"+item+"</b></font>");
-	        	           strBld.append("<br/>");
+	        	         if (viewState.getInspectDataObjectSaved().getInspectTypeID() == 
+	        	               InspectServiceSupportUtil.SERVICE_CAR_INSPECT){
+	        	            
+	        	            
+	        	            Enumeration<String> keys = jrpTable.keys();
+	                         
+	                         while(keys.hasMoreElements())
+	                         {
+	                           String key = keys.nextElement();
+	                           String item = 
+	                                 context.getString(R.string.univeral_car_item, key,jrpTable.get(key));
+	                           strBld.append("<font color='green'><b>"+item+"</b></font>");
+	                           strBld.append("<br/>");
+	                         }
+	                         
+	                         
+	                         
+	                         String strTotal = 
+	                               context.getString(R.string.univeral_total_car, total);
+	                         strBld.append(strTotal);
+	        	         }else{
+                            String strTotal = 
+                                  context.getString(R.string.univeral_total_item, total);
+                            strBld.append(strTotal);
 	        	         }
-	        	         
-	        	         String strTotal = 
-	        	               context.getString(R.string.univeral_total_item, total);
-	        	         strBld.append(strTotal);
-	        	         strBld.append("<br/>");
+	        	        
+                         strBld.append("<br/>");
+	        	        
 	        	      }
 	        	      if ((viewState.getInspectDataObjectSaved().getOpinionValue() != null)&&
 	        	            (!viewState.getInspectDataObjectSaved().getOpinionValue().isEmpty())){

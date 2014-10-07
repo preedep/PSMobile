@@ -76,16 +76,43 @@ public abstract class BaseAsyncTask<T, K, L> extends AsyncTask<T, K, L> {
 	}
 	protected void closeDisplayMessage(){
 		
-		if (alert != null)
-		{
-			alert.dismiss();
-		}
+	   Activity activity = (Activity)context;
+       
+	    if (activity != null){
+	       activity.runOnUiThread(new Runnable(){
+
+            @Override
+            public void run() {
+               // TODO Auto-generated method stub
+               if (alert != null)
+               {
+                   alert.dismiss();
+               }
+            }
+	          
+	       }) ; 
+	    }
+		
 	}
 	protected void closeProgressDisplay(){
-		if (mProgressDialog != null)
-		{
-			mProgressDialog.dismiss();
-		}
+	   Activity activity = (Activity)context;
+       
+       if (activity != null){
+            activity.runOnUiThread(new Runnable(){
+
+               @Override
+               public void run() {
+                  // TODO Auto-generated method stub
+                  if (mProgressDialog != null)
+                  {
+                      mProgressDialog.dismiss();
+                  }
+               }
+               
+            });
+       }
+       
+		
 	}
 	public OnAsyncTaskResultHandler getOnTaskResultHandler() {
 		return onTaskResultHandler;

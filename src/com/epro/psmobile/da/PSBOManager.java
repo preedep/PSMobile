@@ -24,6 +24,7 @@ public class PSBOManager {
 	}
 	public void initialMastertableIfNotExist()
 	{
+	   try{
 		if (databaseBuilder != null)
 		{
 			try{
@@ -32,6 +33,9 @@ public class PSBOManager {
 				databaseBuilder.close();
 			}
 		}
+	   }catch(Exception ex){
+	      ex.printStackTrace();
+	   }
 	}
 
 	/*

@@ -66,6 +66,8 @@ public class ResultCheckJobProduct extends JobRequestProduct
 			this.productPrice = this.inspectDataSaved.getMarketPrice();
 			this.productValue = this.inspectDataSaved.getValue();
 			
+			this.inspectDataObjectID = this.inspectDataSaved.getInspectDataObjectID();
+			
 			/*
 			if (this.getcOrder() == 3){
 			   this.inspectDataObjectID = this.inspectDataSaved.getInspectDataObjectID();

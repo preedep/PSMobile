@@ -884,7 +884,17 @@ public class InspectDataEntryDialog extends DialogFragment implements OnFocusCha
                   int arg2, long arg3) {
               // TODO Auto-generated method stub
               try{
-                  productGroupSelected = sp_product_group.getProductGroups().get(arg2);  
+                  ProductGroup selectGroup = sp_product_group.getProductGroups().get(arg2);  
+                  
+                  if (productGroupSelected != null)
+                  {
+                     if (selectGroup.getProductGroupID() != productGroupSelected.getProductGroupID()){
+                        productIdxSelected = 0;
+                        edt_marketPrice.setText("");
+                     }                     
+                  }
+                  productGroupSelected = selectGroup;
+                  
                   sp_product.initial(productGroupSelected.getProductGroupID());
                   if (sp_product.getProducts() != null){
                       sp_product.setSelection(productIdxSelected);

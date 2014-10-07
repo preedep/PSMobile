@@ -876,51 +876,6 @@ public class DataUploadGenerator {
                                       null,
                                       null);
 			            
-			            /*
-			             * - cFranchise: String
-- cInvoiceDate: String
-- cRegisterNumber: String
-- cMid: String
-- cVin: String
-- cEngine: String
-- cDescription: String
-- cColor: String
-- cModel: String
-- cYear: String
-- cType: String
-
-// new support car for result 
-- cOrder: int, ลำดับ (เฉพาะ requestTypeID=4) เพิ่มใหม่
-- cWareHouse:  int, (ใช้ customerSurveySiteID บอกว่ามาจากโกดังใหน) ลำดับที่อยู่ (เฉพาะ requestTypeID=4) เพิ่มใหม่
-- cSight :varchar(1) ,พบ/ไม่พบ default =”N” (เฉพาะ requestTypeID=4) เพิ่มใหม่
-- cEquipping :varchar(1) , ติดอุปกรณ์/ไม่ติดอุปกรณ์  (เฉพาะ requestTypeID=4) เพิ่มใหม่
-- cPay varchar(1) ขาย,  (เฉพาะ requestTypeID=4) เพิ่มใหม่
-- cSold  varchar(1) โอน, (เฉพาะ requestTypeID=4) เพิ่มใหม่
-- cDate  date (yyyy-MM-dd HH:mm:ss) วันที่โอน/วันที่ขาย,ดูอ้างอิงจาก cPay หรือ cSold (เฉพาะ requestTypeID=4) เพิ่มใหม่
-- cKms: varchar, เลขไมล์ (เฉพาะ requestTypeID=4) เพิ่มใหม่
-- cDocument: varchar(1), เอกสาร  (เฉพาะ requestTypeID=4) เพิ่มใหม่
-- cRemark: text,  เนื่องจาก (เฉพาะ requestTypeID=4) เพิ่มใหม่
-- cImage :varchar , เป็น path ที่เก็บรูป 
-- cReasonId: int ,reasonSentence.reasonSentenceId(เฉพาะ requestTypeID=4)
-- cReasonCode: varchar , reasonSentence.reasonSentenceType (เฉพาะ requestTypeID=4)
-- cReasonDescription: varchar , reasonSentence.reasonSentenceText  (เฉพาะ requestTypeID=4)
-- cTeamId : int   (เอาจาก jobRequestProduct.cTeamId )ใช้สำหรับ เป็น key บอกว่าเป็น ของทีมใหน(เฉพาะ requestTypeID=4) 
-- cJobRowId :int (เอาจาก jobRequestProduct.cJobRowId)ใช้สำหรับ เป็น key บอกว่าเป็นงานใหน(เฉพาะ requestTypeID=4) 
-
-
-			             */
-			            /*
-			             * - cInvoiceDate: String
-- cRegisterNumber: String
-- cMid: String
-- cVin: String
-- cEngine: String
-- cDescription: String
-- cColor: String
-- cModel: String
-- cYear: String
-- cType: String
-			             */
 			            
 			            for(Method mGet : JobRequestProduct.class.getMethods())
 			            {
@@ -1076,107 +1031,6 @@ public class DataUploadGenerator {
 			      /*
 			       * general image
 			       */
-			      /*
-			      int iCount = 0;
-			      ArrayList<InspectDataObjectPhotoSaved> photoSavedList = 
-                        dataAdapter.getInspectDataObjectPhotoSavedWithGeneralImage(task.getTaskCode());
-			      if (photoSavedList != null)
-			      {
-			         InspectDataObjectSaved cameraItem = new InspectDataObjectSaved();
-                     cameraItem.setInspectDataObjectID(0);
-                     
-			         for(InspectDataObjectPhotoSaved generalPhoto : photoSavedList)
-			         {
-			            
-			            CustomerSurveySite site = new CustomerSurveySite();
-                        site.setCustomerSurveySiteID(generalPhoto.getCustomerSurveySiteID());
-                        site.setCustomerSurveySiteRowID(generalPhoto.getCustomerSurveySiteID());
-                       
-                        
-                        
-                         //copy image
-                         
-                        
-                        String fileName = generalPhoto.getFileName();
-                        
-                         //copy photo to upload folder
-                         
-                        File src = new File(fileName);
-                        if (src.exists())
-                        {
-                            String taskCode = DataUtil.regenerateTaskCodeForMakeFolder(generalPhoto.getTaskCode());
-                            
-                            int customerSurveySiteID = generalPhoto.getCustomerSurveySiteID();
-                            
-                            String newFolder = taskCode+"/"+customerSurveySiteID+"/";
-                        
-                            int lastSlashIdx = fileName.lastIndexOf("/");
-                            String tmp_fileName = fileName.substring(lastSlashIdx+1,
-                                  fileName.length());
-                            
-                            //create destination file
-                            String destFolder = rootUploadDataFolder;
-                            destFolder += "/";
-                            destFolder += CommonValues.UPLOAD_IMAGE_INSPECT_FOLDER;
-                            destFolder += "/";                  
-                            destFolder += newFolder;
-                            destFolder += "/";
-                            destFolder += CommonValues.UPLOAD_PHOTO_FOLDER;
-                            destFolder += "/general/";
-                            File folderDest = new File(destFolder);
-                            if (!folderDest.exists())
-                            {
-                                folderDest.mkdirs();
-                            }
-                            
-                            File dest = new File(destFolder+tmp_fileName);
-
-                            
-                            AppFolderUtil.copy(src,dest);
-
-                            //http://stackoverflow.com/questions/5280479/how-to-save-gps-coordinates-in-exif-data-on-android
-                            //float[] latlon = new float[]{0,0};
-                            //ExifInterface exifInterface  = new ExifInterface(src.getAbsolutePath());
-                            //exifInterface.getLatLong(latlon);
-                            //String dateString = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);
-
-                            float[] latlon = new float[]{0,0};
-                            ExifInterface exifInterface  = new ExifInterface(src.getAbsolutePath());
-                            exifInterface.getLatLong(latlon);
-                            String dateString = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);
-
-                            
-                            String rootPath = CommonValues.UPLOAD_IMAGE_INSPECT_FOLDER;
-                            rootPath += "/";
-                            rootPath += newFolder;
-                            String relativePath = rootPath;
-                            relativePath += "/";
-                            relativePath += CommonValues.UPLOAD_PHOTO_FOLDER;
-                            relativePath += "/general/";
-
-                            
-                                                
-                            generalPhoto.setFileName(DataUtil.replaceSingleBackSlash(relativePath)+""+tmp_fileName);
-                            generalPhoto.setLatitude(latlon[0]);
-                            generalPhoto.setLongitude(latlon[1]);
-                            generalPhoto.setImageDate(dateString);
-                        }
-                        //////////
-                        
-			            ResultCheckJobImage checkJobImage = 
-                              new ResultCheckJobImage(task,
-                                      site,
-                                      iCount++,
-                                      cameraItem,
-                                      generalPhoto);
-                      checkJobImage.setResultProductRowId(0);
-                      checkJobImage.setImageDetailName(generalPhoto.getInspectDataTextSelected().trim());
-                      checkJobImage.executeAdapter();
-                      
-                      resultCheckJobImageList.add(checkJobImage);
-                      
-			         }
-			      }*/
 			      genGeneralPhoto(dataAdapter,task, rootUploadDataFolder,resultCheckJobImageList);
 			      
 			   }
@@ -1186,6 +1040,150 @@ public class DataUploadGenerator {
 			       * inspect type id = 1,2
 			       * or QC team
 			       */
+                  if (task.getJobRequest().getInspectType().getInspectTypeID() <= 2)
+                  {
+                     resultRowId = 0;
+                     ArrayList<CustomerSurveySite> customerSurveySites =  dataAdapter.findCustomerSurveySite(
+                           task.getTaskID()
+                           );
+                   ArrayList<InspectDataItem> inspectDataItemList = 
+                           dataAdapter.getAllDataInspectItemsForFarmLand(
+                                          task.getJobRequest().getInspectType().getInspectTypeID());//dataAdapter.findInspectDataItemsByGroupId(0,0/*inspect type id , ignored*/);/*0 = find all*/
+                   
+                   if (customerSurveySites != null)
+                   {
+                       for(CustomerSurveySite site : customerSurveySites)
+                       {
+                           /*
+                            */
+                           InspectDataObjectSaved dataSaved = null;
+                           
+                           ArrayList<InspectDataObjectSaved> objectSavedList = dataAdapter.getInspectDataObjectSaved(
+                                                                                               task.getTaskCode(), 
+                                                                                               site.getCustomerSurveySiteID()
+                                                                                               );
+                           //allgetAllInspectDataObjectSaved;
+                           if (objectSavedList != null)
+                           {
+                               ArrayList<InspectDataObjectSaved> obj_camera_saved_list = 
+                                       new ArrayList<InspectDataObjectSaved>();
+                               
+                             for(InspectDataObjectSaved obj_dataSaved : objectSavedList)
+                             {
+                               InspectDataItem in_item = null;
+                               for(InspectDataItem item : inspectDataItemList)
+                               {
+                                   if (obj_dataSaved.getInspectDataItemID() == item.getInspectDataItemID())
+                                   {
+                                       in_item = item;
+                                       break;
+                                   }                               
+                               }
+                               if (in_item != null)
+                               {
+                                   if (in_item.isCameraObject())
+                                   {
+                                       obj_camera_saved_list.add(obj_dataSaved);
+                                   }else if (in_item.isInspectObject())
+                                   {
+                                       resultRowId += 1;
+                                       ResultCheckJobProduct resultCheckJobProduct = 
+                                                       new ResultCheckJobProduct(task,
+                                                               site,
+                                                               resultRowId,
+                                                               obj_dataSaved,
+                                                               null);
+                                       resultCheckJobProduct.setProductRowID(resultRowId);
+                                       resultCheckJobProduct.executeAdapter();/*bind data to object*/
+                                       resultCheckJobProductList.add(resultCheckJobProduct);
+                                   }
+                               }
+                            }
+                             //////////////////
+                            for(InspectDataObjectSaved cameraItem : obj_camera_saved_list)
+                            {
+                                   ArrayList<InspectDataObjectPhotoSaved> objectPhtoSavedList = 
+                                           allInspectDataObjectPhotoSaved;
+                                   if (objectPhtoSavedList != null)
+                                   {
+                                       int imageNo = 1;
+                                       for(InspectDataObjectPhotoSaved photoSaved : objectPhtoSavedList)
+                                       {
+                                           if (photoSaved.getPhotoID() == cameraItem.getPhotoID())
+                                           {
+                                               String displaySelected = photoSaved.getInspectDataTextSelected();
+                                               String[] productItems = 
+                                                       displaySelected.split("\r\n");
+                                               for(String productItem : productItems)
+                                               {
+                                                   if (productItem.trim().isEmpty()) continue;
+                                                   
+                                                   int idxOfPid = productItem.indexOf("pid:");
+                                                   if (idxOfPid >= 0)
+                                                   {
+                                                       String strSub = productItem.substring(idxOfPid+("pid:".length()), 
+                                                               productItem.length());
+                                                       int idx = strSub.indexOf(")");
+                                                       String strPid = 
+                                                               strSub.substring(0, idx);
+                                                       
+                                                       String[] splitText = strPid.split(",");
+                                                       
+                                                       int productId = Integer.parseInt(splitText[0]);     
+                                                       int objId = Integer.parseInt(splitText[1]);
+                                                       
+                                                       int rowId = 0;                          
+                                                       
+                                                       for(ResultCheckJobProduct jobProduct : resultCheckJobProductList){
+                                                           if (jobProduct.getProductId() == productId){
+                                                               if (jobProduct.getInsectDataObjectSavedID() == objId){
+                                                                   rowId = jobProduct.getResultProductRowID();
+                                                                   break;
+                                                               }
+                                                           }
+                                                       }
+                                                       
+                                                       ResultCheckJobImage checkJobImage = 
+                                                               new ResultCheckJobImage(task,
+                                                                       site,
+                                                                       imageNo++,
+                                                                       cameraItem,
+                                                                       photoSaved);
+                                                       checkJobImage.setResultProductRowId(rowId);
+                                                       
+                                                       try{
+                                                           checkJobImage.setImageDetailName(DataUtil.removePID(productItem));
+                                                       }catch(Exception ex){
+                                                           checkJobImage.setImageDetailName(productItem);
+                                                           ex.printStackTrace();
+                                                       }
+                                                       //checkJobImage.setCameraViewNo(cameraItem.getInspectDataObjectID());
+                                                       checkJobImage.executeAdapter();
+                                                       resultCheckJobImageList.add(checkJobImage);
+
+                                                       
+                                                   }else{
+                                                       
+                                                       ResultCheckJobImage checkJobImage = 
+                                                               new ResultCheckJobImage(task,
+                                                                       site,
+                                                                       imageNo++,
+                                                                       cameraItem,
+                                                                       photoSaved);
+                                                       checkJobImage.setResultProductRowId(-1);
+                                                       checkJobImage.setImageDetailName(productItem);
+                                                       checkJobImage.executeAdapter();
+                                                       resultCheckJobImageList.add(checkJobImage);
+                                                   }
+                                               }
+                                           }
+                                       }
+                                   }
+                               }                                       
+                           }
+                       }
+                    }
+                  }
 
 	                /*
 	                ArrayList<CustomerSurveySite> customerSurveySites =  dataAdapter.findCustomerSurveySite(
@@ -1198,8 +1196,6 @@ public class DataUploadGenerator {
 			         * 
 			         * ignored saved in checklist
 			         **/
-			      
-			        
 	                ArrayList<TaskFormDataSaved> taskFormDataSavedList =
 	                                dataAdapter.findTaskFormDataSavedListByJobRequestId(task.getJobRequest().getJobRequestID(),
 	                                                                                    task.getTaskCode());
@@ -1260,225 +1256,6 @@ public class DataUploadGenerator {
 	                    }
 	                }
 
-	                
-	                
-	                
-	                
-	                /*
-	                if ((taskFormDataSavedList != null)&&(taskFormTemplateList != null))
-	                {
-	                    for(TaskFormDataSaved taskFormDataSaved : taskFormDataSavedList)
-	                    {
-	                            @SuppressWarnings("unused")
-	                            TaskFormTemplate taskFormTemplate = null;
-	                            for(TaskFormTemplate formTemplate : taskFormTemplateList)
-	                            {
-	                                if (taskFormDataSaved.getTaskFormAttributeID() == 
-	                                                formTemplate.getTaskFormAttributeID()){
-	                                    taskFormTemplate = formTemplate;
-	                                    break;
-	                                }
-	                            }
-	                            
-	                            if ((taskFormDataSaved.getTaskControlType() == TaskControlType.RadioBoxList)||
-	                                    (taskFormDataSaved.getTaskControlType() == TaskControlType.CheckBoxList)){
-	                                    taskFormDataSaved.setTaskDataValues("1");                                   
-	                            }else if (taskFormDataSaved.getTaskControlType() == TaskControlType.Dropdownlist){
-
-	                                if ((taskFormDataSaved.getParentID() != null)&&
-	                                        (!taskFormDataSaved.getParentID().equalsIgnoreCase("null")))
-	                                {
-	                                    if (taskFormTemplate != null)
-	                                    {
-	                                        boolean hasParent = false;
-	                                        for (TaskFormDataSaved ts : taskFormDataSavedList)
-	                                        {
-	                                            if (ts.getReasonSentence().getReasonSentencePath().equalsIgnoreCase(taskFormTemplate.getParentId())){
-	                                                hasParent = true;
-	                                                break;
-	                                            }
-	                                        }                                   
-	                                        if (!hasParent){
-	                                            continue;
-	                                        }
-	                                    }                                   
-	                                }
-	                            }else if ((taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleText)||
-	                                      (taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleTextDate)||
-	                                      (taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleTextDecimal)||
-	                                      (taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleTextSingleLine)||
-	                                      (taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleTextDecimalSingleLine))
-	                            {
-	                                if ((taskFormDataSaved.getTaskDataValues() == null)||
-	                                    (taskFormDataSaved.getTaskDataValues().isEmpty())){
-	                                    continue;
-	                                }
-	                            }
-	                            
-	                            String parentId = "";
-	                            String path = "";
-	                            if (taskFormTemplate != null)
-	                            {
-	                                parentId = taskFormTemplate.getParentId();
-	                                path = taskFormTemplate.getPath();
-	                            }
-	                            CheckListFormDetail detail = new CheckListFormDetail(
-	                                    task,
-	                                    taskFormDataSaved,
-	                                    parentId,
-	                                    path);
-	                            
-	                            if (taskFormTemplate != null)
-	                            {
-	                                detail.isQCTeam = taskFormTemplate.isQCTeam();
-	                            }
-	                            
-	                            detail.executeAdapter();
-	                            checkListFormDetailList.add(detail);
-	                        }
-	                }
-	                
-	                */
-	                
-	                ArrayList<CustomerSurveySite> customerSurveySites =  dataAdapter.findCustomerSurveySite(
-	                        task.getTaskID()
-	                        );
-	                ArrayList<InspectDataItem> inspectDataItemList = 
-	                        dataAdapter.findInspectDataItemsByGroupId(0,0/*inspect type id , ignored*/);/*0 = find all*/
-	                
-	                if (customerSurveySites != null){
-	                    for(CustomerSurveySite site : customerSurveySites)
-	                    {
-	                        /*
-	                         */
-	                        InspectDataObjectSaved dataSaved = null;
-	                        
-	                        ArrayList<InspectDataObjectSaved> objectSavedList = dataAdapter.getInspectDataObjectSaved(
-	                                                                                            task.getTaskCode(), 
-	                                                                                            site.getCustomerSurveySiteID()
-	                                                                                            );
-	                        //allgetAllInspectDataObjectSaved;
-	                        if (objectSavedList != null)
-	                        {
-	                            ArrayList<InspectDataObjectSaved> obj_camera_saved_list = 
-	                                    new ArrayList<InspectDataObjectSaved>();
-	                            
-	                          for(InspectDataObjectSaved obj_dataSaved : objectSavedList)
-	                          {
-	                            InspectDataItem in_item = null;
-	                            for(InspectDataItem item : inspectDataItemList)
-	                            {
-	                                if (obj_dataSaved.getInspectDataItemID() == item.getInspectDataItemID())
-	                                {
-	                                    in_item = item;
-	                                    break;
-	                                }                               
-	                            }
-	                            if (in_item != null)
-	                            {
-	                                if (in_item.isCameraObject())
-	                                {
-	                                    obj_camera_saved_list.add(obj_dataSaved);
-	                                }else if (in_item.isInspectObject())
-	                                {
-	                                    resultRowId += 1;
-	                                    ResultCheckJobProduct resultCheckJobProduct = 
-	                                                    new ResultCheckJobProduct(task,
-	                                                            site,
-	                                                            resultRowId,
-	                                                            obj_dataSaved,
-	                                                            null);
-	                                    resultCheckJobProduct.executeAdapter();/*bind data to object*/
-	                                    resultCheckJobProductList.add(resultCheckJobProduct);
-	                                }
-	                            }
-
-	                         }
-	                        
-	                          
-	                         for(InspectDataObjectSaved cameraItem : obj_camera_saved_list)
-	                         {
-	                                ArrayList<InspectDataObjectPhotoSaved> objectPhtoSavedList = 
-	                                        allInspectDataObjectPhotoSaved;
-	                                if (objectPhtoSavedList != null)
-	                                {
-	                                    int imageNo = 1;
-	                                    for(InspectDataObjectPhotoSaved photoSaved : objectPhtoSavedList)
-	                                    {
-	                                        if (photoSaved.getPhotoID() == cameraItem.getPhotoID())
-	                                        {
-	                                            String displaySelected = photoSaved.getInspectDataTextSelected();
-	                                            String[] productItems = 
-	                                                    displaySelected.split("\r\n");
-	                                            for(String productItem : productItems)
-	                                            {
-	                                                if (productItem.trim().isEmpty()) continue;
-	                                                
-	                                                int idxOfPid = productItem.indexOf("pid:");
-	                                                if (idxOfPid >= 0)
-	                                                {
-	                                                    String strSub = productItem.substring(idxOfPid+("pid:".length()), 
-	                                                            productItem.length());
-	                                                    int idx = strSub.indexOf(")");
-	                                                    String strPid = 
-	                                                            strSub.substring(0, idx);
-	                                                    
-	                                                    String[] splitText = strPid.split(",");
-	                                                    
-	                                                    int productId = Integer.parseInt(splitText[0]);     
-	                                                    int objId = Integer.parseInt(splitText[1]);
-	                                                    
-	                                                    int rowId = 0;                          
-	                                                    
-	                                                    for(ResultCheckJobProduct jobProduct : resultCheckJobProductList){
-	                                                        if (jobProduct.getProductId() == productId){
-	                                                            if (jobProduct.getInsectDataObjectSavedID() == objId){
-	                                                                rowId = jobProduct.getResultProductRowID();
-	                                                                break;
-	                                                            }
-	                                                        }
-	                                                    }
-	                                                    
-	                                                    ResultCheckJobImage checkJobImage = 
-	                                                            new ResultCheckJobImage(task,
-	                                                                    site,
-	                                                                    imageNo++,
-	                                                                    cameraItem,
-	                                                                    photoSaved);
-	                                                    checkJobImage.setResultProductRowId(rowId);
-	                                                    
-	                                                    try{
-	                                                        checkJobImage.setImageDetailName(DataUtil.removePID(productItem));
-	                                                    }catch(Exception ex){
-	                                                        checkJobImage.setImageDetailName(productItem);
-	                                                        ex.printStackTrace();
-	                                                    }
-	                                                    //checkJobImage.setCameraViewNo(cameraItem.getInspectDataObjectID());
-	                                                    checkJobImage.executeAdapter();
-	                                                    resultCheckJobImageList.add(checkJobImage);
-
-	                                                    
-	                                                }else{
-	                                                    
-	                                                    ResultCheckJobImage checkJobImage = 
-	                                                            new ResultCheckJobImage(task,
-	                                                                    site,
-	                                                                    imageNo++,
-	                                                                    cameraItem,
-	                                                                    photoSaved);
-	                                                    checkJobImage.setResultProductRowId(-1);
-	                                                    checkJobImage.setImageDetailName(productItem);
-	                                                    checkJobImage.executeAdapter();
-	                                                    resultCheckJobImageList.add(checkJobImage);
-	                                                }
-	                                            }
-	                                        }
-	                                    }
-	                                }
-	                            }                                       
-	                        }
-	                    }
-	                }
 	            }
 			   //end
 			}

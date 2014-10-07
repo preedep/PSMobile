@@ -44,6 +44,8 @@ public class MessageBox
 			final String title,
 			final String message)
 	{
+	    if (ctxt == null)return;
+	    
 		Activity activity = null;
 		if (ctxt instanceof Activity)
 		{

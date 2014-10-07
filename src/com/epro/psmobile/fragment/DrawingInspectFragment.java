@@ -1882,6 +1882,21 @@ implements  OnItemClickListener,
 			InspecItemViewCreator creator = new InspecItemViewCreator(this.getActivity(),0);
 			InspectDataObjectSaved inspectDataObjectSaved = 
 					SerializationUtils.cloneObject(dataItem.getInspectDataObjectSaved());
+			
+			  int objIdMax = 0;
+	            ViewGroup vg = (ViewGroup)layoutContainer;
+	            for(int i = 0; i < vg.getChildCount();i++){
+	               View vEach = vg.getChildAt(i);
+	               if (vEach.getTag() instanceof InspectItemViewState){
+	                  InspectItemViewState state = (InspectItemViewState)vEach.getTag();
+	                  if (state.getObjectId() > objIdMax){
+	                     objIdMax = state.getObjectId();
+	                  }
+	               }
+	            }
+	            
+	        inspectDataObjectSaved.setInspectDataObjectID(objIdMax+1);
+	            
 			View newView = creator.createInspectItemView(
 					dataItem.getInspectDataItem(),
 					inspectDataObjectSaved,
