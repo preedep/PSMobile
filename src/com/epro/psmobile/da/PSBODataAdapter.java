@@ -1524,6 +1524,15 @@ String sql = " select * , ( " +
 	      sql += " and flagGeneralImage='Y'";
 	      return query(sql,InspectDataObjectPhotoSaved.class);
 	  }
+	
+	public synchronized ArrayList<InspectDataObjectPhotoSaved> getInspectDataObjectPhotoSavedWithGeneralImageLayout(
+          String taskCode
+          )
+           throws Exception
+   {
+       String sql = "select * from InspectDataObjectPhotoSaved where taskCode='"+taskCode+"' and flagGeneralImage != 'Y' ";
+       return query(sql,InspectDataObjectPhotoSaved.class);
+   }
 	/*
 	public ArrayList<InspectDataObjectSaved> getInspectDataObjectSaved(int jobRequestID,
 			int customerSurveySiteID) throws Exception
@@ -1543,7 +1552,12 @@ String sql = " select * , ( " +
 		return query(sql,InspectDataObjectSaved.class);
 	}
 	
-	
+	public synchronized ArrayList<InspectDataObjectSaved> getInspectDataObjectSavedNoSiteID(String taskCode) throws Exception
+  {
+      String sql = " select * from InspectDataObjectSaved where taskCode='"+taskCode+"'";
+      sql += " order by inspectDataObjectID";
+      return query(sql,InspectDataObjectSaved.class);
+  }
      public synchronized ArrayList<InspectDataObjectSaved> getInspectDataObjectSavedUniverals(String taskCode,
 	            int customerSurveySiteID) throws Exception
 	 {

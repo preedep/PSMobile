@@ -1546,6 +1546,9 @@ implements  OnItemClickListener,
 				argument.putParcelableArrayList(InstanceStateKey.KEY_ARGUMENT_INSPECT_DATA_ENTRY_SAVED, dataSaved);
 				argument.putString(InstanceStateKey.KEY_ARGUMENT_TASK_CODE, this.currentTask.getTaskCode());
 				argument.putInt(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY_ID, this.customerSurveySite.getCustomerSurveySiteID());
+				if (this.isUniversalLayout){
+				  // argument.putBoolean(InstanceStateKey.KEY_ARGUMENT_TAKE_GENERAL_PHOTO, true);
+				}
 				ActivityUtil.startNewActivityWithResult(getActivity(),
 						InspectPhotoEntryActivity.class, 
 						argument, 

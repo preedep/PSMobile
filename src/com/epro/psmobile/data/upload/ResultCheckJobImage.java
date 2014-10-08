@@ -114,6 +114,7 @@ public class ResultCheckJobImage implements JSONDataHolder ,UploadDataAdapter{
 		{
 			this.cameraViewNo = this.dataObjSaved.getInspectDataObjectID();
 		}
+		
 		if (this.dataObjPhotoSaved != null)
 		{
 			//this.imageDetailName = 

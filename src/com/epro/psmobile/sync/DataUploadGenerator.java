@@ -1040,6 +1040,12 @@ public class DataUploadGenerator {
 			       * inspect type id = 1,2
 			       * or QC team
 			       */
+			      /*
+                   * general image
+                   */
+                  //genGeneralPhoto(dataAdapter,task, rootUploadDataFolder,resultCheckJobImageList);
+
+                  
                   if (task.getJobRequest().getInspectType().getInspectTypeID() <= 2)
                   {
                      resultRowId = 0;
@@ -1331,20 +1337,74 @@ public class DataUploadGenerator {
 		return bWritten;
 	}
 	
-	private void genGeneralPhoto(PSBODataAdapter dataAdapter,Task task,String rootUploadDataFolder,ArrayList<ResultCheckJobImage> resultCheckJobImageList)
+	private void genGeneralPhoto(PSBODataAdapter dataAdapter,
+	      Task task,
+	      String rootUploadDataFolder,
+	      ArrayList<ResultCheckJobImage> resultCheckJobImageList)
 	throws Exception
 	{
 	   int iCount = 0;
-       ArrayList<InspectDataObjectPhotoSaved> photoSavedList = 
-             dataAdapter.getInspectDataObjectPhotoSavedWithGeneralImage(task.getTaskCode());
+       ArrayList<InspectDataObjectPhotoSaved> photoSavedList = null;
+       photoSavedList = dataAdapter.getInspectDataObjectPhotoSavedWithGeneralImage(task.getTaskCode());
+       
+       
+       
+       if (photoSavedList != null){
+          ArrayList<InspectDataObjectSaved> objSaveList = 
+                dataAdapter.getInspectDataObjectSavedNoSiteID(task.getTaskCode());
+       
+             for(InspectDataObjectSaved dataObjSaveItem : objSaveList){
+                if (dataObjSaveItem.getPhotoID() > 0){
+                   ArrayList<InspectDataObjectPhotoSaved> photoSaveds = 
+                         dataAdapter.getInspectDataObjectPhotoSaved(dataObjSaveItem.getPhotoID());
+                   if (photoSaveds != null){
+                      for(InspectDataObjectPhotoSaved item : photoSaveds){
+                         item.setInspectDataObjectID(dataObjSaveItem.getInspectDataObjectID());
+                         photoSavedList.add(item);
+                      }
+                   }
+                }
+             }
+       }else{
+          ArrayList<InspectDataObjectPhotoSaved> generalInLayouts = 
+                dataAdapter.getInspectDataObjectPhotoSavedWithGeneralImageLayout(task.getTaskCode());
+          if (generalInLayouts != null){
+             photoSavedList =  new ArrayList<InspectDataObjectPhotoSaved>();
+             if (generalInLayouts != null)
+             {
+                ArrayList<InspectDataObjectSaved> objSaveList = 
+                      dataAdapter.getInspectDataObjectSavedNoSiteID(task.getTaskCode());
+             
+                   for(InspectDataObjectSaved dataObjSaveItem : objSaveList){
+                      if (dataObjSaveItem.getPhotoID() > 0){
+                         ArrayList<InspectDataObjectPhotoSaved> photoSaveds = 
+                               dataAdapter.getInspectDataObjectPhotoSaved(dataObjSaveItem.getPhotoID());
+                         if (photoSaveds != null)
+                         {
+                             for(InspectDataObjectPhotoSaved item : photoSaveds){
+                                item.setInspectDataObjectID(dataObjSaveItem.getInspectDataObjectID());
+                                photoSavedList.add(item);
+                             }
+                         }
+                      }
+                   }
+               }
+          }
+       }
+       
+       
        if (photoSavedList != null)
        {
-          InspectDataObjectSaved cameraItem = new InspectDataObjectSaved();
-          cameraItem.setInspectDataObjectID(0);
           
+          
+          InspectDataObjectSaved cameraItem = new InspectDataObjectSaved();
           for(InspectDataObjectPhotoSaved generalPhoto : photoSavedList)
           {
-             
+             if (generalPhoto.getInspectDataObjectID() > 0){
+                cameraItem.setInspectDataObjectID(generalPhoto.getInspectDataObjectID());
+             }else{
+                cameraItem.setInspectDataObjectID(0);
+             }
              CustomerSurveySite site = new CustomerSurveySite();
              site.setCustomerSurveySiteID(generalPhoto.getCustomerSurveySiteID());
              site.setCustomerSurveySiteRowID(generalPhoto.getCustomerSurveySiteID());
@@ -1476,10 +1536,12 @@ public class DataUploadGenerator {
                                        hasParent = true;
                                        break;
                                    }
-                               }                                   
+                               }                         
+                               /*
                                if (!hasParent){
                                    continue;
-                               }
+                               }*/
+                               
                            }                                   
                        }
                    }else if ((taskFormDataSaved.getTaskControlType() == TaskControlType.SimpleText)||
@@ -1501,6 +1563,7 @@ public class DataUploadGenerator {
                        parentId = taskFormTemplate.getParentId();
                        path = taskFormTemplate.getPath();
                    }
+                   
                    CheckListFormDetail detail = new CheckListFormDetail(
                            task,
                            taskFormDataSaved,
