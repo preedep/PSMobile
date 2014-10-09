@@ -2040,6 +2040,9 @@ public class JobRequestProduct implements DbCursorHolder,
 		return productId;
 	}
 	public void setProductId(int productId) {
+	    if (this.productRowID == 1){
+	       Log.d("DEBUG_XXXX", "Product id -> "+productId);
+	    }
 		this.productId = productId;
 	}
 	public double getProductQty() {

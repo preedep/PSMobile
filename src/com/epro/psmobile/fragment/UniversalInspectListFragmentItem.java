@@ -59,7 +59,7 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
    private  boolean  forceReload = false;
    private  InspectJobMapper currentjobMapper;
    private  boolean isDeleteRow = false;
-   private AlertDialog deleteConfirmDlg;
+   //private AlertDialog deleteConfirmDlg;
    static class Holder{
      View vContainer;
      Activity aActivity;
@@ -460,12 +460,18 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
                   data, 
                   currentJobRequestProduct, ls);
             this.forceReload = true;
+            
+            currentJobRequestProduct = null;
          }else{
          
             super.doActivityResultForTakePhoto(requestCode, 
                resultCode, 
                data, 
                currentJobRequestProduct, ls,false);         
+            
+            this.forceReload = true;
+            
+            currentJobRequestProduct = null;
          }
       }
    }
@@ -548,6 +554,7 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
    @Override
    public void onOpenCommentActivity(ArrayList<InspectFormView> colProperties, JobRequestProduct type) {
       // TODO Auto-generated method stub
+      currentJobRequestProduct = type;
       super.doOpenUniversalComment(type, colProperties);
    }
 

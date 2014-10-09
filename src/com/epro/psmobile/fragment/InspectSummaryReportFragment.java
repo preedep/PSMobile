@@ -348,7 +348,8 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
           UniversalControlType ctrlType = UniversalControlType.getControlType(formViewItem.getColType());
           if ((ctrlType != UniversalControlType.Camera)&&
                (ctrlType != UniversalControlType.CheckListForm)&&
-               (ctrlType != UniversalControlType.GodownList)){
+               (ctrlType != UniversalControlType.GodownList)&&(ctrlType != UniversalControlType.DeleteRow))
+          {
              reportColumns.add(formViewItem);
           }
        }

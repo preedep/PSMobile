@@ -1892,6 +1892,18 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   (ProductSpinner)v.viewCol.findViewById(R.id.sp_product);
             sp_product.initial(v.jrp.getProductGroupID()/*ignored because already fetched from cache in doBackground*/);
             
+            
+            final ProductSelectImpl productSelectImpl = new ProductSelectImpl();
+            if (sp_product.getOnItemSelectedListener() instanceof ProductTypeSelectImpl){
+               ((ProductSelectImpl)sp_product.getOnItemSelectedListener()).setViewRow(v.viewRow);
+               ((ProductSelectImpl)sp_product.getOnItemSelectedListener()).setPosition(v.position);
+            }else
+            {                  
+               productSelectImpl.setViewRow(v.viewRow);
+               productSelectImpl.setPosition(v.position); 
+               sp_product.setOnItemSelectedListener(productSelectImpl);
+            }
+            
             if (sp_product.getProducts() != null)
             {
                if (product == null){
@@ -1903,16 +1915,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   sp_product.setSelection(objProductIdx, false);
                }               
                
-               final ProductSelectImpl productSelectImpl = new ProductSelectImpl();
-               if (sp_product.getOnItemSelectedListener() instanceof ProductTypeSelectImpl){
-                  ((ProductSelectImpl)sp_product.getOnItemSelectedListener()).setViewRow(v.viewRow);
-                  ((ProductSelectImpl)sp_product.getOnItemSelectedListener()).setPosition(v.position);
-               }else
-               {                  
-                  productSelectImpl.setViewRow(v.viewRow);
-                  productSelectImpl.setPosition(v.position); 
-                  sp_product.setOnItemSelectedListener(productSelectImpl);
-               }
+               
                
                if (marketPriceeachColViewHolder != null){
                   new AsyncTaskReloadColumn().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, marketPriceeachColViewHolder);
