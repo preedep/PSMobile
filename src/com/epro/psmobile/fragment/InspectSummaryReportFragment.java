@@ -348,7 +348,8 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
           UniversalControlType ctrlType = UniversalControlType.getControlType(formViewItem.getColType());
           if ((ctrlType != UniversalControlType.Camera)&&
                (ctrlType != UniversalControlType.CheckListForm)&&
-               (ctrlType != UniversalControlType.GodownList)&&(ctrlType != UniversalControlType.DeleteRow))
+               (ctrlType != UniversalControlType.GodownList)&&
+               (ctrlType != UniversalControlType.DeleteRow))
           {
              reportColumns.add(formViewItem);
           }
@@ -408,14 +409,20 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
                                }
                             }
                          }catch(Exception ex){}
-                      }else if (ctrlType == UniversalControlType.Layout){
+                      }else if (ctrlType == UniversalControlType.Layout)
+                      {
                          int objId = jrp.getInspectDataObjectID();
-                         try{
+                         try
+                         {
                             ArrayList<InspectDataObjectSaved> objSaveds = 
                                   dataAdapter.getInspectDataObjectSavedUniverals(currentTask.getTaskCode(), jrp.getCustomerSurveySiteID());
-                            if (objSaveds != null){
-                               for(InspectDataObjectSaved objSave : objSaveds){
+                            if (objSaveds != null)
+                            {
+                               boolean hasObjId = false;
+                               for(InspectDataObjectSaved objSave : objSaveds)
+                               {
                                   if (objSave.getInspectDataObjectID() == objId){
+                                     hasObjId = true;
                                      String name = "";
                                      if ((objSave.getObjectName() != null)&&(!objSave.getObjectName().equalsIgnoreCase("null"))){
                                         name = objSave.getObjectName().trim();
@@ -424,21 +431,30 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
                                      break;
                                   }
                                }
+                               if (!hasObjId){
+                                  strBld.append("<td></td>");                                  
+                               }
+                            }else{
+                               strBld.append("<td></td>");
                             }
                          }catch(Exception ex){
                             ex.printStackTrace();
                          }
-                         
                       }else
                       {
-                         if (col.getColInvokeField() != null){
+                         if (col.getColInvokeField() != null)
+                         {
                             String[] fields = col.getColInvokeField().split(",");
                             StringBuilder textDisplays = new StringBuilder();
-                            for(String f : fields){
+                            for(String f : fields)
+                            {
                                Object objValue = UniversalListEntryAdapter.invokeGetValue(jrp,f);
-                               textDisplays.append(objValue+"<br/>");
+                               if (objValue != null){
+                                  textDisplays.append(objValue+"<br/>");
+                               }
                             }                            
-                            strBld.append("<td>"+textDisplays.toString()+"</td>");
+                            String strValue = (textDisplays.toString().isEmpty())?"":textDisplays.toString();
+                            strBld.append("<td>"+strValue+"</td>");
                          }else{
                             strBld.append("<td></td>");
                          }

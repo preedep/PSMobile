@@ -1117,14 +1117,23 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   
                   if (formView.isColEditable())
                   {
+                     /*
                      if (formView.textWatcher != null)
                      {
                         edtText.removeTextChangedListener(formView.textWatcher);
                         formView.textWatcher = null;
                         System.gc();
-                     }                     
+                     } */
+                     
+                     if (edtText.getTag() != null){
+                        if (edtText.getTag() instanceof UniversalTextWatcher){
+                           UniversalTextWatcher textWatcher= (UniversalTextWatcher)edtText.getTag();
+                           edtText.removeTextChangedListener(textWatcher);
+                        }
+                     }
                   }
-                  if (!objValue.toString().equalsIgnoreCase("null")){
+                  if (!objValue.toString().equalsIgnoreCase("null"))
+                  {
                      edtText.setText(setFormat(objValue,formView));
                   }
                   
@@ -1148,12 +1157,21 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   }
                   if (formView.isColEditable())
                   {
+                     /*
                      formView.textWatcher = new UniversalTextWatcher();
                      ((UniversalTextWatcher)formView.textWatcher).setEditText(edtText);
                      ((UniversalTextWatcher)formView.textWatcher).setPosition(position);
                      ((UniversalTextWatcher)formView.textWatcher).setViewCol(rowView);
                      Log.d("DEBUG_D_D", " display text watcher position -> "+ ((UniversalTextWatcher)formView.textWatcher).getPosition());
                      edtText.addTextChangedListener(formView.textWatcher);                     
+                     */
+                     UniversalTextWatcher textWatcher = new UniversalTextWatcher();
+                     textWatcher.setEditText(edtText);
+                     textWatcher.setPosition(position);
+                     textWatcher.setViewCol(rowView);
+                     
+                     edtText.setTag(textWatcher);
+                     edtText.addTextChangedListener(textWatcher);
                   }
             }break;
             case CheckBox:{
