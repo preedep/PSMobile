@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import uk.co.informaticscentre.utils.controls.SeekbarWithIntervals;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -351,6 +350,10 @@ implements  OnItemClickListener,
 			this.currentTask = bArgument.getParcelable(InstanceStateKey.KEY_ARGUMENT_TASK);
 			this.isShowFullScreen = bArgument.getBoolean(InstanceStateKey.KEY_ARGUMENT_SCREEN_STATE, false);
 			this.isUniversalLayout = bArgument.getBoolean(InstanceStateKey.KEY_ARGUMENT_IS_UNIVERSAL_LAYOUT,false);
+			
+			/*
+			 * remove intent
+			 **/
 			
 			if (this.isShowFullScreen)
 			{

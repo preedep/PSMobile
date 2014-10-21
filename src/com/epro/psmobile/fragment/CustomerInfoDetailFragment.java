@@ -20,6 +20,7 @@ public class CustomerInfoDetailFragment extends ContentViewBaseFragment {
 	public static CustomerInfoDetailFragment newInstance(JobRequest jobRequest,Task task,boolean showInPlan)
 	{
 		CustomerInfoDetailFragment detail = new CustomerInfoDetailFragment();
+		
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(InstanceStateKey.KEY_ARGUMENT_JOB_DETAIL, jobRequest);
 		bundle.putParcelable(InstanceStateKey.KEY_ARGUMENT_TASK, task);

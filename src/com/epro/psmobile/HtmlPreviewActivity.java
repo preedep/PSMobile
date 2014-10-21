@@ -1,6 +1,7 @@
 package com.epro.psmobile;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import com.epro.psmobile.util.DataUtil;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -70,5 +72,35 @@ public class HtmlPreviewActivity extends PsBaseActivity {
 			}
 		}
 	}
+
+   /* (non-Javadoc)
+    * @see com.actionbarsherlock.app.SherlockFragmentActivity#onDestroy()
+    */
+   @Override
+   protected void onDestroy() {
+      // TODO Auto-generated method stub
+      super.onDestroy();
+      
+      
+      try{
+         if (getIntent() != null){
+            Log.d("DEBUG_X_X_X", "onDestroy  -> has intent");
+            
+            ArrayList<String> keys = new ArrayList<String>(getIntent().getExtras().keySet());
+            
+            for (String key : keys) {
+               Object value = getIntent().getExtras().get(key);
+               if (value != null){
+                  Log.d("DEBUG_X_X_X", String.format("%s %s (%s)", key,  
+                        value.toString(), value.getClass().getName()));
+               }
+               getIntent().getExtras().remove(key);
+           }                      
+         }
+      }catch(Exception ex){
+         ex.printStackTrace();
+      }
+
+   }
 
 }

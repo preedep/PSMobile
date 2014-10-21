@@ -139,7 +139,8 @@ ALTER TABLE JobRequestProductBackup ADD COLUMN  date1 TEXT;
 ALTER TABLE JobRequestProductBackup ADD COLUMN  date2 TEXT;
 ALTER TABLE JobRequestProductBackup ADD COLUMN  date3 TEXT;
 ALTER TABLE JobRequestProductBackup ADD COLUMN  productName TEXT;
-
+ALTER TABLE JobRequestProductBackup ADD COLUMN  marketPriceID INTEGER;
+ALTER TABLE JobRequestProductBackup ADD COLUMN  marketPrice REAL;
 
 ALTER TABLE JobRequestProduct ADD COLUMN remark TEXT;
 ALTER TABLE JobRequestProduct ADD COLUMN isAudit TEXT DEFAULT('true');
@@ -163,6 +164,8 @@ ALTER TABLE JobRequestProduct ADD COLUMN  date1 TEXT;
 ALTER TABLE JobRequestProduct ADD COLUMN  date2 TEXT;
 ALTER TABLE JobRequestProduct ADD COLUMN  date3 TEXT;
 ALTER TABLE JobRequestProduct ADD COLUMN  productName TEXT;
+ALTER TABLE JobRequestProduct ADD COLUMN  marketPriceID INTEGER;
+ALTER TABLE JobRequestProduct ADD COLUMN  marketPrice REAL;
 
 
 

@@ -398,11 +398,16 @@ public class PsMainActivity extends /*PsLayoutBaseActivity*/PsBaseActivity imple
                @Override
                public void onDialogDismiss() {
                    // TODO Auto-generated method stub
+                  /*
                     PsMainActivity.this.finish();  
                     Intent intent1 = new Intent(PsMainActivity.this,PsMainActivity.class);  
-//                  intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);   
                     intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent1);                            
+                    startActivity(intent1);                            */
+                  
+                  Intent intent = PsMainActivity.this.getIntent();
+                  PsMainActivity.this.finish();  
+                  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                  startActivity(intent);
                }
            });
            syncDialog.show(getSupportFragmentManager(), 
@@ -423,8 +428,9 @@ public class PsMainActivity extends /*PsLayoutBaseActivity*/PsBaseActivity imple
 			locManager = new PSMobileLocationManager(this);
 		
 		try {
+		  
 			locManager.startPSMLocationListener(this);
-			locManager.requestLocationUpdated();
+			//locManager.requestLocationUpdated();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -437,11 +443,13 @@ public class PsMainActivity extends /*PsLayoutBaseActivity*/PsBaseActivity imple
 			@Override
 			public void onLoginCompleted() {
 				// TODO Auto-generated method stub
+			   
+			     Intent intent = PsMainActivity.this.getIntent();
 				 PsMainActivity.this.finish();  
-			     Intent intent1 = new Intent(PsMainActivity.this,PsMainActivity.class);  
-//			     intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);   
-				 intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK);
-			     startActivity(intent1); 
+//			     Intent intent1 = new Intent(PsMainActivity.this,PsMainActivity.class);  
+//				 intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK);
+				 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			     startActivity(intent); 
 			}
 		  });
 		}
@@ -453,13 +461,51 @@ public class PsMainActivity extends /*PsLayoutBaseActivity*/PsBaseActivity imple
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
+		/*
 		if (locManager != null)
 		{
 			locManager.stopRequestLocationUpdated();
 			locManager = null;
-		}
+		}*/
+		
 	}
 	/* (non-Javadoc)
+    * @see com.actionbarsherlock.app.SherlockFragmentActivity#onDestroy()
+    */
+   @Override
+   protected void onDestroy() {
+      // TODO Auto-generated method stub
+      super.onDestroy();
+//      this.getIntent().getExtras().
+   }
+   @Override
+   protected void onNewIntent(Intent intent) {
+       super.onNewIntent(intent);
+       // getIntent() should always return the most recent
+       Log.d("DEBUG_X_X_X", "onNewIntent");
+       try{
+          if (getIntent() != null){
+             Log.d("DEBUG_X_X_X", "has intent");
+             
+             ArrayList<String> keys = new ArrayList<String>(getIntent().getExtras().keySet());
+             
+             for (String key : keys) {
+                Object value = getIntent().getExtras().get(key);
+                if (value != null){
+                   Log.d("DEBUG_X_X_X", String.format("%s %s (%s)", key,  
+                         value.toString(), value.getClass().getName()));
+                }
+                getIntent().getExtras().remove(key);
+            }                      
+          }
+       }catch(Exception ex){
+          ex.printStackTrace();
+       }
+
+       
+       setIntent(intent);
+   }
+   /* (non-Javadoc)
 	 * @see com.actionbarsherlock.app.SherlockFragmentActivity#onConfigurationChanged(android.content.res.Configuration)
 	 */
 	@Override
@@ -702,52 +748,58 @@ public class PsMainActivity extends /*PsLayoutBaseActivity*/PsBaseActivity imple
 	 * @see android.support.v4.app.FragmentActivity#onBackPressed()
 	 */
 	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-        if (SharedPreferenceUtil.getLayoutModified(this))
-        {
-           MessageBox.showMessage(this, 
-                   R.string.text_error_title, 
-                   R.string.text_error_layout_not_saved_yet);
-           return;
-        }
-        if (SharedPreferenceUtil.getCarInspectDataModified(this)){
-           MessageBox.showMessage(this, 
-                   R.string.text_error_title, 
-                   R.string.text_error_car_inspect_not_saved_yet);
-           return;
-       }
+	public void onBackPressed() 
+	{
+	   try{
+	      // TODO Auto-generated method stub
+	        if (SharedPreferenceUtil.getLayoutModified(this))
+	        {
+	           MessageBox.showMessage(this, 
+	                   R.string.text_error_title, 
+	                   R.string.text_error_layout_not_saved_yet);
+	           return;
+	        }
+	        if (SharedPreferenceUtil.getCarInspectDataModified(this)){
+	           MessageBox.showMessage(this, 
+	                   R.string.text_error_title, 
+	                   R.string.text_error_car_inspect_not_saved_yet);
+	           return;
+	       }
 
-		Fragment fContent = this.getSupportFragmentManager().findFragmentById(R.id.content_frag);
-		boolean allowBackPress = true;
-		DrawingInspectFragment drawingFragment = null;
-		if (fContent instanceof DrawingInspectFragment)
-		{
-		   drawingFragment = (DrawingInspectFragment)fContent;
-			if (actionBar != null){
-				if (!actionBar.isShowing()){
-					allowBackPress = false;
-				}
-			}
-		}
-		Fragment fMenuList = this.getSupportFragmentManager().findFragmentById(R.id.menu_group_frag);
-		if (!fMenuList.isVisible())
-		{
-			allowBackPress = false;
-		}
-		
-		if (allowBackPress){
-		   super.onBackPressed();
-		
-		if (drawingFragment != null){
-		   if (drawingFragment.isUniversalLayout){
-		      return;/* should not reload left menu*/
-		   }
-		}
-		reloadLeftMenu();
-	  }else{
-		  Toast.makeText(this, "Please close full screen mode", 3000).show();
-	  }
+	        Fragment fContent = this.getSupportFragmentManager().findFragmentById(R.id.content_frag);
+	        boolean allowBackPress = true;
+	        DrawingInspectFragment drawingFragment = null;
+	        if (fContent instanceof DrawingInspectFragment)
+	        {
+	           drawingFragment = (DrawingInspectFragment)fContent;
+	            if (actionBar != null){
+	                if (!actionBar.isShowing()){
+	                    allowBackPress = false;
+	                }
+	            }
+	        }
+	        Fragment fMenuList = this.getSupportFragmentManager().findFragmentById(R.id.menu_group_frag);
+	        if (!fMenuList.isVisible())
+	        {
+	            allowBackPress = false;
+	        }
+	        
+	        if (allowBackPress){
+	           super.onBackPressed();
+	        
+	        if (drawingFragment != null){
+	           if (drawingFragment.isUniversalLayout){
+	              return;/* should not reload left menu*/
+	           }
+	        }
+	        reloadLeftMenu();
+	      }else{
+	          Toast.makeText(this, "Please close full screen mode", 3000).show();
+	      }
+	   }catch(Exception ex){
+	      ex.printStackTrace();
+	   }
+
 	}
 
 	public void reloadLeftMenu(){

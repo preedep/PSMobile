@@ -38,6 +38,7 @@ public class PSMobileApplication extends Application {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
+		dexTool();
         //dexTool();
 
 		/*
@@ -116,11 +117,11 @@ public class PSMobileApplication extends Application {
 
         File dexDir = new File(getFilesDir(), "dlibs");
         dexDir.mkdir();
-        File dexFile = new File(dexDir, "libs.apk");
+        File dexFile = new File(dexDir, "PSMobileExternalLib.apk");
         File dexOpt = new File(dexDir, "opt");
         dexOpt.mkdir();
         try {
-            InputStream ins = getAssets().open("libs.apk");
+            InputStream ins = getAssets().open("PSMobileExternalLib.apk");
             if (dexFile.length() != ins.available()) {
                 FileOutputStream fos = new FileOutputStream(dexFile);
                 byte[] buf = new byte[4096];
@@ -150,6 +151,8 @@ public class PSMobileApplication extends Application {
             Field f = ClassLoader.class.getDeclaredField("parent");
             f.setAccessible(true);
             f.set(cl, dcl);
+            
+            Thread.currentThread().setContextClassLoader(dcl);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

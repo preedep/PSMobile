@@ -151,7 +151,6 @@ public abstract class DrawingViewBaseFragment extends ContentViewBaseFragment im
 			currentTask = this.getArguments().getParcelable(InstanceStateKey.KEY_ARGUMENT_TASK);
 			CustomerSurveySite site = this.getArguments().getParcelable(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY);
 			
-			
 			//////////
 			LayoutItemScaleHistory scale = dataAdapter.getLayoutScale(currentTask.getTaskCode(), site.getCustomerSurveySiteID());
 			if (scale != null){

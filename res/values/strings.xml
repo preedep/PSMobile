@@ -551,7 +551,7 @@
     <string name="universal_note">- %1$s</string>
     <string name="univeral_car_item">%1$s : %2$s คัน</string>
     <string name="univeral_total_car">รวม : %1$s คัน</string>
-    <string name="univeral_total_item">รวม : %1$s ชิ้น</string>
+    <string name="univeral_total_item">รวม : %1$s รายการ</string>
     
     <string name="universal_error_has_refer">Object นี้มีการอ้างอิงแล้ว</string>
     

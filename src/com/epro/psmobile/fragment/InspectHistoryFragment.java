@@ -6,11 +6,11 @@ package com.epro.psmobile.fragment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
+/*
 import uk.co.jasonfry.android.tools.ui.PageControl;
 import uk.co.jasonfry.android.tools.ui.SwipeView;
 import uk.co.jasonfry.android.tools.ui.SwipeView.OnPageChangedListener;
-
+*/
 import com.epro.psmobile.R;
 import com.epro.psmobile.adapter.InspectHistoryFragmentPagerAdapter;
 import com.epro.psmobile.da.PSBODataAdapter;
@@ -46,8 +46,8 @@ public class InspectHistoryFragment<Fragment> extends ContentViewBaseFragment im
 
 	private View currentView;
 	private InspectHistoryFragmentPagerAdapter mPagerAdapter;
-	private PageControl mPageControl;
-	private SwipeView mSwipeView;
+	//private PageControl mPageControl;
+	//private SwipeView mSwipeView;
 	/**
 	 * 
 	 */

@@ -553,7 +553,9 @@ public class JobRequestProduct implements DbCursorHolder,
 	    strBld.append(COLUMN_DATE_1+",");// = "date1";
 	    strBld.append(COLUMN_DATE_2+",");// = "date2";
 	    strBld.append(COLUMN_DATE_3+",");// = "date3";
-	    strBld.append(COLUMN_PRODUCT_NAME);
+	    strBld.append(COLUMN_PRODUCT_NAME+",");
+	    strBld.append(COLUMN_MARKET_PRICE_ID+",");
+	    strBld.append(COLUMN_MARKET_PRICE);
 		strBld.append(")");
 		strBld.append(" values");
 		strBld.append("(");
@@ -708,7 +710,9 @@ public class JobRequestProduct implements DbCursorHolder,
 	    strBld.append("'"+date1+"',");// :String
 	    strBld.append("'"+date2+"',");// :String
 	    strBld.append("'"+date3+"',");// :String
-	    strBld.append("'"+this.productName+"'");
+	    strBld.append("'"+this.productName+"',");
+	    strBld.append(""+this.marketPriceID+",");
+	    strBld.append(""+this.marketPrice+"");
 		strBld.append(")");
 		return strBld.toString();
 	}
@@ -1082,6 +1086,9 @@ public class JobRequestProduct implements DbCursorHolder,
           this.date3 = cursor.getString(cursor.getColumnIndex(COLUMN_DATE_3));// = "date3";
 
 		  this.productName = cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_NAME));
+		  
+		  this.marketPriceID = cursor.getInt(cursor.getColumnIndex(COLUMN_MARKET_PRICE_ID));
+		  this.marketPrice = cursor.getDouble(cursor.getColumnIndex(COLUMN_MARKET_PRICE));
 	}
 
 	public int getJobRequestID() {

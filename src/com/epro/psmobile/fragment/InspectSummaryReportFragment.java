@@ -440,6 +440,15 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
                          }catch(Exception ex){
                             ex.printStackTrace();
                          }
+                      }else if (ctrlType == UniversalControlType.MarketPrice)
+                      {
+                         double marketPrice = jrp.getMarketPrice();
+                         try{
+                            String value = UniversalListEntryAdapter.setFormat(marketPrice, col);
+                            strBld.append("<td>"+value+"</td>");
+                         }catch(Exception ex){
+                            strBld.append("<td>"+marketPrice+"</td>");
+                         }
                       }else
                       {
                          if (col.getColInvokeField() != null)

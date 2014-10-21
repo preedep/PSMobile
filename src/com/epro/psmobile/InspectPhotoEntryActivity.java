@@ -161,7 +161,38 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 		}
 	}
 
-	@Override
+	/* (non-Javadoc)
+    * @see android.app.Activity#onDestroy()
+    */
+   @Override
+   protected void onDestroy() {
+      // TODO Auto-generated method stub
+      super.onDestroy();
+      
+      
+      try{
+         if (getIntent() != null){
+            Log.d("DEBUG_X_X_X", "onDestroy  -> has intent");
+            
+            ArrayList<String> keys = new ArrayList<String>(getIntent().getExtras().keySet());
+            
+            for (String key : keys) {
+               Object value = getIntent().getExtras().get(key);
+               if (value != null){
+                  Log.d("DEBUG_X_X_X", String.format("%s %s (%s)", key,  
+                        value.toString(), value.getClass().getName()));
+               }
+               getIntent().getExtras().remove(key);
+           }                      
+         }
+      }catch(Exception ex){
+         ex.printStackTrace();
+      }
+
+      
+   }
+
+   @Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();

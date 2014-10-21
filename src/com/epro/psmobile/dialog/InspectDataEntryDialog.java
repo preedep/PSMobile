@@ -1432,4 +1432,31 @@ public class InspectDataEntryDialog extends DialogFragment implements OnFocusCha
 		}
 			
 	}
+   /* (non-Javadoc)
+    * @see android.support.v4.app.DialogFragment#onDestroyView()
+    */
+   @Override
+   public void onDestroyView() {
+      // TODO Auto-generated method stub
+      super.onDestroyView();
+      
+      
+      Log.d("DEBUG_X_X_X", "onDestroyView");
+      try{
+         if (this.getArguments() != null){
+            Log.d("DEBUG_X_X_X", "onDestroyView  has intent");
+            ArrayList<String> keys = new ArrayList<String>(getArguments().keySet());
+            for (String key : keys) {
+               Object value = getArguments().get(key);
+               if (value != null){
+                  Log.d("DEBUG_X_X_X", String.format("%s %s (%s)", key,  
+                        value.toString(), value.getClass().getName()));
+               }
+               getArguments().remove(key);
+           }                      
+         }
+      }catch(Exception ex){
+         ex.printStackTrace();
+      }
+   }
 }
