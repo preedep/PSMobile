@@ -169,11 +169,12 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
       // TODO Auto-generated method stub
       super.onDestroy();
       
+
       
       try{
-         if (getIntent() != null){
-            Log.d("DEBUG_X_X_X", "onDestroy  -> has intent");
-            
+         if (getIntent() != null)
+         {
+            Log.d("DEBUG_X_X_X", "InspectPhotoEntryActivity onDestroy  -> has intent");
             ArrayList<String> keys = new ArrayList<String>(getIntent().getExtras().keySet());
             
             for (String key : keys) {
@@ -188,7 +189,7 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
       }catch(Exception ex){
          ex.printStackTrace();
       }
-
+   
       
    }
 
@@ -816,11 +817,10 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 	    return orientation; // return value 1 is portrait and 2 is Landscape Mode
 	}
 
+	/*
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void invokeFragmentManagerNoteStateNotSaved() {
-	    /**
-	     * For post-Honeycomb devices
-	     */
+	private void invokeFragmentManagerNoteStateNotSaved() 
+	{
 	    if (Build.VERSION.SDK_INT < 11) {
 	        return;
 	    }
@@ -842,7 +842,8 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 	        Log.e("DLOutState", "Exception on worka FM.noteStateNotSaved", ex);
 	    }
 	}
-
+    */
+	
 	/* (non-Javadoc)
 	 * @see com.actionbarsherlock.app.SherlockFragmentActivity#onRestoreInstanceState(android.os.Bundle)
 	 */
@@ -865,16 +866,17 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 		InspectDataSavedSpinnerDisplay lastInspectDataSavedDisplay = null;
 		String taskCode = "";
 		int customersurveySiteId = 0;
-		if (getIntent() != null){
+		if (getIntent() != null)
+		{
 			photo_id = getIntent().getIntExtra(InstanceStateKey.KEY_ARGUMENT_INSPECT_DATA_ENTRY_PHOTOS_ID, 0);
 			lastInspectDataSavedDisplay = getIntent().getParcelableExtra(InstanceStateKey.KEY_ARGUMENT_INSPECT_DATA_SELECTED_PHOTO);
 			taskCode = getIntent().getStringExtra(InstanceStateKey.KEY_ARGUMENT_TASK_CODE);
 			customersurveySiteId = getIntent().getIntExtra(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY_ID, -1);
-			
 		}
 		PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(this);		
 
-		allInspectPhotoSavedList = dataAdapter.getInspectDataObjectPhotoSaved(taskCode, customersurveySiteId);
+		allInspectPhotoSavedList = 
+		      dataAdapter.getInspectDataObjectPhotoSaved(taskCode, customersurveySiteId);
 		
 		if (photo_id > 0){
 			photoSetId = photo_id;
@@ -894,7 +896,8 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 	    inspectDataSavedSpinner = 
 		(InspectDataSavedSpinner)this.findViewById(R.id.sp_inspect_data_saved);
 	    
-	    if (jobRequestProduct != null){
+	    if (jobRequestProduct != null)/*inspect type > 2*/
+	    {
 	       /*
 	        *   show list for car
 	        */
@@ -910,7 +913,8 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
                     taskCode,
                     customersurveySiteId);
 	       }
-	    }else{
+	    }else
+	    {
 	       inspectDataSavedSpinner.initial(inspectDataSavedList,
 	          lastInspectDataSavedDisplay,
 	          taskCode,
@@ -938,10 +942,10 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 				// TODO Auto-generated method stub
 //				tv.setText("test");
 				if (currentImageView == null)
-					{
+				{
 					MessageBox.showMessage(InspectPhotoEntryActivity.this, R.string.text_error_title, R.string.text_error_not_add_photo);
 					return;
-					}
+				}
 				
 				if (inspectDataSavedSpinner != null)
 				{
@@ -1249,7 +1253,8 @@ public class InspectPhotoEntryActivity extends /*PsBaseActivity*/Activity implem
 		// TODO Auto-generated method stub
 		currentLocation = location;
 	}
-	private void reloadProductList(){
+	private void reloadProductList()
+	{
 	   /*
 	    * 
         */

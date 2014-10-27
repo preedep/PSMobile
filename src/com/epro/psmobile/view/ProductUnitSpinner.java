@@ -9,6 +9,7 @@ import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.Product;
 import com.epro.psmobile.data.ProductAmountUnit;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
@@ -96,8 +97,21 @@ public class ProductUnitSpinner extends Spinner {
 			{
 				strProducts[i] = productAmountUnits.get(i).getUnitName();
 			}
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_spinner_item,strProducts);
-			this.setAdapter(adapter);
+			final ArrayAdapter<String> adapter = 
+			      new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_spinner_item,strProducts);
+			
+			
+			if (this.getContext() instanceof Activity){
+			   ((Activity)this.getContext()).runOnUiThread(new Runnable(){
+                  @Override
+                  public void run() {
+                     // TODO Auto-generated method stub
+                     setAdapter(adapter);
+                  }
+			   });
+			}else{
+			   this.setAdapter(adapter);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

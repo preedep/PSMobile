@@ -10,6 +10,7 @@ import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.Product;
 import com.epro.psmobile.data.ProductGroup;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
@@ -94,11 +95,25 @@ public class ProductGroupSpinner extends Spinner {
 			{
 				strProductGroups[i] = productGroups.get(i).getProductGroupName();
 			}
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),
+			
+			
+			final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),
 					android.R.layout.simple_spinner_item,
 					strProductGroups);
-			this.setAdapter(adapter);
 			
+			if (this.getContext() instanceof Activity){
+			   ((Activity)this.getContext()).runOnUiThread(new Runnable(){
+
+               @Override
+               public void run() {
+                  // TODO Auto-generated method stub
+                  setAdapter(adapter);
+               }
+			      
+			   });
+			}else{
+			   this.setAdapter(adapter);
+			}
 			/*
 			if (productGroups.size() >= 0){
 				this.setSelection(0,false);

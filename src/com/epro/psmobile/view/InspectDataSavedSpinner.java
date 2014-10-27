@@ -23,6 +23,7 @@ public class InspectDataSavedSpinner extends Spinner {
 
 	private ArrayList<InspectDataSavedSpinnerDisplay> originalDisplayList;
 	        
+	private Thread threadLoadProductList;
 	public InspectDataSavedSpinner(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -51,47 +52,67 @@ public class InspectDataSavedSpinner extends Spinner {
 	}
 
    @SuppressWarnings("unchecked")
-   public void filter(ArrayList<String> productSelectedList )
+   public void filter(final ArrayList<String> productSelectedList )
    {
-	   ArrayList<InspectDataSavedSpinnerDisplay> displayList =
+	   final ArrayList<InspectDataSavedSpinnerDisplay> displayList =
              new ArrayList<InspectDataSavedSpinnerDisplay>();
 	   
-	   String textFirstRowDefault = this.getContext().getString(R.string.photo_entry_default);
-
-
-	   displayList.add(originalDisplayList.get(0));
-	   
-	   
+	   final String textFirstRowDefault = this.getContext().getString(R.string.photo_entry_default);
 	   
 	   //boolean hasFirstRow = false;
-	   
-	   if (originalDisplayList != null)
-	   {
-	      for(int i = 0; i < originalDisplayList.size();i++)
-	      {
-	         InspectDataSavedSpinnerDisplay display = originalDisplayList.get(i);
-	         if (display.toString().equalsIgnoreCase(textFirstRowDefault)){
-	            continue;
-	         }
-	         boolean hasProduct = false;
-             for(String product : productSelectedList)
-             {
-                if (product.equalsIgnoreCase(display.toString())){
-                      hasProduct = true;
-                      continue;
-                }
-             }
-             if (hasProduct){
-                continue;
-             }
-             displayList.add(display);
-	      }
-	      
-	      ArrayAdapter<InspectDataSavedSpinnerDisplay> adapter = 
-                new ArrayAdapter<InspectDataSavedSpinnerDisplay>(this.getContext(),
-                android.R.layout.simple_spinner_item,displayList);
+	   Thread t = new Thread(new Runnable(){
 
-	      this.setAdapter(adapter);
+         @Override
+         public void run() {
+            // TODO Auto-generated method stub
+            if (originalDisplayList != null)
+            {
+               displayList.add(originalDisplayList.get(0));
+               
+               for(int i = 0; i < originalDisplayList.size();i++)
+               {
+                  InspectDataSavedSpinnerDisplay display = originalDisplayList.get(i);
+                  if (display.toString().equalsIgnoreCase(textFirstRowDefault)){
+                     continue;
+                  }
+                  boolean hasProduct = false;
+                  for(String product : productSelectedList)
+                  {
+                     if (product.equalsIgnoreCase(display.toString())){
+                           hasProduct = true;
+                           continue;
+                     }
+                  }
+                  if (hasProduct){
+                     continue;
+                  }
+                  displayList.add(display);
+               }
+               
+               final ArrayAdapter<InspectDataSavedSpinnerDisplay> adapter = 
+                     new ArrayAdapter<InspectDataSavedSpinnerDisplay>(getContext(),
+                     android.R.layout.simple_spinner_item,displayList);
+
+               ((Activity)getContext()).runOnUiThread(new Runnable(){
+
+                  @Override
+                  public void run() {
+                     // TODO Auto-generated method stub
+                     setAdapter(adapter);
+                  }
+               });
+            }
+         }
+	   });
+	   if (threadLoadProductList != null){
+	      try {
+            threadLoadProductList.join();
+            t.start();
+         }
+         catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
 	   }
 	}
     public void initialUniversal(JobRequestProduct jobRequestProduct,
@@ -242,6 +263,8 @@ public class InspectDataSavedSpinner extends Spinner {
 	{
 		final ArrayList<InspectDataSavedSpinnerDisplay> displayList =
 				new ArrayList<InspectDataSavedSpinnerDisplay>();
+		
+		//originalDisplayList = displayList;
 
 		InspectDataSavedSpinnerDisplay displayFirst = new
 				InspectDataSavedSpinnerDisplay(this.getContext());
@@ -256,8 +279,9 @@ public class InspectDataSavedSpinner extends Spinner {
 		displayFirst.dataSaved = dataSaved;
 		displayList.add(displayFirst);
 		
-		
-		Thread thread = new Thread()
+		originalDisplayList = displayList;
+        
+		threadLoadProductList = new Thread()
 		{
 
          @Override
@@ -349,7 +373,6 @@ public class InspectDataSavedSpinner extends Spinner {
                   @Override
                   public void run() {
                      // TODO Auto-generated method stub
-                     originalDisplayList = displayList;
                      
                      ArrayAdapter<InspectDataSavedSpinnerDisplay> adapter = 
                              new ArrayAdapter<InspectDataSavedSpinnerDisplay>(getContext(),
@@ -362,6 +385,6 @@ public class InspectDataSavedSpinner extends Spinner {
             
          }
 		};
-		thread.start();
+		threadLoadProductList.start();
 	}
 }

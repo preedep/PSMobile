@@ -11,6 +11,7 @@ import com.epro.psmobile.data.Product;
 import com.epro.psmobile.data.ProductGroup;
 
 import android.R;
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
@@ -141,11 +142,23 @@ public class ProductSpinner extends Spinner {
 		    
 			if (products != null)
 			{
-	            ArrayAdapter<Product> adapter = new ArrayAdapter<Product>(
+	            final ArrayAdapter<Product> adapter = new ArrayAdapter<Product>(
 	                  this.getContext(),android.R.layout.simple_spinner_item,
 	                  products);
 
-				this.setAdapter(adapter);
+	            if (this.getContext() instanceof Activity)
+	            {
+	              ((Activity)this.getContext()).runOnUiThread(new Runnable(){
+
+	                 @Override
+	                 public void run() {
+                     // TODO Auto-generated method stub
+	                    setAdapter(adapter);
+	                 }
+	              });
+	            }else{
+                   setAdapter(adapter);	               
+	            }
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -156,8 +169,24 @@ public class ProductSpinner extends Spinner {
 			try{
 				if ((this.getAdapter() != null) && (!this.getAdapter().isEmpty()))
 				{
-					ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_spinner_item,new String[]{""});
-					this.setAdapter(adapter);
+					final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_spinner_item,new String[]{""});
+					
+					
+					  if (this.getContext() instanceof Activity)
+		                {
+		                  ((Activity)this.getContext()).runOnUiThread(new Runnable(){
+
+		                     @Override
+		                     public void run() {
+		                     // TODO Auto-generated method stub
+		                        setAdapter(adapter);
+		                     }
+		                  });
+		                }else{
+		                   setAdapter(adapter);                
+		                }
+					
+//					this.setAdapter(adapter);
 				}else{
 					this.setAdapter(null);
 				}

@@ -449,6 +449,16 @@ public class DataUploadGenerator {
 		   
 			for(InspectDataSVGResult svgResult: allInspectDataSVGResult)
 			{
+			   boolean hasSVGResult = false;
+			   for(Task t : allFinishedTasks){
+			      if (t.getTaskCode().equalsIgnoreCase(svgResult.getTaskCode())){
+			         hasSVGResult = true;
+			         break;
+			      }
+			   }
+			   if (!hasSVGResult){
+			      continue;
+			   }
 				/*
 				 * copy photo to upload folder
 				 */
@@ -684,13 +694,27 @@ public class DataUploadGenerator {
 
 		
 		ArrayList<InspectDataObjectPhotoSaved> allInspectDataObjectPhotoSaved = 
-		      dataAdapter.getAllInspectDataObjectPhotoSaved();		
+		      dataAdapter.getAllInspectDataObjectPhotoSaved();	
+		
+		
 		if (allInspectDataObjectPhotoSaved != null)
 		{
 		    ArrayList<InspectDataObjectPhotoSaved> tmpPhotos = new ArrayList<InspectDataObjectPhotoSaved>();
 		    
 			for(InspectDataObjectPhotoSaved photoSaved : allInspectDataObjectPhotoSaved)
 			{
+			   boolean hasPhotoToUpload = false;
+			   for(Task t : allFinishedTasks){
+			      if (photoSaved.getTaskCode().equalsIgnoreCase(t.getTaskCode())){
+			         hasPhotoToUpload = true;
+			         break;
+			      }
+			   }
+			   if (!hasPhotoToUpload)
+			   {
+			      continue;
+			   }
+			   //if (photoSaved.getTaskCode().equalsIgnoreCase(task.get))
 				/*
 				 * copy photo to upload folder
 				 */
@@ -908,6 +932,10 @@ public class DataUploadGenerator {
                            int iCount = 0;
                            for(InspectDataObjectPhotoSaved photoSaved : photoSavedList)
                            {
+                              if (!photoSaved.getTaskCode().equalsIgnoreCase(task.getTaskCode())){
+                                 continue;
+                              }
+                              
                               String fileName = photoSaved.getFileName();
                               String relativePath = "";
                               float[] latlon = new float[]{0,0};
@@ -1117,6 +1145,10 @@ public class DataUploadGenerator {
                                        {
                                            if (photoSaved.getPhotoID() == cameraItem.getPhotoID())
                                            {
+                                               if (!photoSaved.getTaskCode().equalsIgnoreCase(task.getTaskCode())){
+                                                  continue;
+                                               }
+                                               /////////////
                                                String displaySelected = photoSaved.getInspectDataTextSelected();
                                                String[] productItems = 
                                                        displaySelected.split("\r\n");
@@ -1400,6 +1432,7 @@ public class DataUploadGenerator {
           InspectDataObjectSaved cameraItem = new InspectDataObjectSaved();
           for(InspectDataObjectPhotoSaved generalPhoto : photoSavedList)
           {
+             
              if (generalPhoto.getInspectDataObjectID() > 0){
                 cameraItem.setInspectDataObjectID(generalPhoto.getInspectDataObjectID());
              }else{

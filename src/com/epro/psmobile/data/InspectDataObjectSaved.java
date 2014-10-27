@@ -228,6 +228,10 @@ public class InspectDataObjectSaved implements DbCursorHolder,
 		
 		this.inspectDataSavedSpinnerDisplay = source.readParcelable(InspectDataSavedSpinnerDisplay.class.getClassLoader());
 		
+
+		this.objectName = source.readString();
+		this.inspectTypeID = source.readInt();
+		
 	}
 	public InspectDataObjectSaved() {
 		// TODO Auto-generated constructor stub
@@ -747,6 +751,9 @@ public class InspectDataObjectSaved implements DbCursorHolder,
 		dest.writeInt(this.teamIDObjectOwner);
 		dest.writeString(this.addObjectFlag);
 		dest.writeParcelable(inspectDataSavedSpinnerDisplay,flags);
+		
+		dest.writeString(this.objectName);
+		dest.writeInt(this.inspectTypeID);
 	}
 	@Override
 	public void onJSONDataBind(JSONObject jsonObj) throws JSONException {
@@ -795,6 +802,19 @@ public class InspectDataObjectSaved implements DbCursorHolder,
 		try{
 			this.authorized = Boolean.parseBoolean(
 					JSONDataUtil.getString(jsonObj, COLUMN_AUTHORIZED));
+		}catch(Exception ex){}
+		
+		try{
+		   this.objectName = JSONDataUtil.getString(jsonObj, COLUMN_OBJECT_NAME);
+		}catch(Exception ex){
+		   try{
+		      this.objectName = JSONDataUtil.getString(jsonObj, "inspectLayoutName");
+		   }catch(Exception e)
+		   {}
+		}
+		
+		try{
+		   this.inspectTypeID = JSONDataUtil.getInt(jsonObj, COLUMN_INSPECT_TYPE_ID);
 		}catch(Exception ex){}
 	}
 	@Override

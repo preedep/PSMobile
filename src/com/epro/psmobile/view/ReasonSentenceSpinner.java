@@ -154,8 +154,10 @@ public class ReasonSentenceSpinner extends BasicSpinner {
 		PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getContext());
 		sentenceList = dataAdapter.getAllReasonSentenceByType(reasonType);
 		
-		ReasonSentenceAdapter adapter = new ReasonSentenceAdapter(getContext(),sentenceList);
+		final ReasonSentenceAdapter adapter = new ReasonSentenceAdapter(getContext(),sentenceList);
+		
 		setAdapter(adapter);
+		
 		((ReasonSentenceAdapter)getAdapter()).notifyDataSetChanged();
 	}
 	

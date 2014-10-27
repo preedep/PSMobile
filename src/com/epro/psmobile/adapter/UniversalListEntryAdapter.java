@@ -498,7 +498,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          try{
             if (parent instanceof ProductGroupSpinner)
             {
-               ProductGroupSpinner pgs = (ProductGroupSpinner)parent;
+               final ProductGroupSpinner pgs = (ProductGroupSpinner)parent;
                ProductGroup productGroup = 
                      pgs.getProductGroups().get(pos);
                
@@ -507,9 +507,17 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                
                Log.d("DEBUG_D_D_D", "JobRequestProduct position -> "+position+" , "+productGroup.getProductGroupID()+" , "+productGroup.getProductGroupName());
                
+               pgs.post(new Runnable(){
+
+                  @Override
+                  public void run() {
+                     // TODO Auto-generated method stub
+                     pgs.requestFocusFromTouch();
+                     pgs.clearFocus();
+                  }
+                  
+               });
                
-               pgs.requestFocusFromTouch();
-               pgs.clearFocus();
                
                
                if (viewRow != null)
@@ -565,7 +573,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          try{
             if (parent instanceof ProductSpinner)
             {
-               ProductSpinner productSpinner = (ProductSpinner)parent;
+               final ProductSpinner productSpinner = (ProductSpinner)parent;
                final Product currentProduct =
                      productSpinner.getProducts().get(pos);
                
@@ -575,8 +583,18 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                jobRequestProductList.get(position).setProductName(currentProduct.getProductName());
                Log.d("DEBUG_D_D_D", "Set Product id -> object["+position+"] "+jobRequestProductList.get(position).getProductId());
                
-               productSpinner.requestFocusFromTouch();
-               productSpinner.clearFocus();
+               
+               productSpinner.post(new Runnable(){
+
+                  @Override
+                  public void run() {
+                     // TODO Auto-generated method stub
+                     productSpinner.requestFocusFromTouch();
+                     productSpinner.clearFocus();
+                  }
+                  
+               });
+               
                
                
                
@@ -632,13 +650,22 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          try{
             if (parent instanceof ProductUnitSpinner)
             {
-               ProductUnitSpinner productUnitSpinner = (ProductUnitSpinner)parent;
+               final ProductUnitSpinner productUnitSpinner = (ProductUnitSpinner)parent;
                ProductAmountUnit currentProductUnit =
                      productUnitSpinner.getProductAmountUnits().get(pos);
                jobRequestProductList.get(position).setProductUnit(currentProductUnit.getUnitName());
                
-               productUnitSpinner.requestFocusFromTouch();
-               productUnitSpinner.clearFocus();
+               productUnitSpinner.post(new Runnable(){
+
+                  @Override
+                  public void run() {
+                     // TODO Auto-generated method stub
+                     productUnitSpinner.requestFocusFromTouch();
+                     productUnitSpinner.clearFocus();
+
+                  }
+                  
+               });
                
             }
          }catch(Exception ex){
@@ -666,16 +693,23 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
          try{
             if (parent instanceof HistoryInspectLocationSpinner)
             {
-               HistoryInspectLocationSpinner locationSpinner = (HistoryInspectLocationSpinner)parent;
+               final HistoryInspectLocationSpinner locationSpinner = (HistoryInspectLocationSpinner)parent;
                Object obj = locationSpinner.getSelectedItem();
                if (obj instanceof CarInspectStampLocation)
                {
                   CarInspectStampLocation dataObjSaved = (CarInspectStampLocation)obj;
                   jobRequestProductList.get(position).setCustomerSurveySiteID(dataObjSaved.getCustomerSurveySiteID());
                   
-                  locationSpinner.requestFocusFromTouch();
-                  locationSpinner.clearFocus();
-                  
+                  locationSpinner.post(new Runnable(){
+
+                     @Override
+                     public void run() {
+                        // TODO Auto-generated method stub
+                        locationSpinner.requestFocusFromTouch();
+                        locationSpinner.clearFocus();
+                     }
+                  });
+                   
                   
                   if ((jobRequest.getInspectType().getInspectTypeID() == 5)||
                       (jobRequest.getInspectType().getInspectTypeID() == 8)){
@@ -742,9 +776,16 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                   //imm.hideSoftInputFromWindow(mYourEditText.getWindowToken(), 0);
                   //imm.hideSoftInputFromInputMethod(((Activity)context).
                   
-                  layoutSpinner.requestFocusFromTouch();
+                  layoutSpinner.post(new Runnable(){
 
-                  layoutSpinner.clearFocus();
+                     @Override
+                     public void run() {
+                        // TODO Auto-generated method stub
+                        layoutSpinner.requestFocusFromTouch();
+                        layoutSpinner.clearFocus();
+                     }
+                     
+                  });
                }
             }    
          }catch(Exception ex){

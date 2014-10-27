@@ -1531,9 +1531,7 @@ implements  OnItemClickListener,
 				
 				
 				ViewGroup vG = (ViewGroup)layoutContainer;
-				
-			
-				
+
 				if (vG.getChildCount() > 0)
 				{
 					for(int i = 0 ; i < vG.getChildCount();i++)

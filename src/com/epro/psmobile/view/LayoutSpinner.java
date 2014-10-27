@@ -10,6 +10,7 @@ import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.CarInspectStampLocation;
 import com.epro.psmobile.data.InspectDataObjectSaved;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -157,7 +158,7 @@ public class LayoutSpinner extends Spinner {
             layoutList.addAll(inspectDataObjectSavedList);
          }
          
-         ArrayAdapter<InspectDataObjectSaved> adapter = new ArrayAdapter<InspectDataObjectSaved>(this.getContext(),
+         final ArrayAdapter<InspectDataObjectSaved> adapter = new ArrayAdapter<InspectDataObjectSaved>(this.getContext(),
                android.R.layout.simple_spinner_item,layoutList){
 
                   /* (non-Javadoc)
@@ -182,8 +183,20 @@ public class LayoutSpinner extends Spinner {
                   }               
          };
             
-        this.setAdapter(adapter);
+         
+        if (this.getContext() instanceof Activity){
+           ((Activity)this.getContext()).runOnUiThread(new Runnable(){
 
+            @Override
+            public void run() {
+               // TODO Auto-generated method stub
+               setAdapter(adapter);
+            }
+              
+           });
+        }else{
+           this.setAdapter(adapter);
+        }
       }
       catch (Exception e) {
          // TODO Auto-generated catch block
