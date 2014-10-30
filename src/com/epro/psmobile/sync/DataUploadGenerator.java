@@ -442,7 +442,7 @@ public class DataUploadGenerator {
 		
 		/////////////////
 		ArrayList<InspectDataSVGResult> allInspectDataSVGResult = dataAdapter.getAllInspectDataSVGResult();
-		if (allInspectDataSVGResult != null)
+		if ((allInspectDataSVGResult != null)&&(allFinishedTasks != null))/*fix , if plan and task empty */
 		{
 		    ArrayList<InspectDataSVGResult> tmpAllInspectDataSVGResult = 
 		          new ArrayList<InspectDataSVGResult>();
@@ -697,7 +697,7 @@ public class DataUploadGenerator {
 		      dataAdapter.getAllInspectDataObjectPhotoSaved();	
 		
 		
-		if (allInspectDataObjectPhotoSaved != null)
+		if ((allInspectDataObjectPhotoSaved != null)&&(allFinishedTasks != null))
 		{
 		    ArrayList<InspectDataObjectPhotoSaved> tmpPhotos = new ArrayList<InspectDataObjectPhotoSaved>();
 		    
