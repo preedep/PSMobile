@@ -70,6 +70,9 @@ public class DataUploadGenerator {
 	public String generate() throws Exception
 	{
 		//String zipFileName = "";
+	   
+	   try{
+	      
 		PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(context);
 		
 		/*
@@ -442,7 +445,7 @@ public class DataUploadGenerator {
 		
 		/////////////////
 		ArrayList<InspectDataSVGResult> allInspectDataSVGResult = dataAdapter.getAllInspectDataSVGResult();
-		if (allInspectDataSVGResult != null)
+		if ((allInspectDataSVGResult != null)&&(allFinishedTasks != null))/*fix , if plan and task empty */
 		{
 		    ArrayList<InspectDataSVGResult> tmpAllInspectDataSVGResult = 
 		          new ArrayList<InspectDataSVGResult>();
@@ -697,7 +700,7 @@ public class DataUploadGenerator {
 		      dataAdapter.getAllInspectDataObjectPhotoSaved();	
 		
 		
-		if (allInspectDataObjectPhotoSaved != null)
+		if ((allInspectDataObjectPhotoSaved != null)&&(allFinishedTasks != null))
 		{
 		    ArrayList<InspectDataObjectPhotoSaved> tmpPhotos = new ArrayList<InspectDataObjectPhotoSaved>();
 		    
@@ -1351,6 +1354,12 @@ public class DataUploadGenerator {
 		ZipParameters params = new ZipParameters();
 		zipFile.createZipFileFromFolder(new File(rootUploadDataFolder), params, false, 0);
 		return zipFileName;
+	   }catch(Exception ex){
+	      ex.printStackTrace();
+	      
+	      throw ex;
+	   }
+	   
 	}
 	@SuppressWarnings("unused")
 	private  static <T> boolean generateJSONFile(Context context, 
@@ -1379,13 +1388,16 @@ public class DataUploadGenerator {
        ArrayList<InspectDataObjectPhotoSaved> photoSavedList = null;
        photoSavedList = dataAdapter.getInspectDataObjectPhotoSavedWithGeneralImage(task.getTaskCode());
        
+       try{
        
        
        if (photoSavedList != null){
           ArrayList<InspectDataObjectSaved> objSaveList = 
                 dataAdapter.getInspectDataObjectSavedNoSiteID(task.getTaskCode());
        
-             for(InspectDataObjectSaved dataObjSaveItem : objSaveList){
+          if (objSaveList != null){
+             for(InspectDataObjectSaved dataObjSaveItem : objSaveList)
+             {
                 if (dataObjSaveItem.getPhotoID() > 0){
                    ArrayList<InspectDataObjectPhotoSaved> photoSaveds = 
                          dataAdapter.getInspectDataObjectPhotoSaved(dataObjSaveItem.getPhotoID());
@@ -1397,6 +1409,7 @@ public class DataUploadGenerator {
                    }
                 }
              }
+          }
        }else{
           ArrayList<InspectDataObjectPhotoSaved> generalInLayouts = 
                 dataAdapter.getInspectDataObjectPhotoSavedWithGeneralImageLayout(task.getTaskCode());
@@ -1407,19 +1420,23 @@ public class DataUploadGenerator {
                 ArrayList<InspectDataObjectSaved> objSaveList = 
                       dataAdapter.getInspectDataObjectSavedNoSiteID(task.getTaskCode());
              
-                   for(InspectDataObjectSaved dataObjSaveItem : objSaveList){
-                      if (dataObjSaveItem.getPhotoID() > 0){
-                         ArrayList<InspectDataObjectPhotoSaved> photoSaveds = 
-                               dataAdapter.getInspectDataObjectPhotoSaved(dataObjSaveItem.getPhotoID());
-                         if (photoSaveds != null)
-                         {
-                             for(InspectDataObjectPhotoSaved item : photoSaveds){
-                                item.setInspectDataObjectID(dataObjSaveItem.getInspectDataObjectID());
-                                photoSavedList.add(item);
-                             }
+                   if (objSaveList != null){
+                      for(InspectDataObjectSaved dataObjSaveItem : objSaveList)
+                      {
+                         if (dataObjSaveItem.getPhotoID() > 0){
+                            ArrayList<InspectDataObjectPhotoSaved> photoSaveds = 
+                                  dataAdapter.getInspectDataObjectPhotoSaved(dataObjSaveItem.getPhotoID());
+                            if (photoSaveds != null)
+                            {
+                                for(InspectDataObjectPhotoSaved item : photoSaveds){
+                                   item.setInspectDataObjectID(dataObjSaveItem.getInspectDataObjectID());
+                                   photoSavedList.add(item);
+                                }
+                            }
                          }
                       }
                    }
+                 
                }
           }
        }
@@ -1529,6 +1546,9 @@ public class DataUploadGenerator {
            resultCheckJobImageList.add(checkJobImage);
            
           }
+        }
+       }catch(Exception ex){
+          ex.printStackTrace();
        }
 	}
 	
