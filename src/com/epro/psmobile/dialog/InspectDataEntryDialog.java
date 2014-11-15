@@ -482,10 +482,10 @@ public class InspectDataEntryDialog extends DialogFragment implements OnFocusCha
 											)
 								);
 						
-						if (inspectDataObjectSaved != null)
-						{
+						//if (inspectDataObjectSaved != null)
+						//{
 							inspectDataObjectSaved.setMarketPriceID(marketPrice.getMarketPriceID());
-						}
+						//}
 					}catch(Exception ex){}
 					
 					if (productAmountUnit != null){
@@ -623,6 +623,10 @@ public class InspectDataEntryDialog extends DialogFragment implements OnFocusCha
 
            sp_product_group.initial(jobRequest.getJobRequestID());
            
+           
+           if (!inspectDataObjectSaved.isCustomMarketPrice()){
+              edt_marketPrice.setEnabled(false);
+           }
            
            
            //lastProductGroupID = inspectDataObjectSaved.getProductGroupID();
@@ -884,6 +888,8 @@ public class InspectDataEntryDialog extends DialogFragment implements OnFocusCha
                   int arg2, long arg3) {
               // TODO Auto-generated method stub
               try{
+                  currentView.requestFocus();
+                 
                   ProductGroup selectGroup = sp_product_group.getProductGroups().get(arg2);  
                   
                   if (productGroupSelected != null)
@@ -922,6 +928,10 @@ public class InspectDataEntryDialog extends DialogFragment implements OnFocusCha
                   int arg2, long arg3) 
           {
               // TODO Auto-generated method stub
+             
+              currentView.requestFocus();
+             
+             
               if (sp_product.getProducts() == null)return;
               
               productSelected = sp_product.getProducts().get(arg2);

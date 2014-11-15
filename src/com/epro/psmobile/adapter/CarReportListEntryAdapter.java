@@ -956,6 +956,7 @@ public class CarReportListEntryAdapter extends BaseAdapter implements  Filterabl
                    }
                    
                    /**/
+                   
                    holder.layoutSpinner.post(new Runnable(){
 
                      @Override
@@ -1171,23 +1172,7 @@ public class CarReportListEntryAdapter extends BaseAdapter implements  Filterabl
 	    });
 
 	         
-       
-        /*
-        SpinnerAdapter adapter = holder.reasonSentenceSpinner.getAdapter();
-        if (adapter != null)
-        {
-           for(int i = 0; i < adapter.getCount();i++)
-           {
-              ReasonSentence reason = (ReasonSentence)adapter.getItem(i);
-              if (requestProduct.getcReasonID() == reason.getReasonID()){
-                 holder.reasonSentenceSpinner.setSelection(i);
-                 break;
-              }
-           }
-        }*/
-        
-        
-       
+ 
         ////////////////////
         
         if (requestProduct.getPhotoSetID() > 0){
@@ -1211,26 +1196,7 @@ public class CarReportListEntryAdapter extends BaseAdapter implements  Filterabl
         holder.edtCarMiles.setText(requestProduct.getcKms());
         holder.edtRemark.setText(requestProduct.getcRemark());
 
-        /*
-        if (requestProduct.getcErrorType() == JobRequestProduct.ROW_RESULT_ERROR)
-        {
-           vContainer.setBackgroundResource(R.color.inspect_car_error_bg);
-        }else if (requestProduct.getcErrorType() == JobRequestProduct.ROW_RESULT_WARNING){
-           vContainer.setBackgroundResource(R.color.inspect_car_warning_bg);   
-        }else
-        {
-           if (requestProduct.getcSight() != null)
-           {
-              if (requestProduct.getcSight().equalsIgnoreCase("Y"))
-              {
-                    vContainer.setBackgroundResource(R.color.inspect_car_normal_bg);                                  
-              }else{
-                    vContainer.setBackgroundResource(android.R.color.white);
-              }
-           }else{
-              vContainer.setBackgroundResource(android.R.color.white);              
-           }
-        }*/
+        
         setRowColor(vContainer,requestProduct);
         
         
@@ -1331,11 +1297,8 @@ public class CarReportListEntryAdapter extends BaseAdapter implements  Filterabl
       SpinnerAdapter adapter = holder.layoutSpinner.getAdapter();
        
       int inspectDataObjectID = requestProduct.getInspectDataObjectID();
-       /*
-       if (requestProduct.getcOrder() == 1){
-          int xxx = 0;
-          xxx++;
-       }*/
+
+      
        int iSelected = 0;
        for(int i = 0; i < adapter.getCount();i++){
           Object obj = adapter.getItem(i);
@@ -1348,13 +1311,7 @@ public class CarReportListEntryAdapter extends BaseAdapter implements  Filterabl
              }
           }
        }
-       /*
-       if (requestProduct.getcOrder() == 1){
-          if (iSelected == 0){
-             int xxx = 0;
-             xxx++;
-          }
-       }*/
+
        holder.layoutSpinner.setSelection(iSelected, false);
 
        ///////////

@@ -128,7 +128,7 @@ implements android.view.View.OnClickListener, OnAsyncTaskResultHandler {
 		boolean isDebuggable = (0 != (getActivity().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
 		if (isDebuggable){
 			//editUser.setText("47206");
-			editUser.setText("50210");
+			editUser.setText("51213");
 			editPassword.setText("1234");
 		}
 		TextView tvCurrentDate = (TextView)view.findViewById(R.id.tv_login_date);
