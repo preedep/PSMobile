@@ -887,7 +887,7 @@ public class DataUploadGenerator {
 			    */
 			   int inspectTypeID = task.getJobRequest().getInspectType().getInspectTypeID();
 			   /*for car and universal*/
-			   if ((inspectTypeID >= InspectServiceSupportUtil.SERVICE_FARM_LAND_2)&&(!team.isQCTeam()))
+			   if ((inspectTypeID > InspectServiceSupportUtil.SERVICE_FARM_LAND_2)&&(!team.isQCTeam()))
 			   {
 			      ArrayList<JobRequestProduct> jobRequestProductList = 
 			            dataAdapter.findJobRequestProductsByJobRequestID(task.getJobRequest().getJobRequestID());

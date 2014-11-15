@@ -641,6 +641,10 @@ public class InspectDataEntryDialog extends DialogFragment implements OnFocusCha
                TextView tvPalateAmount = (TextView)v.findViewById(R.id.txt_edit_inspect_entry_field_palate_amount);
                tvPalateAmount.setVisibility(View.VISIBLE);
                edt_palateAmount.setVisibility(View.VISIBLE);
+               
+               if (inspectDataObjectSaved.getPalateAmount() > 0){
+                  edt_palateAmount.setEnabled(false);
+               }
            }
            
            
