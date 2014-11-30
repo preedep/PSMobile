@@ -642,8 +642,14 @@ public class InspectDataEntryDialog extends DialogFragment implements OnFocusCha
                tvPalateAmount.setVisibility(View.VISIBLE);
                edt_palateAmount.setVisibility(View.VISIBLE);
                
+               /*
                if (inspectDataObjectSaved.getPalateAmount() > 0){
                   edt_palateAmount.setEnabled(false);
+               }*/
+               if (inspectDataItem.getGroupType().getInspectDataGroupTypeID() != 353){
+                  edt_palateAmount.setEnabled(false);
+               }else{
+                  edt_palateAmount.setEnabled(true);
                }
            }
            
