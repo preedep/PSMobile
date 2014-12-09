@@ -149,7 +149,7 @@ public class CarReportListEntryAdapter extends BaseAdapter implements  Filterabl
 	
 	private Hashtable<String,ArrayList<JobRequestProduct>> vinTable = null;
 	
-	private static View[] view_arrays = null;
+	//private static View[] view_arrays = null;
 	public CarReportListEntryAdapter(Context context,
 	      Task currentTask,
 	      CustomerSurveySite site,
@@ -166,7 +166,7 @@ public class CarReportListEntryAdapter extends BaseAdapter implements  Filterabl
 		
 		reloadVinTable();
 		
-		view_arrays = new View[jobRequestProducts.size()];
+		//view_arrays = new View[jobRequestProducts.size()];
 	}
 	public void reloadVinTable(){
        
@@ -239,7 +239,7 @@ public class CarReportListEntryAdapter extends BaseAdapter implements  Filterabl
 	    if (convertView == null)
 	    {
 	       v = inflater.inflate(R.layout.ps_activity_report_list_entry_row, parent, false);
-	       view_arrays[position] = v;
+	       //view_arrays[position] = v;
 	       
 	       ViewGroup vContainer = (ViewGroup)v.findViewById(R.id.ll_report_list_entry_row_containers);
 	       Holder holder = new Holder();

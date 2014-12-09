@@ -10,6 +10,7 @@ import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.ReasonSentence;
 import com.epro.psmobile.data.ReasonSentence.ReasonType;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -149,16 +150,47 @@ public class ReasonSentenceSpinner extends BasicSpinner {
 		return (ArrayList<T>)sentenceList;
 	}
 
-	public void initialWithReasonType(ReasonType reasonType) throws Exception {
+	public void initialWithReasonType(final ReasonType reasonType) throws Exception {
 		// TODO Auto-generated method stub
-		PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getContext());
-		sentenceList = dataAdapter.getAllReasonSentenceByType(reasonType);
+	   
+	   Thread t = new Thread(new Runnable(){
+
+         @Override
+         public void run() {
+            // TODO Auto-generated method stub
+            PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getContext());
+            try {
+               sentenceList = dataAdapter.getAllReasonSentenceByType(reasonType);
+               
+               
+               final ReasonSentenceAdapter adapter = new ReasonSentenceAdapter(getContext(),sentenceList);
+
+               Activity activity = (Activity)getContext();
+               
+               activity.runOnUiThread(new Runnable(){
+
+                  @Override
+                  public void run() {
+                     // TODO Auto-generated method stub
+                     setAdapter(adapter);
+                     
+                     ((ReasonSentenceAdapter)getAdapter()).notifyDataSetChanged();
+                  }
+                  
+               });
+               
+            }
+            catch (Exception e) {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+            }
+            
+           
+         }
+	      
+	   });
+	   t.start();
 		
-		final ReasonSentenceAdapter adapter = new ReasonSentenceAdapter(getContext(),sentenceList);
-		
-		setAdapter(adapter);
-		
-		((ReasonSentenceAdapter)getAdapter()).notifyDataSetChanged();
 	}
 	
 	public void initialWithReasonList(ArrayList<ReasonSentence> reasonList)

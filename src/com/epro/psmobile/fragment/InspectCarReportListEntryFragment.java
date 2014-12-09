@@ -29,6 +29,7 @@ import com.epro.psmobile.fragment.ContentViewBaseFragment.InspectOptMenuType;
 import com.epro.psmobile.key.params.InstanceStateKey;
 import com.epro.psmobile.util.ActivityUtil;
 import com.epro.psmobile.util.DataUtil;
+import com.epro.psmobile.util.GlobalData;
 import com.epro.psmobile.util.MessageBox;
 import com.epro.psmobile.util.MessageBox.MessageConfirmType;
 import com.epro.psmobile.util.ResourceValueUtil;
@@ -158,8 +159,8 @@ public class InspectCarReportListEntryFragment extends InspectReportListFragment
       InspectReportListFragment.currentTask = bArgument.getParcelable(InstanceStateKey.KEY_ARGUMENT_TASK);
       InspectReportListFragment.customerSurveySite = bArgument.getParcelable(InstanceStateKey.KEY_ARGUMENT_CUSTOMER_SITE_SURVEY);
       */
-      
-      
+      GlobalData.inspectDataObjectSavedList = null;//reset
+      GlobalData.inspectDataObjectTable = null;
       //final ViewGroup vGroupHeader = (ViewGroup)currentView.findViewById(R.id.list_view_header);
       lsView = (ListView)currentView.findViewById(R.id.lv_report_list);
       //lsView.setLongClickable(true);
@@ -450,6 +451,9 @@ public class InspectCarReportListEntryFragment extends InspectReportListFragment
                  dataAdapter.findJobRequestProductsByJobRequestIDAndOrderBy(jobRequest.getJobRequestID());
          if (jobRequestProducts != null)
          {
+            GlobalData.inspectDataObjectSavedList = null;
+            GlobalData.inspectDataObjectTable= null;
+            
             CarReportListEntryAdapter carAdapter = new CarReportListEntryAdapter(getActivity(),
                   currentTask,
                   customerSurveySite,
@@ -655,6 +659,9 @@ public class InspectCarReportListEntryFragment extends InspectReportListFragment
                // TODO Auto-generated method stub
                if (lsView != null){
                   if (lsView.getAdapter() instanceof CarReportListEntryAdapter){
+                     GlobalData.inspectDataObjectSavedList = null;
+                     GlobalData.inspectDataObjectTable= null;
+                     
                      CarReportListEntryAdapter adapter = (CarReportListEntryAdapter)lsView.getAdapter();
                      adapter.notifyDataSetChanged();
                      adapter.notifyDataSetInvalidated();
@@ -679,6 +686,10 @@ public class InspectCarReportListEntryFragment extends InspectReportListFragment
                currentRequestProduct.setcErrorType(0);
                currentRequestProduct.setcErrorText("");
                
+               GlobalData.inspectDataObjectSavedList = null;
+               GlobalData.inspectDataObjectTable = null;
+               
+               
                PSBODataAdapter dataAdapter = 
                      PSBODataAdapter.getDataAdapter(getActivity());
                dataAdapter.updateResetErrorTypeOfJobRequestProduct(currentRequestProduct);
@@ -686,8 +697,10 @@ public class InspectCarReportListEntryFragment extends InspectReportListFragment
                CarReportListEntryAdapter adapter = (CarReportListEntryAdapter)lsView.getAdapter();
                //adapter.notifyDataSetChanged();
                //adapter.notifyDataSetInvalidated();
+               
                adapter.notifyDataSetChanged();
                adapter.notifyDataSetInvalidated();
+
                
                lsView.setAdapter(adapter);
             }

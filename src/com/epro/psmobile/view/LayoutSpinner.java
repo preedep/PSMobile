@@ -4,12 +4,15 @@
 package com.epro.psmobile.view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.epro.psmobile.R;
 import com.epro.psmobile.da.PSBODataAdapter;
 import com.epro.psmobile.data.CarInspectStampLocation;
 import com.epro.psmobile.data.InspectDataObjectSaved;
+import com.epro.psmobile.util.GlobalData;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -119,6 +122,7 @@ public class LayoutSpinner extends Spinner {
       }
       return layoutList;
    }
+   @SuppressLint("UseSparseArrays")
    public void initial(String taskCode,
          int customerSurveySiteID,
          boolean reload)
@@ -143,12 +147,47 @@ public class LayoutSpinner extends Spinner {
             inspectDataObjectSavedList = 
                   dataAdapter.getInspectDataObjectSavedUniverals(taskCode, customerSurveySiteID);
             Log.d("DEBUG_D_D", "Layout Spinner Reload data");
-         }else{
-            if ((inspectDataObjectSavedList == null)||(inspectDataObjectSavedList.size() == 0))
+         }else
+         {
+            
+            if (GlobalData.currentTaskCodeCarInspect == null)
             {
-               inspectDataObjectSavedList = 
-                     dataAdapter.getInspectDataObjectSavedUniverals(taskCode, customerSurveySiteID);               
+               GlobalData.currentTaskCodeCarInspect = taskCode;
+            }else{
+               if (!GlobalData.currentTaskCodeCarInspect.equalsIgnoreCase(taskCode))
+               {            
+                  GlobalData.currentTaskCodeCarInspect = taskCode;
+               }
             }
+
+            
+            if (GlobalData.inspectDataObjectSavedList == null)
+            {
+               GlobalData.inspectDataObjectSavedList = 
+                     dataAdapter.getInspectDataObjectSavedNoSiteID(GlobalData.currentTaskCodeCarInspect);
+            }
+            
+            if (GlobalData.inspectDataObjectTable == null){
+               GlobalData.inspectDataObjectTable = new HashMap<Integer,ArrayList<InspectDataObjectSaved>>();
+            }
+            if (GlobalData.inspectDataObjectSavedList != null){
+           
+               if (!GlobalData.inspectDataObjectTable.containsKey(customerSurveySiteID)){
+                  inspectDataObjectSavedList = new ArrayList<InspectDataObjectSaved>();
+                  for(InspectDataObjectSaved dataSaved : GlobalData.inspectDataObjectSavedList){
+                     if (dataSaved.getCustomerSurveySiteID() == customerSurveySiteID){
+                        inspectDataObjectSavedList.add(dataSaved);
+                     }
+                  }
+                  if (inspectDataObjectSavedList.size() > 0){
+                     GlobalData.inspectDataObjectTable.put(customerSurveySiteID, inspectDataObjectSavedList);
+                  }
+               }
+               
+               inspectDataObjectSavedList = GlobalData.inspectDataObjectTable.get(customerSurveySiteID);
+               
+            }
+            
          }
          ////////////////////
          
