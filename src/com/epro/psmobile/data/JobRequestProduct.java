@@ -455,6 +455,7 @@ public class JobRequestProduct implements DbCursorHolder,
 		strBld.append(COLUMN_JOB_REQUEST_ID+",");
 		strBld.append(COLUMN_PRODUCT_ROW_ID+",");
 		strBld.append(COLUMN_CUSTOMER_SURVEY_SITE_ID+",");
+		strBld.append(COLUMN_JOB_NO+",");
 		strBld.append(COLUMN_ITEM_NO+",");
 		strBld.append(COLUMN_PRODUCT_GROUP+",");
 		strBld.append(COLUMN_PRODUCT_GROUP_ID+",");
@@ -570,6 +571,7 @@ public class JobRequestProduct implements DbCursorHolder,
 		strBld.append(this.jobRequestID+",");
 		strBld.append(this.productRowID+",");
 		strBld.append(""+this.customerSurveySiteID+",");
+		strBld.append("'"+this.jobNo+"',");
 		strBld.append("'"+this.itemNo+"',");
 		strBld.append("'"+this.productGroup+"',");
 		strBld.append(""+this.productGroupID+",");

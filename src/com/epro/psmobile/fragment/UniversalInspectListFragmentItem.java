@@ -609,6 +609,7 @@ implements OnTakeCameraListener<JobRequestProduct> , OnOpenCommentActivity, OnRo
                                           InspectReportListFragment.jobRequest.getInspectType().getInspectTypeID(),
                                           InspectReportListFragment.jobRequest.getJobRequestID(),
                                           InspectReportListFragment.customerSurveySite.getCustomerSurveySiteID(),
+                                          InspectReportListFragment.currentTask.getTaskCode(),
                                           itemListToInsert);
                                  }
                                  catch (Exception e) {

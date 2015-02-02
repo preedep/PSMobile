@@ -1147,7 +1147,8 @@ public class PSBODataAdapter {
 
 	      return query(sql,JobRequestProduct.class);
 	    }
-	   public synchronized ArrayList<JobRequestProduct> findUniversalJobRequestProduct(int jobRequestID,int customerSurveySiteID)
+	   public synchronized ArrayList<JobRequestProduct> findUniversalJobRequestProduct(int jobRequestID,
+	         int customerSurveySiteID)
 	   throws Exception
 	   {
 	      String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + " and customerSurveySiteID = "+customerSurveySiteID+" order by productRowId";
@@ -1191,7 +1192,7 @@ public class PSBODataAdapter {
        return rowEffected;
 	}
 	   public synchronized int insertUniversalJobRequestProduct(int inspectTypeID ,
-	         int jobRequestID,int siteID,
+	         int jobRequestID,int siteID,String taskCode,
 	          ArrayList<JobRequestProduct> jobRequestProducts)
 	    throws Exception
 	    {
@@ -1213,10 +1214,10 @@ public class PSBODataAdapter {
 	           sqliteDb = databaseBuilder.open();
 	           String delete = "";
 	           if ((inspectTypeID == 5)||(inspectTypeID == 8)){
-                  delete = "delete from JobRequestProduct where jobRequestID="+jobRequestID;
+                  delete = "delete from JobRequestProduct where jobRequestID="+jobRequestID + " and jobNo='"+taskCode+"'";
 	           }
 	           else{
-	               delete = "delete from JobRequestProduct where jobRequestID="+jobRequestID+" and customerSurveySiteID="+siteID;	              
+	               delete = "delete from JobRequestProduct where jobRequestID="+jobRequestID+" and customerSurveySiteID="+siteID+" and jobNo='"+taskCode+"'";	              
 	           }
 	           String[] stmts = new String[jobRequestProducts.size()*2];
 	           for(int i = 0; i < jobRequestProducts.size();i++)
@@ -1226,7 +1227,9 @@ public class PSBODataAdapter {
 	           int objIdx = 0;
 	           for(int i = jobRequestProducts.size();i < jobRequestProducts.size()*2;i++)
 	           {
-	              stmts[i] = jobRequestProducts.get(objIdx++).insertStatement();
+	              int idx = objIdx++;
+	              jobRequestProducts.get(idx).setJobNo(taskCode);
+	              stmts[i] = jobRequestProducts.get(idx).insertStatement();
 	           }
 	           rowEffected = DbUtils.executeSqlStatementsInTx(sqliteDb, stmts);
 	       }finally{

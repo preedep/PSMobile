@@ -639,6 +639,7 @@ OnTakeCameraListener<JobRequestProduct>, OnClickListener , OnDeleteRowCompleted 
                      InspectReportListFragment.jobRequest.getInspectType().getInspectTypeID(),
                      InspectReportListFragment.jobRequest.getJobRequestID(),
                      InspectReportListFragment.customerSurveySite.getCustomerSurveySiteID(),
+                     InspectReportListFragment.currentTask.getTaskCode(),                     
                      jobRequestProductList);
                bRet = true;
             }
