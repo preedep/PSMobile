@@ -233,7 +233,9 @@ OnTakeCameraListener<JobRequestProduct>, OnClickListener , OnDeleteRowCompleted 
                                     }*/
                                     try {
                                        ArrayList<JobRequestProduct> jrpList = 
-                                             dataAdapter.findUniversalJobRequestProduct(jobRequest.getJobRequestID(), customerSurveySite.getCustomerSurveySiteID());
+                                             dataAdapter.findUniversalJobRequestProduct(jobRequest.getJobRequestID(), 
+                                                   UniversalInspectListFragment.currentTask.getTaskCode(),
+                                                   customerSurveySite.getCustomerSurveySiteID());
                                        if (jrpList != null){
                                           lastRowProductId = jrpList.get(jrpList.size()-1).getProductRowID();
                                        }

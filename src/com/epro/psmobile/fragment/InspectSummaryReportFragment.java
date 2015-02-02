@@ -359,11 +359,18 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
        float percentPerCol = (maxWidth-locWidth)/reportColumns.size();
        if (godownCheckInList != null){
           for(CarInspectStampLocation godownLoc : godownCheckInList){
+             
+             if (!currentTask.getTaskCode().equalsIgnoreCase(godownLoc.getTaskCode())){
+                continue;
+             }
+
              String locationName = 
                    this.getString(R.string.txt_customer_survey_site_amount,godownLoc.getSiteAddress());
              
+             
              ArrayList<JobRequestProduct> jobRequestProductList = 
                    dataAdapter.findUniversalJobRequestProduct(currentTask.getJobRequest().getJobRequestID(),
+                         currentTask.getTaskCode(),
                          godownLoc.getCustomerSurveySiteID());
              
              strBld.append("<p>"+locationName+"</p>");
@@ -753,6 +760,7 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
              
              ArrayList<JobRequestProduct> jobRequestProductList = 
                    dataAdapter.findUniversalJobRequestProduct(currentTask.getJobRequest().getJobRequestID(),
+                         currentTask.getTaskCode(),
                          godownLoc.getCustomerSurveySiteID());
              if (jobRequestProductList != null){
                 for(JobRequestProduct jrp : jobRequestProductList){
