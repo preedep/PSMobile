@@ -214,7 +214,7 @@ public class JobRequestPlanDetailFragment extends ContentViewBaseFragment {
 			PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getActivity());
 			try {
 				ArrayList<JobRequestProduct> jobRequestProducts =
-						dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID());
+						dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(),task.getTaskCode());
 				if (jobRequestProducts != null)
 				{
 				    /*

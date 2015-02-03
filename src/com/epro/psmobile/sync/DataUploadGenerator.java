@@ -890,7 +890,7 @@ public class DataUploadGenerator {
 			   if ((inspectTypeID > InspectServiceSupportUtil.SERVICE_FARM_LAND_2)&&(!team.isQCTeam()))
 			   {
 			      ArrayList<JobRequestProduct> jobRequestProductList = 
-			            dataAdapter.findJobRequestProductsByJobRequestID(task.getJobRequest().getJobRequestID());
+			            dataAdapter.findJobRequestProductsByJobRequestID(task.getJobRequest().getJobRequestID(),task.getTaskCode());
 			      if (jobRequestProductList != null)
 			      {
 			         for(JobRequestProduct jobRequestProduct : jobRequestProductList)

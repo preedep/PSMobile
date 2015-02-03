@@ -49,7 +49,7 @@ public class CarInspectEditLocationDialog extends DialogFragment {
          {
             com.epro.psmobile.view.HistoryInspectLocationSpinner locations = 
                (com.epro.psmobile.view.HistoryInspectLocationSpinner)vCustom.findViewById(R.id.spn_location);
-            locations.initial(task.getJobRequest().getJobRequestID());
+            locations.initial(task.getJobRequest().getJobRequestID(),task.getTaskCode());
             
             locations.setOnItemSelectedListener(new OnItemSelectedListener(){
 

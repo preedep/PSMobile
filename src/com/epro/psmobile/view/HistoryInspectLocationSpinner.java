@@ -37,7 +37,7 @@ public class HistoryInspectLocationSpinner extends Spinner {
       super(context, attrs, defStyle, mode);
       // TODO Auto-generated constructor stub
    }
-   public void initial(final int jobRequestID)
+   public void initial(final int jobRequestID,final String taskCode)
    {
       Thread t = new Thread(new Runnable(){
 
@@ -47,7 +47,7 @@ public class HistoryInspectLocationSpinner extends Spinner {
             try{
                PSBODataAdapter dataAdapter = PSBODataAdapter.getDataAdapter(getContext());
                ArrayList<CarInspectStampLocation> historyStampLocs = 
-                     dataAdapter.getAllCarInspectStampLocation(jobRequestID);
+                     dataAdapter.getAllCarInspectStampLocation(jobRequestID,taskCode);
                /*
                ArrayAdapter adapter = new ArrayAdapter();
                */

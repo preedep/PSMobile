@@ -336,7 +336,7 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
        
        strBld.append("<p><u>"+this.getString(R.string.text_titles_of_job_detail_product)+"</u></p>");
        ArrayList<CarInspectStampLocation> godownCheckInList =
-             dataAdapter.getAllCarInspectStampLocation(currentTask.getJobRequest().getJobRequestID());
+             dataAdapter.getAllCarInspectStampLocation(currentTask.getJobRequest().getJobRequestID(),currentTask.getTaskCode());
        
        InspectJobMapper jobMapper =  dataAdapter.getInspectJobMapper(currentTask.getJobRequest().getJobRequestID(), currentTask.getTaskCode());
        
@@ -680,6 +680,9 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
        if (godownCheckInList != null){
           for(CarInspectStampLocation godownLoc : godownCheckInList)
           {
+             if (!godownLoc.getTaskCode().equalsIgnoreCase(currentTask.getTaskCode())){
+                continue;
+             }
              String locationName = 
                    this.getString(R.string.txt_customer_survey_site_amount,godownLoc.getSiteAddress());
              
@@ -1068,7 +1071,7 @@ public class InspectSummaryReportFragment extends ContentViewBaseFragment{
 	       strBld.append("    </tr>");
 	       
 	       ArrayList<CarInspectStampLocation> locationStamps = 
-	             dataAdapter.getAllCarInspectStampLocation(currentTask.getJobRequest().getJobRequestID());
+	             dataAdapter.getAllCarInspectStampLocation(currentTask.getJobRequest().getJobRequestID(),currentTask.getTaskCode());
 	       
 	       for(CarInspectStampLocation stmpLoc : locationStamps)
 	       {

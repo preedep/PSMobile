@@ -1384,7 +1384,7 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
             }break;
             case GodownList:{
                final HistoryInspectLocationSpinner sp_location = (HistoryInspectLocationSpinner)vEachCol.findViewById(R.id.sp_history_inspect_location);
-               sp_location.initial(jobRequest.getJobRequestID());
+               sp_location.initial(jobRequest.getJobRequestID(),task.getTaskCode());
                SpinnerAdapter adapter = sp_location.getAdapter();
                for(int i = 0; i < adapter.getCount();i++){
                   Object obj = adapter.getItem(i);

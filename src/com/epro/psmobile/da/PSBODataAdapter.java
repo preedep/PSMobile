@@ -490,12 +490,12 @@ public class PSBODataAdapter {
       return query(sql,InspectFormView.class);
    }
    public synchronized ArrayList<CarInspectStampLocation> getAllCarInspectStampLocation(
-	          int jobRequestID)
+	          int jobRequestID,String taskCode)
 	    throws Exception
 	    {
 	       
 	       String sql = "select * from CarInspectStampLocation";
-	       sql += " where "+CarInspectStampLocation.COLUMN_JOB_REQUEST_ID+"="+jobRequestID;
+	       sql += " where "+CarInspectStampLocation.COLUMN_JOB_REQUEST_ID+"="+jobRequestID + " and "+CarInspectStampLocation.COLUMN_TASK_CODE+"='"+taskCode+"'";
 	       
 	       ArrayList<CarInspectStampLocation> results = query(sql,CarInspectStampLocation.class);
 	       return results;
@@ -1126,9 +1126,10 @@ public class PSBODataAdapter {
 	        }
 	        return 0;
     }
-	public synchronized ArrayList<JobRequestProduct> findJobRequestProductsByJobRequestID(int jobRequestID) throws Exception
+	public synchronized ArrayList<JobRequestProduct> findJobRequestProductsByJobRequestID(int jobRequestID,String taskCode) throws Exception
 	{
-	  String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + "  order by cReasonId, productRowId";
+	  String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + " and jobNo='" +taskCode+"' "+
+	  		" order by cReasonId, productRowId";
 	   //   String sql = "select * from JobRequestProduct where jobRequestID="+jobRequestID + "  order by cReasonId";
 
 	  return query(sql,JobRequestProduct.class);

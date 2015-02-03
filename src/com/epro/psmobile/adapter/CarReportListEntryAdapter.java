@@ -373,7 +373,7 @@ public class CarReportListEntryAdapter extends BaseAdapter implements  Filterabl
                     
                    try 
                    {
-                      sp_historyLocation.initial(requestProduct.getJobRequestID());
+                      sp_historyLocation.initial(requestProduct.getJobRequestID(),requestProduct.getJobNo());
                       /*
                       for(int i_history = 0;i_history < sp_historyLocation.getCount();i_history++)
                       {

@@ -396,7 +396,7 @@ public class InspectCarReportListEntryFragment extends InspectReportListFragment
                   vSub = vEntry.findViewById(R.id.sp_history_inspect_location);
                   HistoryInspectLocationSpinner spinner = (HistoryInspectLocationSpinner)vSub;
                   if (jobRequestProducts != null){
-                     spinner.initial(jobRequestProducts.get(0).getJobRequestID());
+                     spinner.initial(jobRequestProducts.get(0).getJobRequestID(),jobRequestProducts.get(0).getJobNo());
                   }
                }else if (position == 17)
                {
@@ -592,7 +592,7 @@ public class InspectCarReportListEntryFragment extends InspectReportListFragment
             try {
                
                ArrayList<JobRequestProduct> tmps =  
-                     dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID());
+                     dataAdapter.findJobRequestProductsByJobRequestID(jobRequest.getJobRequestID(),currentTask.getTaskCode());
 
                if (tmps != null)
                {
