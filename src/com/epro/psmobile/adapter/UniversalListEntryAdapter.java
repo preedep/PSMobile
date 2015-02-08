@@ -1386,28 +1386,32 @@ public class UniversalListEntryAdapter extends BaseAdapter  {
                final HistoryInspectLocationSpinner sp_location = (HistoryInspectLocationSpinner)vEachCol.findViewById(R.id.sp_history_inspect_location);
                sp_location.initial(jobRequest.getJobRequestID(),task.getTaskCode());
                SpinnerAdapter adapter = sp_location.getAdapter();
-               for(int i = 0; i < adapter.getCount();i++){
-                  Object obj = adapter.getItem(i);
-                  if (obj instanceof CarInspectStampLocation){
-                     CarInspectStampLocation location = (CarInspectStampLocation)obj;
-                     if (location.getCustomerSurveySiteID() == jrp.getCustomerSurveySiteID()){
-                        sp_location.setSelection(i, false);
-                        break;
+               if (adapter != null)
+               {
+                  for(int i = 0; i < adapter.getCount();i++){
+                     Object obj = adapter.getItem(i);
+                     if (obj instanceof CarInspectStampLocation){
+                        CarInspectStampLocation location = (CarInspectStampLocation)obj;
+                        if (location.getCustomerSurveySiteID() == jrp.getCustomerSurveySiteID()){
+                           sp_location.setSelection(i, false);
+                           break;
+                        }
                      }
                   }
+                  
+                  //////////
+                  
+                  final LocationSelectImpl locationSelect = new LocationSelectImpl();
+                  if (sp_location.getOnItemSelectedListener() instanceof LocationSelectImpl)
+                  {
+                     ((LocationSelectImpl)sp_location.getOnItemSelectedListener()).setViewRow(rowView);
+                     ((LocationSelectImpl)sp_location.getOnItemSelectedListener()).setPosition(position);
+                  }else{
+                     locationSelect.setViewRow(rowView);
+                     locationSelect.setPosition(position);
+                     sp_location.setOnItemSelectedListener(locationSelect);
+                  }
                }
-               
-               final LocationSelectImpl locationSelect = new LocationSelectImpl();
-               if (sp_location.getOnItemSelectedListener() instanceof LocationSelectImpl)
-               {
-                  ((LocationSelectImpl)sp_location.getOnItemSelectedListener()).setViewRow(rowView);
-                  ((LocationSelectImpl)sp_location.getOnItemSelectedListener()).setPosition(position);
-               }else{
-                  locationSelect.setViewRow(rowView);
-                  locationSelect.setPosition(position);
-                  sp_location.setOnItemSelectedListener(locationSelect);
-               }
-               
             }break;
             case Layout:
             {

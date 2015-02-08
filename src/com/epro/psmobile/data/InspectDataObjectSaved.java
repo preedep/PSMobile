@@ -806,6 +806,10 @@ public class InspectDataObjectSaved implements DbCursorHolder,
 		
 		try{
 		   this.objectName = JSONDataUtil.getString(jsonObj, COLUMN_OBJECT_NAME);
+		   if ((this.objectName == null)||(this.objectName.trim().length() == 0))
+		   {
+              this.objectName = JSONDataUtil.getString(jsonObj, "inspectLayoutName");		      
+		   }
 		}catch(Exception ex){
 		   try{
 		      this.objectName = JSONDataUtil.getString(jsonObj, "inspectLayoutName");
