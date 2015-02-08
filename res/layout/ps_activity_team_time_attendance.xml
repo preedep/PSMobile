@@ -62,6 +62,7 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:singleLine="true" 
+         android:maxLength="@integer/max_limit_mile_no_digit"
          style="@style/style_edit_simple_number_field"         
       />
 

@@ -39,6 +39,7 @@
        android:layout_height="wrap_content"
        android:singleLine="true"
        android:inputType="number"
+       android:maxLength="@integer/max_limit_mile_no_digit"
     />
 
 <TextView
