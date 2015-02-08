@@ -18,6 +18,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -137,12 +138,21 @@ public class InfoDialog extends DialogFragment {
 		Button btnOk = (Button)v.findViewById(R.id.btn_simple_dlg_ok);
 		Button btnCancel = (Button)v.findViewById(R.id.btn_simple_dlg_cancel);
 
+		
 		if (isCheckOut)
 		{
 			tvMessage.getLayoutParams().height = 50;
 			vGroupContainer = 
 					(ViewGroup)v.findViewById(R.id.ll_data_container);
 			vGroupContainer.setVisibility(View.VISIBLE);
+			
+			try{
+	           EditText edt = (EditText)vGroupContainer.findViewById(R.id.simple_dlg_et_team_car_mile);
+	           int maxLength = 7;
+	           InputFilter[] fArray = new InputFilter[1];
+	           fArray[0] = new InputFilter.LengthFilter(maxLength);
+	           edt.setFilters(fArray);
+	        }catch(Exception ex){}
 			
 			
 			licensePlateSpinner = 
